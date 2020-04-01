@@ -61,6 +61,7 @@
 	
 	<modules>
         <module>db-core</module>
+        <module>db-jpa</module>
         <module>db-osgi-api</module>
         <module>db-osgi-adb</module>
         <module>db-karaf</module>

@@ -19,9 +19,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>db-karaf</artifactId>
+	<artifactId>db-osgi-api</artifactId>
 	<packaging>bundle</packaging>
-	<description>abstract db commands</description>
+	<description>commands OSGi blueprint bundle project.</description>
 	<parent>
 		<artifactId>mhus-persistence</artifactId>
 		<groupId>de.mhus.db</groupId>
@@ -38,11 +38,14 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package>de.mhus.karaf.xdb*;version=${project.version}</Export-Package>
+						<Export-Package>
+							de.mhus.osgi.api.*;version=${project.version}
+						</Export-Package>
 						<Import-Package>
-							*
+                            *;resolution:=optional
 						</Import-Package>
 						<Service-Component>*</Service-Component>
+                        <DynamicImport-Package>*</DynamicImport-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -59,39 +62,32 @@
 			<artifactId>org.osgi.compendium</artifactId>
 		</dependency>
         <dependency>
-            <groupId>biz.aQute.bnd</groupId>
-            <artifactId>bndlib</artifactId>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bndlib</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.apache.karaf.shell</groupId>
 			<artifactId>org.apache.karaf.shell.console</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-pool</groupId>
-			<artifactId>commons-pool</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>de.mhus.lib</groupId>
 			<artifactId>lib-core</artifactId>
 		</dependency>
-
-       	<dependency>
-			<groupId>de.mhus.osgi</groupId>
-			<artifactId>osgi-api</artifactId>
+		<dependency>
+			<groupId>de.mhus.lib</groupId>
+			<artifactId>lib-jms</artifactId>
 		</dependency>
-
+		<dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+        </dependency>
         <dependency>
-            <groupId>de.mhus.db</groupId>
-            <artifactId>db-core</artifactId>
+            <groupId>de.mhus.osgi</groupId>
+            <artifactId>osgi-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.mhus.db</groupId>
-            <artifactId>db-osgi-api</artifactId>
+            <artifactId>db-core</artifactId>
         </dependency>
         
 	</dependencies>
