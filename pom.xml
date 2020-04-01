@@ -60,7 +60,7 @@
 	</developers>
 	
 	<modules>
-        <module>db-lib</module>
+        <module>db-core</module>
         <module>db-osgi-api</module>
         <module>db-osgi-adb</module>
         <module>db-karaf</module>
