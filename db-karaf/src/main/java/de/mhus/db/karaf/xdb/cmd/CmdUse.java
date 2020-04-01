@@ -21,8 +21,9 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.db.karaf.xdb.adb.XdbKarafApi;
+import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbApi;
-import de.mhus.db.osgi.api.xdb.XdbKarafApi;
 import de.mhus.db.osgi.api.xdb.XdbUtil;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.util.MUri;
@@ -96,11 +97,11 @@ public class CmdUse implements Action {
         }
 
         if (apiName != null || serviceName != null || dsName != null)
-            XdbUtil.setSessionUse(
+            XdbKarafUtil.setSessionUse(
                     session,
-                    XdbUtil.getApiName(session, apiName),
-                    XdbUtil.getServiceName(session, serviceName),
-                    XdbUtil.getDatasourceName(session, dsName));
+                    XdbKarafUtil.getApiName(session, apiName),
+                    XdbKarafUtil.getServiceName(session, serviceName),
+                    XdbKarafUtil.getDatasourceName(session, dsName));
 
         System.out.println(
                 "Global : xdb:"
@@ -113,18 +114,18 @@ public class CmdUse implements Action {
 
         System.out.println(
                 "Session: xdb:"
-                        + XdbUtil.getApiName(session, null)
+                        + XdbKarafUtil.getApiName(session, null)
                         + "/"
-                        + XdbUtil.getServiceName(session, null)
-                        + (XdbUtil.getDatasourceName(session, null) != null
-                                ? "/" + XdbUtil.getDatasourceName(session, null)
+                        + XdbKarafUtil.getServiceName(session, null)
+                        + (XdbKarafUtil.getDatasourceName(session, null) != null
+                                ? "/" + XdbKarafUtil.getDatasourceName(session, null)
                                 : ""));
 
         if ("apis".equals(cmd))
             for (String n : XdbUtil.getApis()) System.out.println("Available Api: " + n);
 
         if ("services".equals(cmd)) {
-            String an = XdbUtil.getApiName(session, null);
+            String an = XdbKarafUtil.getApiName(session, null);
             XdbApi a = XdbUtil.getApi(an);
             System.out.println("Services in " + an + ":");
             for (String n : a.getServiceNames()) System.out.println("  " + n);

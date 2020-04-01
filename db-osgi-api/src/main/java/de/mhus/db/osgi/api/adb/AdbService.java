@@ -16,7 +16,7 @@ package de.mhus.db.osgi.api.adb;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.errors.MException;
 
-public interface DbManagerService {
+public interface AdbService {
 
     void updateManager(boolean clean) throws MException;
 
@@ -33,4 +33,5 @@ public interface DbManagerService {
     void doInitialize() throws MException;
 
     void doClose();
+
 }

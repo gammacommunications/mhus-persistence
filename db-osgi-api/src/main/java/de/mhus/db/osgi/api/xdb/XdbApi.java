@@ -19,6 +19,12 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
 
+/**
+ * Basic interface to handle multiple types of databases with the same framework.
+ * 
+ * @author mikehummel
+ *
+ */
 public interface XdbApi {
 
     XdbService getService(String serviceName) throws NotFoundException;

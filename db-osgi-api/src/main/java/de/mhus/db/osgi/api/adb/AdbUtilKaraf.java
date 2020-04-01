@@ -19,20 +19,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
+import de.mhus.osgi.api.services.MOsgi;
 
 public class AdbUtilKaraf {
 
-    public static Class<? extends Persistable> getType(DbManagerService service, String typeName)
+    public static Class<? extends Persistable> getType(AdbService service, String typeName)
             throws IOException {
         for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
             if (item.getSimpleName().equals(typeName)) {
@@ -41,7 +39,7 @@ public class AdbUtilKaraf {
         throw new IOException("Type not found in service: " + typeName);
     }
 
-    public static String getTableName(DbManagerService service, String typeName)
+    public static String getTableName(AdbService service, String typeName)
             throws IOException {
         typeName = typeName.toLowerCase();
         for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
@@ -51,7 +49,7 @@ public class AdbUtilKaraf {
         throw new IOException("Type not found in service: " + typeName);
     }
 
-    public static String getTableName(DbManagerService service, Class<?> type) throws IOException {
+    public static String getTableName(AdbService service, Class<?> type) throws IOException {
         for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
             if (item.getName().equals(type.getName())) {
                 return item.getCanonicalName();
@@ -59,38 +57,23 @@ public class AdbUtilKaraf {
         throw new IOException("Type not found in service: " + type);
     }
 
-    public static DbManagerAdmin getAdmin() {
-        BundleContext context = FrameworkUtil.getBundle(AdbUtilKaraf.class).getBundleContext();
-        ServiceReference<DbManagerAdmin> adminRef =
-                context.getServiceReference(DbManagerAdmin.class);
-        if (adminRef == null) return null;
-        DbManagerAdmin admin = context.getService(adminRef);
-        return admin;
-    }
+    public static List<AdbService> getServices(boolean connectedOnly) {
 
-    public static List<DbManagerService> getServices(boolean connectedOnly) {
-
-        DbManagerAdmin admin = getAdmin();
-        LinkedList<DbManagerService> out = new LinkedList<>();
-        if (admin != null) {
-            for (DbManagerService service : admin.getServices())
-                if (!connectedOnly || service.isConnected()) out.add(service);
-        }
+        LinkedList<AdbService> out = new LinkedList<>();
+        for (AdbService service : MOsgi.getServices(AdbService.class, null))
+            if (!connectedOnly || service.isConnected()) out.add(service);
         return out;
     }
 
-    public static DbManagerService getService(String serviceName)
+    public static AdbService getService(String serviceName)
             throws IOException, InvalidSyntaxException {
         int cnt = 0;
 
-        DbManagerAdmin admin = getAdmin();
-        if (admin != null) {
-            for (DbManagerService service : admin.getServices()) {
-                if (serviceName.equals("*")
-                        || serviceName.equals("*" + cnt)
-                        || serviceName.equals(service.getServiceName())) return service;
-                cnt++;
-            }
+        for (AdbService service : MOsgi.getServices(AdbService.class, null)) {
+            if (serviceName.equals("*")
+                    || serviceName.equals("*" + cnt)
+                    || serviceName.equals(service.getServiceName())) return service;
+            cnt++;
         }
         throw new IOException("Service not found: " + serviceName);
     }
@@ -139,7 +122,7 @@ public class AdbUtilKaraf {
         return null;
     }
 
-    public static List<Object> getObjects(DbManagerService service, Class<?> type, String id)
+    public static List<Object> getObjects(AdbService service, Class<?> type, String id)
             throws MException {
         LinkedList<Object> out = new LinkedList<>();
         if (MString.isEmptyTrim(id)) return out;

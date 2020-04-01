@@ -24,8 +24,8 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
+import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.db.osgi.api.adb.AdbUtilKaraf;
-import de.mhus.db.osgi.api.adb.DbManagerService;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.sql.DbPool;
@@ -71,7 +71,7 @@ public class CmdAdbControl extends AbstractCmd {
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
         if (cmd.equals("mapping")) {
-            DbManagerService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
 
             ConsoleTable table = new ConsoleTable(tblOpt);
             table.setHeaderValues("Key", "Mapping");
@@ -83,7 +83,7 @@ public class CmdAdbControl extends AbstractCmd {
 
             table.print(System.out);
         } else if (cmd.equals("datasource")) {
-            DbManagerService service = AdbUtilKaraf.getAdmin().getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
             if (args != null && args.length > 0) service.setDataSourceName(args[0]);
             System.out.println("Datasource: " + service.getDataSourceName());
         } else if (cmd.equals("jmx-list")) {
@@ -114,7 +114,7 @@ public class CmdAdbControl extends AbstractCmd {
             out.print(System.out);
         } else if (cmd.equals("info")) {
 
-            DbManagerService service = AdbUtilKaraf.getAdmin().getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
             System.out.println("Pool     : " + service.getManager().getPool().getClass());
             System.out.println("Pool Size: " + service.getManager().getPool().getSize());
             System.out.println("Pool Used: " + service.getManager().getPool().getUsedSize());
@@ -124,7 +124,7 @@ public class CmdAdbControl extends AbstractCmd {
         }
         if (cmd.equals("cleanup")) {
 
-            DbManagerService service = AdbUtilKaraf.getAdmin().getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
             DbPool pool = service.getManager().getPool();
             pool.cleanup(args != null && args.length > 0 ? MCast.toboolean(args[0], false) : false);
             System.out.println("Size  : " + pool.getSize());

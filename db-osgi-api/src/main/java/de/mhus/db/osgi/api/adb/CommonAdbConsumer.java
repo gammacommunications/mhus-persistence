@@ -20,7 +20,7 @@ import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbService;
 
-public interface DbSchemaService {
+public interface CommonAdbConsumer {
 
     void registerObjectTypes(List<Class<? extends Persistable>> list);
 
@@ -44,6 +44,13 @@ public interface DbSchemaService {
 
     void doCleanup();
 
+    /**
+     * Is called after creation of the DbManager. Could be called multiple times
+     * if a recreation of the db manager was done.
+     * 
+     * @param manager
+     * @throws Exception
+     */
     void doPostInitialize(XdbService manager) throws Exception;
 
 }

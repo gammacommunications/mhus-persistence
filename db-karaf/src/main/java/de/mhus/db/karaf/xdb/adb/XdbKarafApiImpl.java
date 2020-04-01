@@ -19,7 +19,6 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import de.mhus.db.karaf.xdb.cmd.CmdUse;
-import de.mhus.db.osgi.api.xdb.XdbKarafApi;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.lang.MObject;
@@ -28,7 +27,7 @@ import de.mhus.lib.core.util.MUri;
 @Component
 public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
 
-    private String api = AdbXdbApi.NAME;
+    private String api = "adb";
     private String service = null;
     private String datasource = null;
 

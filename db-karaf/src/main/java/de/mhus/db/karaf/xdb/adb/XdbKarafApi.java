@@ -11,8 +11,17 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.api.xdb;
+package de.mhus.db.karaf.xdb.adb;
 
+/**
+ * Singleton Service Interface
+ * 
+ * Tooling API for karaf commands. xdb:use is the manager of this api. It
+ * provides the current used api and services.
+ * 
+ * @author mikehummel
+ *
+ */
 public interface XdbKarafApi {
 
     void setApi(String api);

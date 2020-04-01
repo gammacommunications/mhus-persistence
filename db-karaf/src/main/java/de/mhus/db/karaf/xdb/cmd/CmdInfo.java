@@ -23,8 +23,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
-import de.mhus.db.osgi.api.xdb.XdbApi;
-import de.mhus.db.osgi.api.xdb.XdbUtil;
+import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.xdb.XdbType;
 import de.mhus.osgi.api.karaf.AbstractCmd;
@@ -52,11 +51,10 @@ public class CmdInfo extends AbstractCmd {
     @Override
     public Object execute2() throws Exception {
 
-        apiName = XdbUtil.getApiName(session, apiName);
-        serviceName = XdbUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(session, apiName);
+        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
 
-        XdbApi api = XdbUtil.getApi(apiName);
-        XdbType<?> type = api.getType(serviceName, typeName);
+        XdbType<?> type = XdbKarafUtil.getType(apiName, serviceName, typeName);
 
         List<String> fieldNames = type.getAttributeNames();
         fieldNames.sort(

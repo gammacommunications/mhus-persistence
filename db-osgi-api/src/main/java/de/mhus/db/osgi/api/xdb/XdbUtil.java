@@ -22,19 +22,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.karaf.shell.api.console.Session;
-
 import de.mhus.lib.adb.DbCollection;
-import de.mhus.lib.core.M;
+import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
-import de.mhus.lib.core.MString;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
 import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.api.services.MOsgi.Service;
 
 public class XdbUtil {
+
+    private static final int PAGE_SIZE = 100; //XXX ?
 
     public static XdbApi getApi(String apiName) throws NotFoundException {
         XdbApi api = MOsgi.getService(XdbApi.class, "(xdb.type=" + apiName + ")");
@@ -133,31 +134,16 @@ public class XdbUtil {
         return v;
     }
 
-    public static String getApiName(Session session, String apiName) {
-        if (MString.isSet(apiName)) return apiName;
-        apiName = (String) session.get("xdb_use_api");
-        if (MString.isSet(apiName)) return apiName;
-        return M.l(XdbKarafApi.class).getApi();
+    public static <T> LinkedList<T> collectResults(XdbService manager, AQuery<T> query, int page) throws MException {
+        LinkedList<T> list = new LinkedList<T>();
+        DbCollection<T> res = manager.getByQualification(query);
+        if (!res.skip(page * PAGE_SIZE)) return list;
+        while (res.hasNext()) {
+            list.add(res.next());
+            if (list.size() >= PAGE_SIZE) break;
+        }
+        res.close();
+        return list;
     }
 
-    public static String getServiceName(Session session, String serviceName) {
-        if (MString.isSet(serviceName)) return serviceName;
-        serviceName = (String) session.get("xdb_use_service");
-        if (MString.isSet(serviceName)) return serviceName;
-        return M.l(XdbKarafApi.class).getService();
-    }
-
-    public static String getDatasourceName(Session session, String dsName) {
-        if (MString.isSet(dsName)) return dsName;
-        dsName = (String) session.get("xdb_use_datasource");
-        if (MString.isSet(dsName)) return dsName;
-        return M.l(XdbKarafApi.class).getDatasource();
-    }
-
-    public static void setSessionUse(
-            Session session, String apiName, String serviceName, String dsName) {
-        if (apiName != null) session.put("xdb_use_api", apiName);
-        if (serviceName != null) session.put("xdb_use_service", serviceName);
-        if (dsName != null) session.put("xdb_use_datasource", dsName);
-    }
 }

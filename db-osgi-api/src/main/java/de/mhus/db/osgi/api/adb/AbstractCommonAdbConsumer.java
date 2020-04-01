@@ -15,21 +15,30 @@ package de.mhus.db.osgi.api.adb;
 
 import java.util.UUID;
 
+import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.Persistable;
-import de.mhus.lib.basics.Ace;
 import de.mhus.lib.basics.UuidIdentificable;
-import de.mhus.lib.core.M;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.xdb.XdbService;
 
-public abstract class AbstractDbSchemaService extends MLog implements DbSchemaService {
+public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAdbConsumer {
 
     public static CfgLong CFG_TIMEOUT =
-            new CfgLong(DbSchemaService.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
+            new CfgLong(CommonAdbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
+    protected DbManager manager;
+
+    @Override
+    public final void doInitialize(XdbService dbService) {
+        manager = (DbManager)dbService;
+        doInitialize();
+    }
+
+    protected abstract void doInitialize();
 
     @Override
     public boolean canCreate(Persistable obj) throws MException {
@@ -80,7 +89,7 @@ public abstract class AbstractDbSchemaService extends MLog implements DbSchemaSe
         try {
             Class<?> clazz = Class.forName(type, true, this.getClass().getClassLoader());
             if (clazz != null) {
-                return (Persistable) M.l(AdbApi.class).getManager().getObject(clazz, id);
+                return (Persistable) manager.getObject(clazz, id);
             }
         } catch (Throwable t) {
             throw new MException("type error", type, t);
@@ -97,4 +106,9 @@ public abstract class AbstractDbSchemaService extends MLog implements DbSchemaSe
         }
         throw new MException("unknown type", type);
     }
+    
+    public DbManager getManager() {
+        return manager;
+    }
+    
 }

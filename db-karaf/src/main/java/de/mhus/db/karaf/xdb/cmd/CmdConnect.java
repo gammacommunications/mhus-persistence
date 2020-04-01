@@ -21,6 +21,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbApi;
 import de.mhus.db.osgi.api.xdb.XdbUtil;
 import de.mhus.lib.xdb.XdbService;
@@ -60,8 +61,8 @@ public class CmdConnect implements Action {
     @Override
     public Object execute() throws Exception {
 
-        apiName = XdbUtil.getApiName(session, apiName);
-        serviceName = XdbUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(session, apiName);
+        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
 
         XdbApi api = XdbUtil.getApi(apiName);
 

@@ -21,6 +21,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbApi;
 import de.mhus.db.osgi.api.xdb.XdbUtil;
 import de.mhus.lib.core.MCollection;
@@ -46,7 +47,7 @@ public class CmdList extends AbstractCmd {
         List<String> apis =
                 apiName == null
                         ? XdbUtil.getApis()
-                        : MCollection.toList(XdbUtil.getApiName(session, apiName));
+                        : MCollection.toList(XdbKarafUtil.getApiName(session, apiName));
 
         ConsoleTable table = new ConsoleTable(tblOpt);
         table.setHeaderValues("Service", "Schema", "DataSource", "Managed Types");

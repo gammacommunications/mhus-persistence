@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.karaf.xdb.adb;
+package de.mhus.db.osgi.services.adb;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -21,21 +21,29 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.annotations.Component;
 
 import de.mhus.db.osgi.api.adb.AdbUtilKaraf;
-import de.mhus.db.osgi.api.adb.DbManagerService;
+import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.db.osgi.api.xdb.XdbApi;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
 
-@Component(property = "xdb.type=adb")
-public class AdbXdbApi implements XdbApi {
+/**
+ * Singleton Service
+ * 
+ * Provide a XdbApi and implement the Adb schema.
+ * Searches for AdbManagerService and provide it as XdbService to Xdb.
+ * 
+ * @author mikehummel
+ *
+ */
 
-    public static final String NAME = "adb";
+@Component(property = "xdb.type=adb")
+public class AdbXdbApiImpl implements XdbApi {
 
     @Override
     public XdbService getService(String serviceName) throws NotFoundException {
         try {
-            DbManagerService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
 
             return service.getManager();
 
@@ -47,7 +55,7 @@ public class AdbXdbApi implements XdbApi {
     @Override
     public <T> XdbType<T> getType(String serviceName, String typeName) throws NotFoundException {
         try {
-            DbManagerService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbUtilKaraf.getService(serviceName);
 
             String tableName = AdbUtilKaraf.getTableName(service, typeName);
             return service.getManager().getType(tableName);
@@ -60,7 +68,7 @@ public class AdbXdbApi implements XdbApi {
     @Override
     public List<String> getServiceNames() {
         LinkedList<String> out = new LinkedList<>();
-        for (DbManagerService s : AdbUtilKaraf.getServices(false)) {
+        for (AdbService s : AdbUtilKaraf.getServices(false)) {
             out.add(s.getServiceName());
         }
         return out;

@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-import de.mhus.db.osgi.api.adb.DbManagerService;
+import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
@@ -34,7 +34,8 @@ import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
 import de.mhus.osgi.api.util.DataSourceUtil;
 // @Component(provide=DbManagerService.class,name="...",immediate=true)
-public abstract class DbManagerServiceImpl extends MLog implements DbManagerService {
+// 
+public abstract class AbstractAdbService extends MLog implements AdbService {
 
     protected DataSourceUtil util;
     private String dataSourceName;

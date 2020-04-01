@@ -16,9 +16,8 @@ package de.mhus.db.osgi.services.adb;
 import java.util.List;
 
 import de.mhus.db.osgi.api.adb.AbstractDbSchema;
-import de.mhus.db.osgi.api.adb.AdbApi;
-import de.mhus.db.osgi.api.adb.DbManagerService;
-import de.mhus.db.osgi.api.adb.DbSchemaService;
+import de.mhus.db.osgi.api.adb.AdbService;
+import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
 import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
@@ -26,28 +25,34 @@ import de.mhus.lib.adb.DbObject;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.DbLockObject;
-import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbResult;
 
-public class SopDbSchema extends AbstractDbSchema {
+/**
+ * Common used DB Schema, created by CommonAdbService for all
+ * CommonAdbProvider services.
+ * 
+ * @author mikehummel
+ *
+ */
+public class CommonDbSchema extends AbstractDbSchema {
 
-    private SopDbManagerService admin;
+    private CommonAdbService admin;
     private DbAccessManager accessManager;
 
-    public SopDbSchema() {
+    public CommonDbSchema() {
         init();
     }
 
-    public SopDbSchema(SopDbManagerService admin) {
+    public CommonDbSchema(CommonAdbService admin) {
         this.admin = admin;
         init();
     }
 
     private void init() {
-        tablePrefix = MApi.getCfg(DbManagerService.class).getExtracted("tablePrefix", "sop_");
+        tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "sop_");
     }
 
     @Override
@@ -55,7 +60,7 @@ public class SopDbSchema extends AbstractDbSchema {
 
         list.add(DbLockObject.class); // needed for object locking
 
-        for (DbSchemaService schema : admin.getSchemas()) {
+        for (CommonAdbConsumer schema : admin.getConsumer()) {
             schema.registerObjectTypes(list);
         }
     }
@@ -91,23 +96,22 @@ public class SopDbSchema extends AbstractDbSchema {
             if (object instanceof DbMetadata) {
                 DbMetadata obj = (DbMetadata) object;
                 try {
-                    AdbApi adb = M.l(AdbApi.class);
-                    if (adb == null) return; // means in init .. say ok
+                    
                     switch (right) {
                         case CREATE:
-                            if (!adb.canCreate(obj))
+                            if (!admin.canCreate(obj))
                                 throw new AccessDeniedException(c.getName(), right);
                             break;
                         case DELETE:
-                            if (!adb.canDelete(obj))
+                            if (!admin.canDelete(obj))
                                 throw new AccessDeniedException(c.getName(), right);
                             break;
                         case READ:
-                            if (!adb.canRead(obj))
+                            if (!admin.canRead(obj))
                                 throw new AccessDeniedException(c.getName(), right);
                             break;
                         case UPDATE:
-                            if (!adb.canUpdate(obj))
+                            if (!admin.canUpdate(obj))
                                 throw new AccessDeniedException(c.getName(), right);
                             break;
                         default:
