@@ -39,23 +39,20 @@
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>
-							de.mhus.osgi.commands.*;version=${project.version},
-							de.mhus.osgi.services.*;version=${project.version},
-                            de.mhus.lib.mutable*;version=${project.version}
+							de.mhus.db.osgi.commands.*;version=${project.version},
+							de.mhus.db.osgi.services.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
                         	de.mhus.lib.adb*;resolution:=optional,
                         	de.mhus.lib.jpa*;resolution:=optional,
                         	de.mhus.lib.cao*;resolution:=optional,
                         	de.mhus.lib.sql*;resolution:=optional,
-                        	org.apache.activemq.*;resolution:=optional,
-                        	javax.jms.*;resolution:=optional,
                         	org.apache.commons.beanutils;resolution:=optional,
                         	org.apache.shiro.*;resolution:=optional,
                             *
 						</Import-Package>
 						<Private-Package>
-							de.mhus.osgi.commands.impl*
+							de.mhus.db.osgi.commands.impl*
 						</Private-Package>
 						<Service-Component>*</Service-Component>
                         <DynamicImport-Package>*</DynamicImport-Package>

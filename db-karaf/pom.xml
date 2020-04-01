@@ -38,7 +38,7 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package>de.mhus.karaf.xdb*;version=${project.version}</Export-Package>
+						<Export-Package>de.mhus.db.karaf.*;version=${project.version}</Export-Package>
 						<Import-Package>
 							*
 						</Import-Package>
@@ -92,6 +92,11 @@
         <dependency>
             <groupId>de.mhus.db</groupId>
             <artifactId>db-osgi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.mhus.db</groupId>
+            <artifactId>db-osgi-adb</artifactId>
+            <version>${project.version}</version>
         </dependency>
         
 	</dependencies>

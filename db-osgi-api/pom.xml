@@ -39,7 +39,7 @@
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>
-							de.mhus.osgi.api.*;version=${project.version}
+							de.mhus.db.osgi.api.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
                             *;resolution:=optional
