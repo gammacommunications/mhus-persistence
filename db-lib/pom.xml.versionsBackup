@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!--
+
+        Licensed to the Apache Software Foundation (ASF) under one or more
+        contributor license agreements.  See the NOTICE file distributed with
+        this work for additional information regarding copyright ownership.
+        The ASF licenses this file to You under the Apache License, Version 2.0
+        (the "License"); you may not use this file except in compliance with
+        the License.  You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>mhu-lib-persistence</artifactId>
+    <packaging>bundle</packaging>
+
+  <parent>
+	  	<groupId>de.mhus.lib</groupId>
+        <artifactId>mhu-lib</artifactId>
+        <version>3.3.1-SNAPSHOT</version>
+  </parent>
+  
+     <build>
+    <plugins>
+		  <plugin>
+	        <groupId>org.apache.felix</groupId>
+	        <artifactId>maven-bundle-plugin</artifactId>
+            <version>${bundle.plugin.version}</version>
+	        <extensions>true</extensions>
+	        <configuration>
+	          <instructions>
+                <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                <Bundle-Version>${project.version}</Bundle-Version>
+	            <Export-Package>
+	            de.mhus.lib.adb.*;version=${project.version},
+	            de.mhus.lib.adb.util.*;version=${project.version},
+	            de.mhus.lib.cao.*;version=${project.version},
+	            de.mhus.lib.jpa.*;version=${project.version},
+	            de.mhus.lib.sql.*;version=${project.version}
+	            </Export-Package>
+	            <Import-Package>
+		            javax.persistence.*;resolution:=optional,
+		            org.apache.openjpa.*;resolution:=optional,
+		            *
+	            </Import-Package>
+	          </instructions>
+	        </configuration>
+	      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-release-plugin</artifactId>
+		  <version>2.2.2</version>
+		  <configuration>
+		    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+		    
+		  </configuration>
+		</plugin>
+
+    </plugins>
+  </build>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>mhu-lib-core</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>mhu-lib-annotations</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  	
+  	<dependency>
+    	<groupId>junit</groupId>
+    	<artifactId>junit</artifactId>
+    	<version>4.7</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>1.2.14</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+  	<dependency>
+    	<groupId>org.apache.openjpa</groupId>
+    	<artifactId>openjpa</artifactId>
+    	<version>2.2.1</version>
+    	<scope>provided</scope>
+    </dependency>
+  	    <dependency>
+    	<groupId>org.hsqldb</groupId>
+    	<artifactId>hsqldb</artifactId>
+    	<version>2.3.2</version>
+    	<type>jar</type>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>mysql</groupId>
+    	<artifactId>mysql-connector-java</artifactId>
+    	<version>5.1.18</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+
+  </dependencies>
+</project>
