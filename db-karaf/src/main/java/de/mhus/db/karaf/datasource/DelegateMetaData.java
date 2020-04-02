@@ -11,15 +11,13 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.impl;
+package de.mhus.db.karaf.datasource;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.RowIdLifetime;
 import java.sql.SQLException;
-
-import de.mhus.db.osgi.commands.db.DelegatedDataSource;
 
 public class DelegateMetaData implements DatabaseMetaData {
 

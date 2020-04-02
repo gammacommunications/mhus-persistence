@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.karaf.xdb.adb.sql;
+package de.mhus.db.karaf.datasource;
 
 import java.io.File;
 import java.io.InputStream;
@@ -24,14 +24,14 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.osgi.framework.BundleContext;
 
-import de.mhus.db.osgi.commands.db.TraceDataSource;
+import de.mhus.db.karaf.datasource.FailoverDataSource;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 import de.mhus.osgi.api.util.TemplateUtils;
 
-@Command(scope = "jdbc", name = "createdbtrace", description = "Create DB Trace")
+@Command(scope = "jdbc", name = "createdbfailover", description = "Create DB Failover DataSource")
 @Service
-public class CmdCreateDbTrace extends AbstractCmd {
+public class CmdCreateDbFailover extends AbstractCmd {
 
     @Option(
             name = "-o",
@@ -43,17 +43,17 @@ public class CmdCreateDbTrace extends AbstractCmd {
 
     @Argument(
             index = 0,
-            name = "source",
+            name = "sources",
             required = true,
-            description = "Source Datasource",
+            description = "Source Datasources, separated by comma",
             multiValued = false)
-    String source;
+    String sources;
 
     @Argument(
             index = 1,
             name = "target",
             required = true,
-            description = "New Target Datasource",
+            description = "New Pooling Datasource",
             multiValued = false)
     String target;
 
@@ -64,14 +64,13 @@ public class CmdCreateDbTrace extends AbstractCmd {
     @Override
     public Object execute2() throws Exception {
 
-        util = new DataSourceUtil(context);
+        this.util = new DataSourceUtil(context);
 
         if (online) {
 
-            TraceDataSource dataSource = new TraceDataSource();
-            dataSource.setSource(source);
+            FailoverDataSource dataSource = new FailoverDataSource();
+            dataSource.setSource(sources);
             dataSource.setContext(context);
-            dataSource.setTrace(true);
 
             util.registerDataSource(dataSource, target);
 
@@ -79,12 +78,12 @@ public class CmdCreateDbTrace extends AbstractCmd {
 
             File karafBase = new File(System.getProperty("karaf.base"));
             File deployFolder = new File(karafBase, "deploy");
-            File outFile = new File(deployFolder, "datasource-trace_" + target + ".xml");
+            File outFile = new File(deployFolder, "datasource-failover_" + target + ".xml");
 
             HashMap<String, String> properties = new HashMap<String, String>();
             properties.put("name", target);
-            properties.put("source", source);
-            String templateFile = "datasource-trace.xml";
+            properties.put("source", sources);
+            String templateFile = "datasource-failover.xml";
             InputStream is = this.getClass().getResourceAsStream(templateFile);
             if (is == null) {
                 throw new IllegalArgumentException(

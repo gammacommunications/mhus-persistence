@@ -11,14 +11,12 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.impl;
+package de.mhus.db.karaf.datasource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import de.mhus.db.osgi.commands.db.TraceDataSource;
 
 public class TracedConnection extends DelegateConnection {
 

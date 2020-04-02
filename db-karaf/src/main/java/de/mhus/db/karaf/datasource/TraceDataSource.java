@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.db;
+package de.mhus.db.karaf.datasource;
 
 import java.io.File;
 import java.sql.Connection;
@@ -23,8 +23,6 @@ import javax.sql.DataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-import de.mhus.db.osgi.commands.impl.AbstractDataSource;
-import de.mhus.db.osgi.commands.impl.TracedConnection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.logging.FileLogger;

@@ -1,4 +1,4 @@
-package de.mhus.db.osgi.services.cluster;
+package de.mhus.db.osgi.adb.cluster;
 
 import java.net.URL;
 import java.sql.SQLException;

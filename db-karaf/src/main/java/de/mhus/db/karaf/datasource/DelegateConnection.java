@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.impl;
+package de.mhus.db.karaf.datasource;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -31,8 +31,6 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
-
-import de.mhus.db.osgi.commands.db.DelegatedDataSource;
 
 public class DelegateConnection implements Connection {
 

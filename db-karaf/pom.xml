@@ -38,7 +38,9 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package>de.mhus.db.karaf.*;version=${project.version}</Export-Package>
+						<Export-Package>
+						  de.mhus.db.karaf.*;version=${project.version}
+						  </Export-Package>
 						<Import-Package>
 							*
 						</Import-Package>

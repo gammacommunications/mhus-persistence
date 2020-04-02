@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.karaf.xdb.adb.sql;
+package de.mhus.db.karaf.datasource;
 
 import java.sql.Connection;
 
@@ -23,8 +23,8 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.osgi.framework.BundleContext;
 
-import de.mhus.db.osgi.commands.db.TraceDataSource;
-import de.mhus.db.osgi.commands.impl.TracedConnection;
+import de.mhus.db.karaf.datasource.TraceDataSource;
+import de.mhus.db.karaf.datasource.TracedConnection;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 

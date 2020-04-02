@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg width="416" height="505" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!--WillInclude_umd3-->
+<path d="M 23.65 62.82 L 123.65 62.82 L 123.65 112.82 L 23.65 112.82 Z M 23.65 62.82" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="white"  />
+
+<text x="54.31" y="92.56" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >XdbApi</text>
+<path d="M 23.65 138.22 L 123.65 138.22 L 123.65 188.22 L 23.65 188.22 Z M 23.65 138.22" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="white"  />
+
+<text x="32.29" y="167.96" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >AdbXdbApiImpl</text>
+<path d="M 162.17 138.22 L 262.17 138.22 L 262.17 188.22 L 162.17 188.22 Z M 162.17 138.22" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="white"  />
+
+<text x="181.49" y="167.96" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >AdbService</text>
+<path d="M 162.17 212.77 L 262.17 212.77 L 262.17 262.77 L 162.17 262.77 Z M 162.17 212.77" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="white"  />
+
+<text x="179.49" y="235.01" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >AbstractAdb</text>
+<text x="192.17" y="250.01" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Service</text>
+<path d="M 300.03 212.77 L 400.03 212.77 L 400.03 262.77 L 300.03 262.77 Z M 300.03 212.77" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="white"  />
+
+<text x="315.01" y="235.01" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >CommonAdb</text>
+<text x="330.02" y="250.01" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Service</text>
+<path d="M 300.03 291.80 L 400.03 291.80 L 400.03 341.80 L 300.03 341.80 Z M 300.03 291.80" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="white"  />
+
+<text x="315.01" y="314.04" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >CommonAdb</text>
+<text x="322.35" y="329.04" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Consumer</text>
+<path d="M 300.03 367.61 L 400.03 367.61 L 400.03 417.61 L 300.03 417.61 Z M 300.03 367.61" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="white"  />
+
+<text x="303.68" y="389.85" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >AbstractCommon</text>
+<text x="311.67" y="404.85" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >AdbConsumer</text>
+<path d="M 300.03 445.18 L 400.03 445.18 L 400.03 495.18 L 300.03 495.18 Z M 300.03 445.18" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="white"  />
+
+<text x="316.56" y="474.92" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Your Entities</text>
+<path d="M 75.00 137.01 L 75.00 124.91" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="none"  />
+
+<path d="M 75.00 124.91 L 75.00 129.72 M 78.59 129.72 L 71.40 129.72 L 75.00 112.82 Z M 78.59 129.72" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 123.65 163.22 L 162.17 163.22" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 212.15 212.77 L 212.15 200.50" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="none"  />
+
+<path d="M 212.15 200.50 L 212.15 205.12 M 215.74 205.12 L 208.55 205.12 L 212.15 188.22 Z M 215.74 205.12" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 300.03 237.16 L 280.77 237.16" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 280.77 237.16 L 279.07 237.16 M 279.07 233.56 L 279.07 240.75 L 262.17 237.16 Z M 279.07 233.56" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 349.05 367.61 L 349.05 354.71" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6.00,2.00" fill="none"  />
+
+<path d="M 349.05 354.71 L 349.05 358.70 M 352.64 358.70 L 345.46 358.70 L 349.05 341.80 Z M 352.64 358.70" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 350.03 262.77 L 350.03 291.80" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 349.90 445.18 L 349.90 431.40" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<path d="M 349.90 431.40 L 349.90 434.51 M 353.49 434.51 L 346.30 434.51 L 349.90 417.61 Z M 353.49 434.51" stroke-width="1.00" stroke="black" stroke-linecap="round" stroke-linejoin="round" fill="none"  />
+
+<text x="24.96" y="22.24" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >General Database</text>
+<text x="43.64" y="37.24" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Abstraction</text>
+<text x="161.79" y="29.74" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Object Persistence</text>
+<text x="325.69" y="14.74" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Common</text>
+<text x="320.01" y="29.74" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Abstraction</text>
+<text x="326.34" y="44.74" font-family="Helvetica" font-size="12.00px" fill="black" opacity="1.00" >Manager</text>
+
+</svg>
+<!--OldSVGSize:6035 -->
+<!--Data_umd3_bIncluded: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-->

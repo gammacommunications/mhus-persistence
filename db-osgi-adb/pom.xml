@@ -39,12 +39,10 @@
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>
-							de.mhus.db.osgi.commands.*;version=${project.version},
-							de.mhus.db.osgi.services.*;version=${project.version}
+							de.mhus.db.osgi.adb.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
                         	de.mhus.lib.adb*;resolution:=optional,
-                        	de.mhus.lib.jpa*;resolution:=optional,
                         	de.mhus.lib.cao*;resolution:=optional,
                         	de.mhus.lib.sql*;resolution:=optional,
                         	org.apache.commons.beanutils;resolution:=optional,

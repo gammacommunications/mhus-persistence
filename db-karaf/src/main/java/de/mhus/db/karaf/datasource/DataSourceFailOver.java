@@ -11,84 +11,94 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.impl;
+package de.mhus.db.karaf.datasource;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import de.mhus.db.osgi.commands.db.DelegatedDataSource;
+public class DataSourceFailOver implements DataSource, DelegatedDataSource {
 
-public abstract class AbstractDataSource implements DataSource, DelegatedDataSource {
+    private LinkedList<DataSource> list;
 
-    protected String instanceName = "";
-
-    public abstract DataSource getDataSource() throws SQLFeatureNotSupportedException;
+    public DataSource getCurrentDataSource() {
+        if (list.isEmpty()) return null;
+        return list.get(0); // implement fallback
+    }
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return getDataSource().getLogWriter();
+        return getCurrentDataSource().getLogWriter();
     }
 
     @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-        getDataSource().setLogWriter(out);
+        getCurrentDataSource().setLogWriter(out);
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-        getDataSource().setLoginTimeout(seconds);
+        getCurrentDataSource().setLoginTimeout(seconds);
     }
 
     @Override
     public int getLoginTimeout() throws SQLException {
-        return getDataSource().getLoginTimeout();
+        return getCurrentDataSource().getLoginTimeout();
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return getDataSource().getParentLogger();
+        return getCurrentDataSource().getParentLogger();
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        return getDataSource().unwrap(iface);
+        return getCurrentDataSource().unwrap(iface);
     }
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return getDataSource().isWrapperFor(iface);
+        return getCurrentDataSource().isWrapperFor(iface);
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return new DelegateConnection(getDataSource().getConnection(), this);
+        return getCurrentDataSource().getConnection();
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        try {
-            return getDataSource().getConnection();
-        } catch (SQLException e) {
-            doDisconnect();
-            throw e;
+        SQLException lastException = null;
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                return getCurrentDataSource().getConnection(username, password);
+            } catch (SQLException e) {
+                if (list.isEmpty()) throw e;
+                // move first connection to the end
+                DataSource ds = list.removeFirst();
+                list.addLast(ds);
+                lastException = e;
+            }
         }
+        if (lastException != null) throw lastException;
+        throw new SQLException("no DataSource found");
     }
 
-    public abstract void doDisconnect();
-
-    public String getInstanceName() {
-        return instanceName;
+    public void setDestinations(LinkedList<DataSource> list) {
+        this.list = list;
     }
-
-    public abstract boolean isInstanceConnected();
 
     @Override
     public String getDelegateURL() {
-        return getInstanceName() + (!isInstanceConnected() ? " (disconnected)" : "");
+        try {
+            return "failover:" + getCurrentDataSource().getConnection().getMetaData().getURL();
+        } catch (Throwable e) {
+            return "failover:" + e;
+        }
     }
 }

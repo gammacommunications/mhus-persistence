@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.db.osgi.commands.db;
+package de.mhus.db.karaf.datasource;
 
 import java.sql.SQLFeatureNotSupportedException;
 
@@ -20,7 +20,6 @@ import javax.sql.DataSource;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
-import de.mhus.db.osgi.commands.impl.AbstractDataSource;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 public class DelegateDataSource extends AbstractDataSource {
