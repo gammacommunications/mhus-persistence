@@ -50,12 +50,10 @@ public class CmdDbTrace extends AbstractCmd {
 
     @Reference private BundleContext context;
 
-    private DataSourceUtil util;
-
     @Override
     public Object execute2() throws Exception {
 
-        DataSource ds = util.getDataSource(source);
+        DataSource ds = DataSourceUtil.getDataSource(source);
         Connection con = ds.getConnection();
         if (!(con instanceof TracedConnection)) {
             System.out.println("The source is not a trace datasource");
@@ -84,8 +82,4 @@ public class CmdDbTrace extends AbstractCmd {
         return null;
     }
 
-    public void setContext(BundleContext context) {
-        this.context = context;
-        this.util = new DataSourceUtil(context);
-    }
 }

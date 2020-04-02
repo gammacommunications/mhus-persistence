@@ -20,11 +20,8 @@ import java.util.HashMap;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.osgi.framework.BundleContext;
 
-import de.mhus.db.karaf.datasource.DelegateDataSource;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 import de.mhus.osgi.api.util.TemplateUtils;
@@ -57,22 +54,15 @@ public class CmdCreateDbDelegate extends AbstractCmd {
             multiValued = false)
     String target;
 
-    @Reference private BundleContext context;
-
-    private DataSourceUtil util;
-
     @Override
     public Object execute2() throws Exception {
-
-        this.util = new DataSourceUtil(context);
 
         if (online) {
 
             DelegateDataSource dataSource = new DelegateDataSource();
             dataSource.setSource(source);
-            dataSource.setContext(context);
 
-            util.registerDataSource(dataSource, target);
+            DataSourceUtil.registerDataSource(dataSource, target);
 
         } else {
 

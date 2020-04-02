@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.UUID;
 
+import javax.sql.DataSource;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
@@ -36,9 +38,11 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.basics.UuidIdentificable;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgInt;
+import de.mhus.lib.core.cfg.CfgString;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DataSourceProvider;
 import de.mhus.lib.sql.DbPool;
@@ -46,6 +50,7 @@ import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.PseudoDbPool;
 import de.mhus.osgi.api.aaa.ContextCachedItem;
 import de.mhus.osgi.api.services.MOsgi;
+import de.mhus.osgi.api.util.DataSourceUtil;
 
 @Component(service = AdbService.class, immediate = true)
 public class CommonAdbService extends AbstractAdbService {
@@ -54,6 +59,15 @@ public class CommonAdbService extends AbstractAdbService {
             new CfgBoolean(CommonAdbService.class, "usePseudoPool", false);
     private static final CfgBoolean CFG_ENABLED =
             new CfgBoolean(CommonAdbService.class, "enabled", true);
+    private static final CfgInt CFG_INIT_RETRY_SEC =
+            new CfgInt(CommonAdbService.class, "initRetrySec", 10);
+    private static final CfgString CFG_DATASOURCE =
+            new CfgString(CommonAdbService.class, "dataSourceName", "adb/common").updateAction(s -> {
+                if (instance() != null)
+                    instance().setDataSourceName(s);
+            });
+    private static final CfgString CFG_SERVICE_NAME = 
+            new CfgString(CommonAdbService.class, "serviceName", "common");
     
     private ServiceTracker<CommonAdbConsumer, CommonAdbConsumer> tracker;
     private TreeMap<String, CommonAdbConsumer> schemaList = new TreeMap<>();
@@ -76,6 +90,7 @@ public class CommonAdbService extends AbstractAdbService {
     
     @Activate
     public void doActivate(ComponentContext ctx) {
+        dataSourceName = CFG_DATASOURCE.value();
         status = STATUS.ACTIVATED;
         //		new de.mhus.lib.adb.util.Property();
         context = ctx.getBundleContext();
@@ -91,26 +106,49 @@ public class CommonAdbService extends AbstractAdbService {
     }
 
     public void doStart(ComponentContext ctx) {
+        boolean once = true;
         while (true) {
+            try {
+                CommonAdbService.this.updateManager(false);
+            } catch (Throwable e1) {
+                log().e(e1);
+            }
             if (status == STATUS.STARTED) return;
-
-            if (getManager() != null) {
-                log().i("Start tracker");
-                try {
-                    tracker =
-                            new ServiceTracker<>(
-                                    context, CommonAdbConsumer.class, new MyTrackerCustomizer());
-                    tracker.open();
-                } finally {
-                    status = STATUS.STARTED;
+            try {
+                DataSource ds = DataSourceUtil.getDataSource(getDataSourceName(), ctx == null ? MOsgi.getBundleContext() : ctx.getBundleContext());
+                if (ds != null) {
+                    if (getManager() != null) {
+                        log().i("Start tracker");
+                        try {
+                            tracker =
+                                    new ServiceTracker<>(
+                                            context, CommonAdbConsumer.class, new MyTrackerCustomizer());
+                            tracker.open();
+                        } finally {
+                            status = STATUS.STARTED;
+                        }
+                        return;
+                    }
                 }
+            } catch (java.lang.IllegalStateException e) {
+                log().e("Exit CommonAdbService start loop",e.toString());
                 return;
             }
-            log().i("Waiting for datasource",getDataSourceName());
-            MThread.sleep(10000);
+            
+            // write once as info
+            log().log(once ? LEVEL.INFO : LEVEL.TRACE,"Waiting for datasource",getDataSourceName());
+            once = false;
+            MThread.sleep(CFG_INIT_RETRY_SEC.value()*1000);
         }
     }
 
+    @Override
+    protected DataSource getDataSource() {
+        DataSource ds = DataSourceUtil.getDataSource(dataSourceName,context);
+        if (ds == null) log().w("DataSource is unknown", dataSourceName);
+        return ds;
+    }
+    
     @Deactivate
     public void doDeactivate(ComponentContext ctx) {
         status = STATUS.CLOSED;
@@ -129,8 +167,8 @@ public class CommonAdbService extends AbstractAdbService {
 
     @Override
     public void doInitialize() throws MException {
-        setDataSourceName(
-                MApi.getCfg(AdbService.class).getExtracted("dataSourceName", "db_sop"));
+//        setDataSourceName(
+//                MApi.getCfg(AdbService.class).getExtracted("dataSourceName", "adb/common"));
     }
 
     @Override
@@ -233,7 +271,7 @@ public class CommonAdbService extends AbstractAdbService {
 
     @Override
     public String getServiceName() {
-        return MApi.getCfg(AdbService.class).getString("serviceName", "common");
+        return CFG_SERVICE_NAME.value();
     }
 
     @Override

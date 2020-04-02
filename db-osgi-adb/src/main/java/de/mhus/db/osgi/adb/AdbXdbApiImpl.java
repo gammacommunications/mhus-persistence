@@ -20,7 +20,7 @@ import java.util.List;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.annotations.Component;
 
-import de.mhus.db.osgi.api.adb.AdbUtilKaraf;
+import de.mhus.db.osgi.api.adb.AdbOsgiUtil;
 import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.db.osgi.api.xdb.XdbApi;
 import de.mhus.lib.errors.NotFoundException;
@@ -43,7 +43,7 @@ public class AdbXdbApiImpl implements XdbApi {
     @Override
     public XdbService getService(String serviceName) throws NotFoundException {
         try {
-            AdbService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbOsgiUtil.getService(serviceName);
 
             return service.getManager();
 
@@ -55,9 +55,9 @@ public class AdbXdbApiImpl implements XdbApi {
     @Override
     public <T> XdbType<T> getType(String serviceName, String typeName) throws NotFoundException {
         try {
-            AdbService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbOsgiUtil.getService(serviceName);
 
-            String tableName = AdbUtilKaraf.getTableName(service, typeName);
+            String tableName = AdbOsgiUtil.getTableName(service, typeName);
             return service.getManager().getType(tableName);
 
         } catch (IOException | InvalidSyntaxException e) {
@@ -68,9 +68,15 @@ public class AdbXdbApiImpl implements XdbApi {
     @Override
     public List<String> getServiceNames() {
         LinkedList<String> out = new LinkedList<>();
-        for (AdbService s : AdbUtilKaraf.getServices(false)) {
+        for (AdbService s : AdbOsgiUtil.getServices(false)) {
             out.add(s.getServiceName());
         }
         return out;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <I> I adaptTo(Class<? extends I> ifc) {
+        return (I) this;
     }
 }

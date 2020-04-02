@@ -18,11 +18,12 @@ import java.util.List;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.query.AQuery;
+import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 
-public interface XdbService {
+public interface XdbService extends Adaptable {
 
     boolean isConnected();
 

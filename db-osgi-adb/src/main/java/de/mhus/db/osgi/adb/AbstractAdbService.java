@@ -15,9 +15,6 @@ package de.mhus.db.osgi.adb;
 
 import javax.sql.DataSource;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-
 import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
@@ -37,8 +34,7 @@ import de.mhus.osgi.api.util.DataSourceUtil;
 // 
 public abstract class AbstractAdbService extends MLog implements AdbService {
 
-    protected DataSourceUtil util;
-    private String dataSourceName;
+    protected String dataSourceName;
     private DbManager manager;
 
     //	protected abstract void doInitialize() throws Exception;
@@ -52,8 +48,6 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     protected void doOpen(boolean clean) throws MException {
         if (manager != null) return;
         doInitialize();
-        BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
-        util = new DataSourceUtil(context);
 
         if (getDataSource() == null) return;
 
@@ -104,7 +98,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     }
 
     protected DataSource getDataSource() {
-        DataSource ds = util.getDataSource(dataSourceName);
+        DataSource ds = DataSourceUtil.getDataSource(dataSourceName);
         if (ds == null) log().w("DataSource is unknown", dataSourceName);
         return ds;
     }
@@ -125,7 +119,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
         try {
             doOpen(false);
         } catch (Exception e) {
-            log().d(e);
+            log().w(e);
         }
         return manager;
     }

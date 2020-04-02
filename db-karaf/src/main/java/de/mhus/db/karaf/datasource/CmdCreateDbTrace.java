@@ -20,11 +20,8 @@ import java.util.HashMap;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.osgi.framework.BundleContext;
 
-import de.mhus.db.karaf.datasource.TraceDataSource;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 import de.mhus.osgi.api.util.TemplateUtils;
@@ -57,23 +54,16 @@ public class CmdCreateDbTrace extends AbstractCmd {
             multiValued = false)
     String target;
 
-    @Reference private BundleContext context;
-
-    private DataSourceUtil util;
-
     @Override
     public Object execute2() throws Exception {
-
-        util = new DataSourceUtil(context);
 
         if (online) {
 
             TraceDataSource dataSource = new TraceDataSource();
             dataSource.setSource(source);
-            dataSource.setContext(context);
             dataSource.setTrace(true);
 
-            util.registerDataSource(dataSource, target);
+            DataSourceUtil.registerDataSource(dataSource, target);
 
         } else {
 

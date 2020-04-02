@@ -52,7 +52,7 @@ public class CommonDbSchema extends AbstractDbSchema {
     }
 
     private void init() {
-        tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "sop_");
+        tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "adb_");
     }
 
     @Override

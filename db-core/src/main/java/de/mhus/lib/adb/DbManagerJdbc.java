@@ -1515,4 +1515,5 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     public String getDataSourceName() {
         return dataSourceName;
     }
+
 }

@@ -20,9 +20,6 @@ import java.sql.SQLFeatureNotSupportedException;
 
 import javax.sql.DataSource;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.logging.FileLogger;
@@ -31,7 +28,6 @@ import de.mhus.osgi.api.util.DataSourceUtil;
 public class TraceDataSource extends AbstractDataSource {
 
     private String source;
-    private BundleContext context;
     private DataSource dataSource;
     private Log log = Log.getLog(TraceDataSource.class); // TODO change !
     private boolean trace;
@@ -42,11 +38,7 @@ public class TraceDataSource extends AbstractDataSource {
 
         synchronized (this) {
             if (dataSource == null) {
-
-                if (context == null)
-                    context = FrameworkUtil.getBundle(DataSource.class).getBundleContext();
-
-                dataSource = new DataSourceUtil(context).getDataSource(source);
+                dataSource = DataSourceUtil.getDataSource(source);
             }
         }
 
@@ -70,14 +62,6 @@ public class TraceDataSource extends AbstractDataSource {
     public void setSource(String source) {
         this.source = source;
         instanceName = "trace(" + isTrace() + "):" + source;
-    }
-
-    public BundleContext getContext() {
-        return context;
-    }
-
-    public void setContext(BundleContext context) {
-        this.context = context;
     }
 
     @Override

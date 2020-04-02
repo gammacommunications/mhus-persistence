@@ -28,7 +28,7 @@ import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.api.services.MOsgi;
 
-public class AdbUtilKaraf {
+public class AdbOsgiUtil {
 
     public static Class<? extends Persistable> getType(AdbService service, String typeName)
             throws IOException {
@@ -138,4 +138,14 @@ public class AdbUtilKaraf {
 
         return out;
     }
+    
+    public static AdbService getCommonAdbService() {
+        try {
+            AdbService service = getService("common");
+            return service;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+    
 }

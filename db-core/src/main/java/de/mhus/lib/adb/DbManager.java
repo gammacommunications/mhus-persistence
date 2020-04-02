@@ -647,4 +647,10 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
             return MSystem.toString(this, table == null ? "?" : table.getName());
         }
     }
+    
+    @Override
+    public <I> I adaptTo(Class<? extends I> ifc) {
+        return null;
+    }
+    
 }

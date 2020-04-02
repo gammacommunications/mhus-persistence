@@ -17,26 +17,19 @@ import java.sql.SQLFeatureNotSupportedException;
 
 import javax.sql.DataSource;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 public class DelegateDataSource extends AbstractDataSource {
 
     private String source;
-    private BundleContext context;
     private DataSource dataSource;
 
     @Override
     public DataSource getDataSource() throws SQLFeatureNotSupportedException {
 
         synchronized (this) {
-            if (context == null)
-                context = FrameworkUtil.getBundle(DataSource.class).getBundleContext();
-
             if (dataSource == null) {
-                dataSource = new DataSourceUtil(context).getDataSource(source);
+                dataSource = DataSourceUtil.getDataSource(source);
             }
         }
 
@@ -62,11 +55,4 @@ public class DelegateDataSource extends AbstractDataSource {
         instanceName = "delegate:" + source;
     }
 
-    public BundleContext getContext() {
-        return context;
-    }
-
-    public void setContext(BundleContext context) {
-        this.context = context;
-    }
 }

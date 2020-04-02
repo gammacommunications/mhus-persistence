@@ -26,6 +26,7 @@ import de.mhus.lib.sql.DbStatement;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
 import de.mhus.osgi.api.services.MOsgi;
+import de.mhus.osgi.api.util.DataSourceUtil;
 
 public class ClusterViaDatabase extends MLog implements ClusterApi {
 
@@ -70,9 +71,9 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
         if (ds != null) return; // TODO timeout
         while (true) {
             try {
-                ds = MOsgi.getDataSource(dsName);
+                ds = DataSourceUtil.getDataSource(dsName);
                 if (ds == null) {
-                    log().w("Datasource not found",dsName);
+                    log().d("Datasource not found",dsName);
                 } else {
                     // init pool object
                     DataSourceProvider dsProvider = new DataSourceProvider();

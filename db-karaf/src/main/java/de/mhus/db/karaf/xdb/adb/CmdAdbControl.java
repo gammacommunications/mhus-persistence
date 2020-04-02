@@ -14,6 +14,7 @@
 package de.mhus.db.karaf.xdb.adb;
 
 import java.lang.management.ManagementFactory;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -25,41 +26,37 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.db.osgi.api.adb.AdbService;
-import de.mhus.db.osgi.api.adb.AdbUtilKaraf;
+import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
+import de.mhus.db.osgi.adb.CommonAdbService;
+import de.mhus.db.osgi.api.adb.AdbOsgiUtil;
+import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 
-@Command(scope = "adb", name = "control", description = "Control ADB specific attributes")
+@Command(scope = "xdb", name = "adb", description = "Control ADB specific attributes")
 @Service
 public class CmdAdbControl extends AbstractCmd {
 
     @Argument(
             index = 0,
-            name = "service",
-            required = true,
-            description = "Service Class",
-            multiValued = false)
-    String serviceName;
-
-    @Argument(
-            index = 1,
             name = "command",
             required = true,
             description =
                     "Command:\n"
-                            + " jmx-list - list all pools using jmx\n"
+                            + " consumers - list all consumers and managed types\n"
+                            + " jmx-list <serviceName> - list all pools using jmx\n"
                             + " jmx-all  - list all jmx components - debug only\n"
-                            + " info     - info about the adb service\n"
-                            + " cleanup  <unused also (true)>- cleanup pool\n"
+                            + " info     <serviceName> - info about the adb service\n"
+                            + " cleanup  <serviceName> <unused also (true)>- cleanup pool\n"
                             + " datasource <name> - change datasource (be aware!)\n"
                             + " mapping  - print service mappings",
             multiValued = false)
     String cmd;
 
     @Argument(
-            index = 2,
+            index = 1,
             name = "arguments",
             required = false,
             description = "Arguments for the command",
@@ -68,10 +65,22 @@ public class CmdAdbControl extends AbstractCmd {
 
     @Override
     public Object execute2() throws Exception {
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
+        if (cmd.equals("start")) {
+            CommonAdbService.instance().doStart(null);
+        }
+        if (cmd.equals("consumers")) {
+            ConsoleTable table = new ConsoleTable(tblOpt);
+            table.setHeaderValues("Consumer","Managed Types");
+            for (CommonAdbConsumer consumer : CommonAdbService.instance().getConsumer()) {
+                LinkedList<Class<? extends Persistable>> list = new LinkedList<>();
+                consumer.registerObjectTypes(list);
+                table.addRowValues(consumer.getClass().getCanonicalName(), list);
+            }
+            table.print();
+        } else
         if (cmd.equals("mapping")) {
-            AdbService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbOsgiUtil.getService(args[0]);
 
             ConsoleTable table = new ConsoleTable(tblOpt);
             table.setHeaderValues("Key", "Mapping");
@@ -81,12 +90,13 @@ public class CmdAdbControl extends AbstractCmd {
                 table.addRowValues(entry, String.valueOf(map.get(entry)));
             }
 
-            table.print(System.out);
+            table.print();
         } else if (cmd.equals("datasource")) {
-            AdbService service = AdbUtilKaraf.getService(serviceName);
-            if (args != null && args.length > 0) service.setDataSourceName(args[0]);
+            AdbService service = AdbOsgiUtil.getService(args[0]);
+            if (args.length > 1) service.setDataSourceName(args[1]);
             System.out.println("Datasource: " + service.getDataSourceName());
         } else if (cmd.equals("jmx-list")) {
+            MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             ConsoleTable out = new ConsoleTable(tblOpt);
             out.setHeaderValues("Id", "Name", "Class", "Size", "Used");
             for (ObjectInstance instance : server.queryMBeans(null, null)) {
@@ -114,7 +124,7 @@ public class CmdAdbControl extends AbstractCmd {
             out.print(System.out);
         } else if (cmd.equals("info")) {
 
-            AdbService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbOsgiUtil.getService(args[0]);
             System.out.println("Pool     : " + service.getManager().getPool().getClass());
             System.out.println("Pool Size: " + service.getManager().getPool().getSize());
             System.out.println("Pool Used: " + service.getManager().getPool().getUsedSize());
@@ -124,13 +134,14 @@ public class CmdAdbControl extends AbstractCmd {
         }
         if (cmd.equals("cleanup")) {
 
-            AdbService service = AdbUtilKaraf.getService(serviceName);
+            AdbService service = AdbOsgiUtil.getService(args[0]);
             DbPool pool = service.getManager().getPool();
-            pool.cleanup(args != null && args.length > 0 ? MCast.toboolean(args[0], false) : false);
+            pool.cleanup(args.length > 1 ? MCast.toboolean(args[1], false) : false);
             System.out.println("Size  : " + pool.getSize());
             System.out.println("Unused: " + pool.getUsedSize());
 
         } else if (cmd.equals("jmx-all")) {
+            MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             for (ObjectInstance instance : server.queryMBeans(null, null)) {
                 System.out.println("MBean Found");
                 System.out.println("Class Name : " + instance.getClassName());

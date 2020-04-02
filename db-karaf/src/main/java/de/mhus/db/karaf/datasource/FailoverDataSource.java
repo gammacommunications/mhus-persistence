@@ -20,16 +20,12 @@ import java.util.LinkedList;
 
 import javax.sql.DataSource;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 public class FailoverDataSource extends AbstractDataSource {
 
     private String source;
     private String realList = "";
-    private BundleContext context;
     private LinkedList<DataSource> list;
     private int current = 0;
 
@@ -42,11 +38,7 @@ public class FailoverDataSource extends AbstractDataSource {
                 list = new LinkedList<DataSource>();
                 realList = "";
                 for (String name : source.split(",")) {
-
-                    if (context == null)
-                        context = FrameworkUtil.getBundle(DataSource.class).getBundleContext();
-
-                    DataSource dataSource = new DataSourceUtil(context).getDataSource(name);
+                    DataSource dataSource = DataSourceUtil.getDataSource(name);
                     if (dataSource != null) {
                         list.add(dataSource);
                         if (realList.length() > 0) realList = realList + ",";
@@ -107,13 +99,5 @@ public class FailoverDataSource extends AbstractDataSource {
     public void setSource(String source) {
         this.source = source;
         instanceName = "failover:" + source;
-    }
-
-    public BundleContext getContext() {
-        return context;
-    }
-
-    public void setContext(BundleContext context) {
-        this.context = context;
     }
 }

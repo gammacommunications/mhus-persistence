@@ -19,7 +19,6 @@
 
     <bean id="dataSource" class="de.mhus.db.karaf.datasource.PoolDataSource">
         <property name="source" value="${source}"/>
-		<property name="context" ref="blueprintBundleContext" />
     </bean>
 
     <service interface="javax.sql.DataSource" ref="dataSource">

@@ -234,8 +234,8 @@ public class DialectH2 extends DialectDefault {
     public void prepareConnection(Connection con) throws SQLException {
         super.prepareConnection(con);
         Statement sth = con.createStatement();
-        sth.execute("SET DATABASE TRANSACTION CONTROL MVCC");
-        sth.execute("SET DATABASE DEFAULT ISOLATION LEVEL READ COMMITTED");
+//        sth.execute("SET DATABASE TRANSACTION CONTROL MVCC");
+//        sth.execute("SET DATABASE DEFAULT ISOLATION LEVEL READ COMMITTED");
         // sth.execute("SET DATABASE TRANSACTION ROLLBACK ON DEADLOCK TRUE");
         sth.close();
     }

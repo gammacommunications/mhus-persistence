@@ -20,11 +20,8 @@ import java.util.HashMap;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.osgi.framework.BundleContext;
 
-import de.mhus.db.karaf.datasource.FailoverDataSource;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 import de.mhus.osgi.api.util.TemplateUtils;
@@ -57,22 +54,15 @@ public class CmdCreateDbFailover extends AbstractCmd {
             multiValued = false)
     String target;
 
-    @Reference private BundleContext context;
-
-    private DataSourceUtil util;
-
     @Override
     public Object execute2() throws Exception {
-
-        this.util = new DataSourceUtil(context);
-
+        
         if (online) {
 
             FailoverDataSource dataSource = new FailoverDataSource();
             dataSource.setSource(sources);
-            dataSource.setContext(context);
 
-            util.registerDataSource(dataSource, target);
+            DataSourceUtil.registerDataSource(dataSource, target);
 
         } else {
 
