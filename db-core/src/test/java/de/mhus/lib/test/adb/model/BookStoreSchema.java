@@ -20,7 +20,6 @@ import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
@@ -82,7 +81,7 @@ public class BookStoreSchema extends DbSchema {
     }
 
     @Override
-    public void findObjectTypes(List<Class<? extends Persistable>> list) {
+    public void findObjectTypes(List<Class<? extends Object>> list) {
         list.add(Book.class);
         list.add(Person.class);
         list.add(Person2.class);

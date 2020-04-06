@@ -19,7 +19,6 @@ import java.util.WeakHashMap;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
@@ -51,7 +50,7 @@ public class AdbCore extends CaoCore {
 
         if (type != null) this.type = type;
         else
-            for (Class<? extends Persistable> t : schema.getObjectTypes()) {
+            for (Class<? extends Object> t : schema.getObjectTypes()) {
                 if (CaoNode.class.isAssignableFrom(t)) {
                     this.type = (Class<? extends AdbNodeData>) t;
                 }

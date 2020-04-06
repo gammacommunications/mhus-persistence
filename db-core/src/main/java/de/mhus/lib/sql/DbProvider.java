@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.sql;
 
-import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;

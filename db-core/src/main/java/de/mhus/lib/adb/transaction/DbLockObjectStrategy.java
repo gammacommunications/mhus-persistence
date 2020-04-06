@@ -14,9 +14,8 @@
 package de.mhus.lib.adb.transaction;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.adb.Persistable;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -26,7 +25,7 @@ public class DbLockObjectStrategy extends LockStrategy {
     private long sleepTime = 200;
 
     @Override
-    public void lock(Persistable object, String key, LockBase transaction, long timeout) {
+    public void lock(Object object, String key, LockBase transaction, long timeout) {
         DbLockObject lock = transaction.getDbManager().inject(new DbLockObject());
         //		if (key.length() > 760) key = key.substring(0, 760); // not really a good solution ...!
         lock.setKey(key);
@@ -58,7 +57,7 @@ public class DbLockObjectStrategy extends LockStrategy {
     }
 
     @Override
-    public void releaseLock(Persistable object, String key, LockBase transaction) {
+    public void releaseLock(Object object, String key, LockBase transaction) {
         try {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null) {

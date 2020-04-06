@@ -16,7 +16,6 @@ package de.mhus.lib.xdb;
 import java.util.List;
 
 import de.mhus.lib.adb.DbCollection;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.core.pojo.PojoModelFactory;
@@ -51,7 +50,7 @@ public interface XdbService extends Adaptable {
         return type.getByQualification(query);
     }
 
-    default <T extends Persistable> DbCollection<T> getAll(Class<T> type) throws MException {
+    default <T extends Object> DbCollection<T> getAll(Class<T> type) throws MException {
         XdbType<T> xType = (XdbType<T>) getType(type);
         return xType.getAll();
     }
@@ -64,7 +63,7 @@ public interface XdbService extends Adaptable {
 
     <T> XdbType<T> getType(Class<T> type) throws NotFoundException;
 
-    <T extends Persistable> T inject(T object);
+    <T extends Object> T inject(T object);
 
     <T> T getObject(Class<T> clazz, Object... keys) throws MException;
 
@@ -72,7 +71,7 @@ public interface XdbService extends Adaptable {
 
     String getDataSourceName();
 
-    void delete(Persistable object) throws MException;
+    void delete(Object object) throws MException;
 
-    void save(Persistable object) throws MException;
+    void save(Object object) throws MException;
 }

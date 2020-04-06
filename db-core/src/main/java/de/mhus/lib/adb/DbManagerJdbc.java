@@ -355,7 +355,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         reloadLock.waitWithException(MAX_LOCK);
 
-        Class<? extends Persistable> clazz2 = schema.findClassForObject(clazz, this);
+        Class<? extends Object> clazz2 = schema.findClassForObject(clazz, this);
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT $db.")
                 .append(getMappingName(clazz2))
@@ -581,7 +581,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         try {
             Object out = c.getObject(con, keys);
-            schema.doPostLoad(c, (Persistable) out, con, this);
+            schema.doPostLoad(c, out, con, this);
             return out;
         } catch (AccessDeniedException e) {
             return null;
@@ -705,7 +705,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             }
             c.fillObject(object, con, res);
 
-            schema.doPostLoad(c, (Persistable) object, con, this);
+            schema.doPostLoad(c, object, con, this);
 
         } catch (AccessDeniedException ade) {
             throw ade;
@@ -765,7 +765,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             if (c.fillObject(con, object, keys.toArray()) == null)
                 throw new MException("object not found");
 
-            schema.doPostLoad(c, (Persistable) object, con, this);
+            schema.doPostLoad(c, object, con, this);
 
         } catch (Throwable t) {
             throw new MException(registryName, t);
@@ -908,7 +908,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         try {
             c.fillObject(con, object, keys);
 
-            schema.doPostLoad(c, (Persistable) object, con, this);
+            schema.doPostLoad(c, object, con, this);
 
         } catch (Throwable t) {
             throw new MException(registryName, t);
@@ -983,7 +983,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
             c.createObject(con, object);
 
-            schema.doPostCreate(c, (Persistable) object, con, this);
+            schema.doPostCreate(c, object, con, this);
 
         } catch (Throwable t) {
             throw new MException(registryName, t);
@@ -1279,12 +1279,12 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         try {
             // prepare object
-            schema.doPreDelete(c, (Persistable) object, con, this);
+            schema.doPreDelete(c, object, con, this);
 
             // save object
             c.deleteObject(con, object);
 
-            schema.doPostDelete(c, (Persistable) object, con, this);
+            schema.doPostDelete(c, object, con, this);
 
         } catch (Throwable t) {
             throw new MException(registryName, t);
@@ -1355,7 +1355,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         try {
             schema.resetObjectTypes();
             pool.cleanup(true);
-            Class<? extends Persistable>[] types = schema.getObjectTypes();
+            Class<? extends Object>[] types = schema.getObjectTypes();
             DbConnection con = pool.getConnection();
             if (con == null) return;
 
@@ -1376,7 +1376,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             }
 
             // classes
-            for (Class<? extends Persistable> clazz : types) {
+            for (Class<? extends Object> clazz : types) {
                 addClass(null, getRegistryName(clazz), clazz, con, cleanup);
             }
             con.commit();
@@ -1417,7 +1417,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     protected void addClass(
             String tableName,
             String registryName,
-            Class<? extends Persistable> clazz,
+            Class<? extends Object> clazz,
             DbConnection con,
             boolean cleanup)
             throws Exception {
@@ -1488,7 +1488,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         if (object instanceof Class<?>) {
             return ((Class<?>) object).getCanonicalName();
         }
-        Class<? extends Persistable> clazz = schema.findClassForObject(object, this);
+        Class<? extends Object> clazz = schema.findClassForObject(object, this);
         if (clazz == null) return null;
         return clazz.getCanonicalName();
     }
@@ -1500,14 +1500,14 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     }
 
     @Override
-    public <T extends Persistable> T inject(T object) {
+    public <T extends Object> T inject(T object) {
         reloadLock.waitWithException(MAX_LOCK);
         schema.injectObject(object, this, getTable(getRegistryName(object)));
         return object;
     }
 
     @Override
-    public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
+    public <T extends Object> DbCollection<T> getAll(Class<T> clazz) throws MException {
         return getByQualification(clazz, "", null);
     }
 

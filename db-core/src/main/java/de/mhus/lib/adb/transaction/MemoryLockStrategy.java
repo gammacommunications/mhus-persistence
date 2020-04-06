@@ -15,9 +15,8 @@ package de.mhus.lib.adb.transaction;
 
 import java.util.HashMap;
 
-import de.mhus.lib.adb.Persistable;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MemoryLockStrategy extends LockStrategy {
@@ -28,7 +27,7 @@ public class MemoryLockStrategy extends LockStrategy {
     private HashMap<String, LockObject> locks = new HashMap<>();
 
     @Override
-    public void lock(Persistable object, String key, LockBase transaction, long timeout) {
+    public void lock(Object object, String key, LockBase transaction, long timeout) {
 
         long start = System.currentTimeMillis();
         while (true) {
@@ -58,7 +57,7 @@ public class MemoryLockStrategy extends LockStrategy {
     }
 
     @Override
-    public void releaseLock(Persistable object, String key, LockBase transaction) {
+    public void releaseLock(Object object, String key, LockBase transaction) {
         synchronized (this) {
             LockObject obj = locks.get(key);
             if (obj == null) return;

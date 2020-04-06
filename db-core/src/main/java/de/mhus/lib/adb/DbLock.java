@@ -17,7 +17,7 @@ import de.mhus.lib.basics.MCloseable;
 
 public class DbLock implements MCloseable {
 
-    public DbLock(Persistable... objects) {
+    public DbLock(Object... objects) {
         // TODO
     }
 

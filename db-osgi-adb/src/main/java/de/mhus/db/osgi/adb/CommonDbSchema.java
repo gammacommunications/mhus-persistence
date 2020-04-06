@@ -22,7 +22,6 @@ import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
 import de.mhus.lib.adb.DbObject;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.DbLockObject;
 import de.mhus.lib.core.MApi;
@@ -56,7 +55,7 @@ public class CommonDbSchema extends AbstractDbSchema {
     }
 
     @Override
-    public void findObjectTypes(List<Class<? extends Persistable>> list) {
+    public void findObjectTypes(List<Class<? extends Object>> list) {
 
         list.add(DbLockObject.class); // needed for object locking
 

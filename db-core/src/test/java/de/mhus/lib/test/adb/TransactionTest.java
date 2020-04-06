@@ -62,14 +62,14 @@ public class TransactionTest {
         obj2.save();
         obj3.save();
 
-        DbTransaction.lock(obj1, obj2); // simple lock
+        DbTransaction.lockDefault(obj1, obj2); // simple lock
         DbTransaction.releaseLock();
 
         DbTransaction.releaseLock(); // one more should be ok - robust code
 
-        DbTransaction.lock(obj1, obj2);
+        DbTransaction.lockDefault(obj1, obj2);
         try {
-            DbTransaction.lock(
+            DbTransaction.lockDefault(
                     obj3); // nested not locked should fail, can't lock two times - philosophers
                            // deadlock
             DbTransaction.releaseLock();
@@ -79,14 +79,14 @@ public class TransactionTest {
         }
         DbTransaction.releaseLock();
 
-        DbTransaction.lock(obj1, obj2);
-        DbTransaction.lock(
+        DbTransaction.lockDefault(obj1, obj2);
+        DbTransaction.lockDefault(
                 obj1); // nested is ok as long as it is already locked - no philosophers problem
         DbTransaction.releaseLock();
         DbTransaction.releaseLock();
 
         // concurrent locking ...
-        DbTransaction.lock(obj1, obj2);
+        DbTransaction.lockDefault(obj1, obj2);
 
         final ObjectContainer<Boolean> done = new ObjectContainer<>(false);
         final ObjectContainer<String> fail = new ObjectContainer<>();

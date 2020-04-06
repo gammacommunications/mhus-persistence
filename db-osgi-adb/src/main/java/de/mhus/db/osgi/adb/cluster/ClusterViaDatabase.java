@@ -25,7 +25,6 @@ import de.mhus.lib.sql.DbResult;
 import de.mhus.lib.sql.DbStatement;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
-import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 public class ClusterViaDatabase extends MLog implements ClusterApi {

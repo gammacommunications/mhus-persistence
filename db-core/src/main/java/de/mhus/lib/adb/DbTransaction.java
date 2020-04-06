@@ -38,12 +38,11 @@ public class DbTransaction {
 
     /**
      * lock accept only nested locks with already locked objects.
-     *
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects 
      * @return A lock object
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock lock(Persistable... objects) throws TimeoutRuntimeException {
+    public static DbLock lockDefault(Object... objects) throws TimeoutRuntimeException {
         return lock(DEFAULT_TIMEOUT, objects);
     }
 
@@ -54,7 +53,7 @@ public class DbTransaction {
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock relaxedLock(Persistable... objects) throws TimeoutRuntimeException {
+    public static DbLock relaxedLock(Object... objects) throws TimeoutRuntimeException {
         return relaxedLock(DEFAULT_TIMEOUT, objects);
     }
 
@@ -62,11 +61,11 @@ public class DbTransaction {
      * lock accept only nested locks with already locked objects.
      *
      * @param timeout a long.
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock lock(long timeout, Persistable... objects) throws TimeoutRuntimeException {
+    public static DbLock lock(long timeout, Object... objects) throws TimeoutRuntimeException {
         TransactionPool.instance().lock(timeout, new TransactionLock(false, objects));
         return new DbLock(objects);
     }
@@ -75,11 +74,11 @@ public class DbTransaction {
      * lock and accept all nested locks.
      *
      * @param timeout a long.
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock relaxedLock(long timeout, Persistable... objects)
+    public static DbLock relaxedLock(long timeout, Object... objects)
             throws TimeoutRuntimeException {
         TransactionPool.instance().lock(timeout, new TransactionLock(true, objects));
         return new DbLock(objects);
@@ -89,11 +88,11 @@ public class DbTransaction {
      * lock.
      *
      * @param manager a {@link de.mhus.lib.adb.DbManager} object.
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock lock(DbManager manager, Persistable... objects)
+    public static DbLock lock(DbManager manager, Object... objects)
             throws TimeoutRuntimeException {
         return lock(manager, DEFAULT_TIMEOUT, objects);
     }
@@ -103,11 +102,11 @@ public class DbTransaction {
      *
      * @param manager a {@link de.mhus.lib.adb.DbManager} object.
      * @param timeout a long.
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock lock(DbManager manager, long timeout, Persistable... objects)
+    public static DbLock lock(DbManager manager, long timeout, Object... objects)
             throws TimeoutRuntimeException {
         TransactionPool.instance().lock(timeout, new TransactionLock(manager, false, objects));
         return new DbLock(objects);

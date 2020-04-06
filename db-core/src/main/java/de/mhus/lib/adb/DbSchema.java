@@ -52,15 +52,14 @@ import de.mhus.lib.sql.DbResult;
 public abstract class DbSchema extends MObject implements PojoModelFactory {
 
     protected String tablePrefix = "";
-    private LinkedList<Class<? extends Persistable>> objectTypes;
+    private LinkedList<Class<? extends Object>> objectTypes;
     protected LockStrategy lockStrategy; // set this object to enable locking
 
-    public abstract void findObjectTypes(List<Class<? extends Persistable>> list);
+    public abstract void findObjectTypes(List<Class<? extends Object>> list);
 
-    @SuppressWarnings("unchecked")
-    public final Class<? extends Persistable>[] getObjectTypes() {
+    public final Class<? extends Object>[] getObjectTypes() {
         initObjectTypes();
-        return (Class<? extends Persistable>[])
+        return (Class<? extends Object>[])
                 objectTypes.toArray(new Class<?>[objectTypes.size()]);
     }
 
@@ -131,14 +130,14 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      * @param manager
      * @return x
      */
-    public Class<? extends Persistable> findClassForObject(Object object, DbManager manager) {
+    public Class<? extends Object> findClassForObject(Object object, DbManager manager) {
         initObjectTypes();
         if (object instanceof Class<?>) {
-            for (Class<? extends Persistable> c : objectTypes)
+            for (Class<? extends Object> c : objectTypes)
                 if (((Class<?>) object).isAssignableFrom(c)) return c;
         }
 
-        for (Class<? extends Persistable> c : objectTypes) if (c.isInstance(object)) return c;
+        for (Class<? extends Object> c : objectTypes) if (c.isInstance(object)) return c;
         return null;
     }
 
@@ -256,7 +255,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      * @param dbManager
      */
     public void doPreDelete(
-            Table table, Persistable object, DbConnection con, DbManager dbManager) {
+            Table table, Object object, DbConnection con, DbManager dbManager) {
         if (object instanceof DbObject) {
             ((DbObject) object).doPreDelete(con);
         }
@@ -271,13 +270,13 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      * @param con
      * @param manager
      */
-    public void doPostLoad(Table table, Persistable object, DbConnection con, DbManager manager) {
+    public void doPostLoad(Table table, Object object, DbConnection con, DbManager manager) {
         if (object instanceof DbObject) {
             ((DbObject) object).doPostLoad(con);
         }
     }
 
-    public void doPostCreate(Table table, Persistable object, DbConnection con, DbManager manager) {
+    public void doPostCreate(Table table, Object object, DbConnection con, DbManager manager) {
         if (object instanceof DbObject) {
             ((DbObject) object).doPostCreate(con);
         }
@@ -291,7 +290,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      * @param con
      * @param dbManager
      */
-    public void doPostDelete(Table c, Persistable object, DbConnection con, DbManager dbManager) {
+    public void doPostDelete(Table c, Object object, DbConnection con, DbManager dbManager) {
         if (object instanceof DbObject) {
             ((DbObject) object).doPostDelete(con);
         }
@@ -335,7 +334,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 
     public Table createTable(
             DbManager manager,
-            Class<? extends Persistable> clazz,
+            Class<? extends Object> clazz,
             String registryName,
             String tableName) {
 

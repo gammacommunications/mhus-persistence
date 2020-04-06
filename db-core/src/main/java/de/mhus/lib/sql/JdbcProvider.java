@@ -17,8 +17,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import de.mhus.lib.core.MPassword;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MString;
 
 /**
  * Database provider for the jdbc database access variant.

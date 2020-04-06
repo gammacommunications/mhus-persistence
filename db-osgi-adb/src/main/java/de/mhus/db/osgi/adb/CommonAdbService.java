@@ -36,7 +36,6 @@ import de.mhus.db.osgi.api.adb.Reference.TYPE;
 import de.mhus.db.osgi.api.adb.ReferenceCollector;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgBoolean;
@@ -299,7 +298,7 @@ public class CommonAdbService extends AbstractAdbService {
         return ret;
     }
     
-    protected boolean canRead(Persistable obj) throws MException {
+    protected boolean canRead(Object obj) throws MException {
         if (obj == null) return false;
 
 //XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
@@ -315,7 +314,7 @@ public class CommonAdbService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canUpdate(Persistable obj) throws MException {
+    protected boolean canUpdate(Object obj) throws MException {
         if (obj == null) return false;
 
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
@@ -331,7 +330,7 @@ public class CommonAdbService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canDelete(Persistable obj) throws MException {
+    protected boolean canDelete(Object obj) throws MException {
         if (obj == null) return false;
 
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
@@ -347,7 +346,7 @@ public class CommonAdbService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canCreate(Persistable obj) throws MException {
+    protected boolean canCreate(Object obj) throws MException {
         if (obj == null) return false;
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
 //        if (item != null) return item;
@@ -363,20 +362,20 @@ public class CommonAdbService extends AbstractAdbService {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Persistable> T getObject(String type, UUID id) throws MException {
+    public <T extends Object> T getObject(String type, UUID id) throws MException {
         CommonAdbConsumer controller = getConsumer(type);
         if (controller == null) return null;
         return (T) controller.getObject(type, id);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Persistable> T getObject(String type, String id) throws MException {
+    public <T extends Object> T getObject(String type, String id) throws MException {
         CommonAdbConsumer controller = getConsumer(type);
         if (controller == null) return null;
         return (T) controller.getObject(type, id);
     }
 
-    protected void onDelete(Persistable object) {
+    protected void onDelete(Object object) {
 
         if (object == null) return;
 
@@ -419,7 +418,7 @@ public class CommonAdbService extends AbstractAdbService {
         getManager().delete(ref.getObject());
     }
 
-    public void collectRefereces(Persistable object, ReferenceCollector collector) {
+    public void collectRefereces(Object object, ReferenceCollector collector) {
 
         if (object == null) return;
 
@@ -436,7 +435,7 @@ public class CommonAdbService extends AbstractAdbService {
             }
     }
 
-    public <T extends Persistable> T getObject(Class<T> type, UUID id) throws MException {
+    public <T extends Object> T getObject(Class<T> type, UUID id) throws MException {
         return getObject(type.getCanonicalName(), id);
     }
 

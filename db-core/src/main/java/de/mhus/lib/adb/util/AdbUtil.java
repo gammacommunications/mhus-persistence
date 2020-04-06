@@ -22,7 +22,6 @@ import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
@@ -35,9 +34,9 @@ import de.mhus.lib.errors.MException;
 
 public class AdbUtil {
 
-    public static Class<? extends Persistable> getType(DbManager manager, String typeName)
+    public static Class<? extends Object> getType(DbManager manager, String typeName)
             throws IOException {
-        for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+        for (Class<? extends Object> item : manager.getSchema().getObjectTypes())
             if (item.getSimpleName().equals(typeName)) {
                 return item;
             }
@@ -46,7 +45,7 @@ public class AdbUtil {
 
     public static String getTableName(DbManager manager, String typeName) throws IOException {
         typeName = typeName.toLowerCase();
-        for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+        for (Class<? extends Object> item : manager.getSchema().getObjectTypes())
             if (item.getSimpleName().toLowerCase().equals(typeName)
                     || item.getCanonicalName().toLowerCase().equals(typeName)) {
                 return item.getCanonicalName();
@@ -55,7 +54,7 @@ public class AdbUtil {
     }
 
     public static String getTableName(DbManager manager, Class<?> type) throws IOException {
-        for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+        for (Class<? extends Object> item : manager.getSchema().getObjectTypes())
             if (
             /*item.getName().equals(type.getName()) ||*/ item.getCanonicalName()
                     .equals(type.getCanonicalName())) {

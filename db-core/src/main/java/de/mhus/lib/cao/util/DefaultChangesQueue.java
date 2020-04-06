@@ -20,8 +20,8 @@ import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MSystem;
 
 public class DefaultChangesQueue extends MLog implements CaoAspectFactory<Changes> {
 

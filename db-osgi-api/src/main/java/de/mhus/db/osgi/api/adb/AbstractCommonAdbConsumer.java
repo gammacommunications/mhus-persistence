@@ -16,7 +16,6 @@ package de.mhus.db.osgi.api.adb;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
@@ -41,7 +40,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     protected abstract void doInitialize();
 
     @Override
-    public boolean canCreate(Persistable obj) throws MException {
+    public boolean canCreate(Object obj) throws MException {
         String type = obj.getClass().getCanonicalName();
         String ident = "*";
         if (obj instanceof UuidIdentificable) {
@@ -52,7 +51,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     }
     
     @Override
-    public boolean canRead(Persistable obj) throws MException {
+    public boolean canRead(Object obj) throws MException {
         String type = obj.getClass().getCanonicalName();
         String ident = "*";
         if (obj instanceof UuidIdentificable) {
@@ -63,7 +62,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     }
 
     @Override
-    public boolean canUpdate(Persistable obj) throws MException {
+    public boolean canUpdate(Object obj) throws MException {
         String type = obj.getClass().getCanonicalName();
         String ident = "*";
         if (obj instanceof UuidIdentificable) {
@@ -74,7 +73,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     }
 
     @Override
-    public boolean canDelete(Persistable obj) throws MException {
+    public boolean canDelete(Object obj) throws MException {
         String type = obj.getClass().getCanonicalName();
         String ident = "*";
         if (obj instanceof UuidIdentificable) {
@@ -85,11 +84,11 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     }
 
     @Override
-    public Persistable getObject(String type, UUID id) throws MException {
+    public Object getObject(String type, UUID id) throws MException {
         try {
             Class<?> clazz = Class.forName(type, true, this.getClass().getClassLoader());
             if (clazz != null) {
-                return (Persistable) manager.getObject(clazz, id);
+                return manager.getObject(clazz, id);
             }
         } catch (Throwable t) {
             throw new MException("type error", type, t);
@@ -98,7 +97,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonAd
     }
 
     @Override
-    public Persistable getObject(String type, String id) throws MException {
+    public Object getObject(String type, String id) throws MException {
         try {
             if (MValidator.isUUID(id)) return getObject(type, UUID.fromString(id));
         } catch (Throwable t) {

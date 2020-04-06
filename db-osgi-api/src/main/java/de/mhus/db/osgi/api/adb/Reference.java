@@ -13,10 +13,9 @@
  */
 package de.mhus.db.osgi.api.adb;
 
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MLog;
 
-public class Reference<T extends Persistable> extends MLog {
+public class Reference<T extends Object> extends MLog {
 
     public enum TYPE {
         CHILD,

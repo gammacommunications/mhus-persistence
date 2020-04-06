@@ -16,31 +16,30 @@ package de.mhus.db.osgi.api.adb;
 import java.util.List;
 import java.util.UUID;
 
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbService;
 
 public interface CommonAdbConsumer {
 
-    void registerObjectTypes(List<Class<? extends Persistable>> list);
+    void registerObjectTypes(List<Class<? extends Object>> list);
 
     void doInitialize(XdbService dbService);
 
     void doDestroy();
 
-    boolean canRead(Persistable obj) throws MException;
+    boolean canRead(Object obj) throws MException;
 
-    boolean canUpdate(Persistable obj) throws MException;
+    boolean canUpdate(Object obj) throws MException;
 
-    boolean canDelete(Persistable obj) throws MException;
+    boolean canDelete(Object obj) throws MException;
 
-    boolean canCreate(Persistable obj) throws MException;
+    boolean canCreate(Object obj) throws MException;
 
-    Persistable getObject(String type, UUID id) throws MException;
+    Object getObject(String type, UUID id) throws MException;
 
-    Persistable getObject(String type, String id) throws MException;
+    Object getObject(String type, String id) throws MException;
 
-    void collectReferences(Persistable object, ReferenceCollector collector);
+    void collectReferences(Object object, ReferenceCollector collector);
 
     void doCleanup();
 

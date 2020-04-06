@@ -20,7 +20,6 @@ import java.util.TreeMap;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbObject;
 import de.mhus.lib.adb.DbTransaction;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.MCast;
@@ -38,10 +37,10 @@ public class TransactionLock extends LockBase {
 
     private static final CfgBoolean CFG_TRACE_CALLER =
             new CfgBoolean(DbTransaction.class, "traceTransactionCallers", false);
-    private Persistable[] objects;
+    private Object[] objects;
     private DbManager manager;
     private boolean locked;
-    private TreeMap<String, Persistable> orderedKeys;
+    private TreeMap<String, Object> orderedKeys;
     private String stacktrace;
     private boolean relaxed;
 
@@ -50,9 +49,9 @@ public class TransactionLock extends LockBase {
      *
      * @param manager a {@link de.mhus.lib.adb.DbManager} object.
      * @param relaxed
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      */
-    public TransactionLock(DbManager manager, boolean relaxed, Persistable... objects) {
+    public TransactionLock(DbManager manager, boolean relaxed, Object... objects) {
         this.manager = manager;
         this.objects = objects;
         this.relaxed = relaxed;
@@ -67,11 +66,11 @@ public class TransactionLock extends LockBase {
      * Constructor for TransactionLock.
      *
      * @param relaxed
-     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @param objects
      */
-    public TransactionLock(boolean relaxed, Persistable... objects) {
+    public TransactionLock(boolean relaxed, Object... objects) {
         this(null, relaxed, objects);
-        for (Persistable o : objects)
+        for (Object o : objects)
             if (o instanceof DbObject) {
                 manager = (DbManager) ((DbObject) o).getDbHandler();
                 break;
@@ -93,14 +92,14 @@ public class TransactionLock extends LockBase {
         getLockKeys();
 
         long start = System.currentTimeMillis();
-        for (Map.Entry<String, Persistable> entry : orderedKeys.entrySet()) {
+        for (Map.Entry<String, Object> entry : orderedKeys.entrySet()) {
             try {
                 strategy.lock(entry.getValue(), entry.getKey(), this, timeout);
             } catch (Throwable t) {
                 log().d(t);
             }
             if (System.currentTimeMillis() - start > timeout) {
-                for (Map.Entry<String, Persistable> entry2 : orderedKeys.entrySet()) {
+                for (Map.Entry<String, Object> entry2 : orderedKeys.entrySet()) {
                     try {
                         strategy.releaseLock(entry2.getValue(), entry2.getKey(), this);
                     } catch (Throwable t) {
@@ -117,10 +116,10 @@ public class TransactionLock extends LockBase {
     /**
      * createKey.
      *
-     * @param o a {@link de.mhus.lib.adb.Persistable} object.
+     * @param o a {@link de.mhus.lib.adb.Object} object.
      * @return a {@link java.lang.String} object.
      */
-    protected String createKey(Persistable o) {
+    protected String createKey(Object o) {
         // find db manager of the object, fallback is my manager
         DbManager m = manager;
         if (o instanceof DbObject) m = (DbManager) ((DbObject) o).getDbHandler();
@@ -148,7 +147,7 @@ public class TransactionLock extends LockBase {
         LockStrategy strategy = manager.getSchema().getLockStrategy();
         if (strategy == null) return;
 
-        for (Persistable o : objects) {
+        for (Object o : objects) {
             String key = createKey(o);
             try {
                 strategy.releaseLock(o, key, this);
@@ -207,7 +206,7 @@ public class TransactionLock extends LockBase {
         if (orderedKeys == null) {
             orderedKeys = new TreeMap<>();
             if (objects != null) {
-                for (Persistable o : objects) {
+                for (Object o : objects) {
                     String key = createKey(o);
                     orderedKeys.put(key, o);
                 }

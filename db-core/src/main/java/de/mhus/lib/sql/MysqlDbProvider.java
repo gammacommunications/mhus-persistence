@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.sql;
 
-import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.config.NodeConfig;
 
 public class MysqlDbProvider extends JdbcProvider {

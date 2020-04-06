@@ -28,9 +28,9 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
 import de.mhus.lib.cao.util.MutableMetadata;
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.errors.MException;
 
 public class FdbCore extends CaoCore {

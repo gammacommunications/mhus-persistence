@@ -25,11 +25,10 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-import de.mhus.db.osgi.api.adb.AdbService;
-import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
 import de.mhus.db.osgi.adb.CommonAdbService;
 import de.mhus.db.osgi.api.adb.AdbOsgiUtil;
-import de.mhus.lib.adb.Persistable;
+import de.mhus.db.osgi.api.adb.AdbService;
+import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.sql.DbPool;
@@ -73,7 +72,7 @@ public class CmdAdbControl extends AbstractCmd {
             ConsoleTable table = new ConsoleTable(tblOpt);
             table.setHeaderValues("Consumer","Managed Types");
             for (CommonAdbConsumer consumer : CommonAdbService.instance().getConsumer()) {
-                LinkedList<Class<? extends Persistable>> list = new LinkedList<>();
+                LinkedList<Class<? extends Object>> list = new LinkedList<>();
                 consumer.registerObjectTypes(list);
                 table.addRowValues(consumer.getClass().getCanonicalName(), list);
             }

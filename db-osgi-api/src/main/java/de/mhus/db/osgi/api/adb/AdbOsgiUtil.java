@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import org.osgi.framework.InvalidSyntaxException;
 
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.MUri;
@@ -30,9 +29,9 @@ import de.mhus.osgi.api.services.MOsgi;
 
 public class AdbOsgiUtil {
 
-    public static Class<? extends Persistable> getType(AdbService service, String typeName)
+    public static Class<? extends Object> getType(AdbService service, String typeName)
             throws IOException {
-        for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
+        for (Class<? extends Object> item : service.getManager().getSchema().getObjectTypes())
             if (item.getSimpleName().equals(typeName)) {
                 return item;
             }
@@ -42,7 +41,7 @@ public class AdbOsgiUtil {
     public static String getTableName(AdbService service, String typeName)
             throws IOException {
         typeName = typeName.toLowerCase();
-        for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
+        for (Class<? extends Object> item : service.getManager().getSchema().getObjectTypes())
             if (item.getSimpleName().toLowerCase().equals(typeName)) {
                 return item.getCanonicalName();
             }
@@ -50,7 +49,7 @@ public class AdbOsgiUtil {
     }
 
     public static String getTableName(AdbService service, Class<?> type) throws IOException {
-        for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
+        for (Class<? extends Object> item : service.getManager().getSchema().getObjectTypes())
             if (item.getName().equals(type.getName())) {
                 return item.getCanonicalName();
             }

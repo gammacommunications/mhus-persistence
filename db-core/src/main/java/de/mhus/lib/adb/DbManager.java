@@ -418,10 +418,10 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     public abstract String getMappingName(Class<?> clazz);
 
     @Override
-    public abstract <T extends Persistable> T inject(T object);
+    public abstract <T extends Object> T inject(T object);
 
     @Override
-    public abstract <T extends Persistable> DbCollection<T> getAll(Class<T> clazz)
+    public abstract <T extends Object> DbCollection<T> getAll(Class<T> clazz)
             throws MException;
 
     public abstract <T> String toQualification(AQuery<T> qualification);
@@ -455,7 +455,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     @Override
     public List<String> getTypeNames() {
         LinkedList<String> out = new LinkedList<>();
-        for (Class<? extends Persistable> o : getSchema().getObjectTypes())
+        for (Class<? extends Object> o : getSchema().getObjectTypes())
             out.add(o.getSimpleName());
         return out;
     }
@@ -476,12 +476,12 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     }
 
     @Override
-    public void delete(Persistable object) throws MException {
+    public void delete(Object object) throws MException {
         deleteObject(object);
     }
 
     @Override
-    public void save(Persistable object) throws MException {
+    public void save(Object object) throws MException {
         saveObject(object);
     }
 
@@ -570,7 +570,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         public T newInstance() throws Exception {
             @SuppressWarnings("unchecked")
             T out = (T) table.getClazz().getDeclaredConstructor().newInstance();
-            service.inject((Persistable) out);
+            service.inject(out);
             return out;
         }
 
@@ -639,7 +639,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         @SuppressWarnings("unchecked")
         @Override
         public DbCollection<T> getAll() throws MException {
-            return (DbCollection<T>) service.getAll((Class<Persistable>) table.getClazz());
+            return (DbCollection<T>) service.getAll((Class<? extends Object>) table.getClazz());
         }
 
         @Override
