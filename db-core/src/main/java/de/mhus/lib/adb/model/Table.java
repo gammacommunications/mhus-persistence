@@ -892,7 +892,7 @@ public abstract class Table extends MObject {
     /**
      * Getter for the field <code>attributes</code>.
      *
-     * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @return a object.
      */
     public IConfig getAttributes() {
         return attributes;

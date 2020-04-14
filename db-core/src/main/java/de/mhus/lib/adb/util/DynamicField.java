@@ -105,7 +105,7 @@ public class DynamicField implements DbDynamic.Field {
     /**
      * Setter for the field <code>attributes</code>.
      *
-     * @param attributes a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @param attributes a object.
      */
     public void setAttributes(IConfig attributes) {
         this.attributes = attributes;
