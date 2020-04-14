@@ -33,7 +33,7 @@ public class CaoMetaDefinition implements CaoAspect {
     private String nls;
     private long size;
     private String[] categories;
-    private CaoDriver driver;
+//    private CaoDriver driver;
 
     public CaoMetaDefinition(
             CaoMetadata meta, String name, TYPE type, String nls, long size, String... categories) {
@@ -42,7 +42,7 @@ public class CaoMetaDefinition implements CaoAspect {
         this.nls = nls;
         this.size = size;
         this.categories = categories;
-        this.driver = meta.getDriver();
+//        this.driver = meta.getDriver();
     }
 
     public TYPE getType() {
@@ -65,9 +65,9 @@ public class CaoMetaDefinition implements CaoAspect {
         return categories;
     }
 
-    public final CaoDriver getDriver() {
-        return driver;
-    }
+//    public final CaoDriver getDriver() {
+//        return driver;
+//    }
 
     public boolean hasCategory(String category) {
         if (category == null || categories == null) return false;

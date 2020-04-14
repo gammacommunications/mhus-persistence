@@ -28,8 +28,8 @@ import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.base.service.UniqueId;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgTimeInterval;
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.errors.MException;
 
@@ -148,7 +148,7 @@ public abstract class DbPool extends MJmx implements DbTransactionable {
             config = MApi.get().getCfgManager().getCfg(this, null);
         } catch (Throwable t) {
         }
-        if (config == null) config = new HashConfig();
+        if (config == null) config = new MConfig();
     }
 
     /**

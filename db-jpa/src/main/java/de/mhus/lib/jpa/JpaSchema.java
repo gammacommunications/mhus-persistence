@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.jpa;
 
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
 
 public abstract class JpaSchema extends MObject {
@@ -33,7 +33,7 @@ public abstract class JpaSchema extends MObject {
      *
      * @param config
      */
-    public void doInit(ResourceNode<?> config) {}
+    public void doInit(IConfig config) {}
 
     public String getSchemaName() {
         return getClass().getSimpleName();

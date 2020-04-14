@@ -13,32 +13,35 @@
  */
 package de.mhus.lib.test.adb;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.DbTransaction;
 import de.mhus.lib.adb.transaction.NestedTransactionException;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.config.NodeConfig;
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.util.ObjectContainer;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
 import de.mhus.lib.test.adb.model.TransactionDummy;
 import de.mhus.lib.test.adb.model.TransactionSchema;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
 
 public class TransactionTest {
 
     public DbPoolBundle createPool(String name) {
-        NodeConfig cdb = new NodeConfig();
-        NodeConfig cconfig = new NodeConfig();
+        IConfig cconfig = new MConfig();
+        IConfig cdb = cconfig.createObject("test");
+        
         cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
         cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
         cdb.setProperty("user", "sa");
         cdb.setProperty("pass", "");
-        cconfig.setConfig("test", cdb);
+
         DbPoolBundle pool = new DbPoolBundle(cconfig, null);
         return pool;
     }

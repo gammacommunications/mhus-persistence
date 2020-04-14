@@ -15,7 +15,6 @@ package de.mhus.lib.sql;
 
 import java.util.List;
 
-import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoMetaDefinition;
 import de.mhus.lib.cao.CaoMetadata;
 
@@ -27,11 +26,6 @@ import de.mhus.lib.cao.CaoMetadata;
 public class MutableMetadata extends CaoMetadata {
 
     public MutableMetadata() {
-        super(null); // TODO check !
-    }
-
-    public MutableMetadata(CaoDriver driver) {
-        super(driver);
     }
 
     /**

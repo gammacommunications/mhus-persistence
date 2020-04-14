@@ -74,7 +74,7 @@ public class MySqlDatabaseExport {
      */
     public static boolean dumpDB(IConfig props, PrintWriter writer) {
         Properties prop = new Properties();
-        for (String key : props.getNodeKeys()) prop.setProperty(key, props.getExtracted(key));
+        for (String key : props.getPropertyKeys()) prop.setProperty(key, props.getExtracted(key));
         return dumpDB(prop, writer);
     }
 

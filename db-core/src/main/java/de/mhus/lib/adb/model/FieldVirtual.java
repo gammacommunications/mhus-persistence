@@ -16,7 +16,7 @@ package de.mhus.lib.adb.model;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbResult;
@@ -28,7 +28,7 @@ public class FieldVirtual extends Field {
             Table table,
             boolean isPrimary,
             PojoAttribute<?> attribute,
-            ResourceNode<?> attr2,
+            IConfig attr2,
             String[] features)
             throws MException {
         this.attribute = (PojoAttribute<Object>) attribute;

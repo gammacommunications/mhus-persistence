@@ -26,7 +26,6 @@ import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.adb.util.Property;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.cao.util.MetadataBundle;
-import de.mhus.lib.cao.util.NoneDriver;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
@@ -1362,7 +1361,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             cIndex.clear();
             nameMapping = new HashMap<String, Object>();
             nameMappingRO = Collections.unmodifiableMap(nameMapping);
-            caoBundle = new MetadataBundle(NoneDriver.getInstance());
+            caoBundle = new MetadataBundle();
 
             // schema info
             if (schema.hasPersistentInfo()) {

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
@@ -16,7 +17,8 @@ import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.base.service.ClusterApi;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.concurrent.Lock;
-import de.mhus.lib.core.config.XmlConfigFile;
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.sql.DataSourceProvider;
 import de.mhus.lib.sql.DbConnection;
@@ -84,7 +86,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
                     // init tables
                     URL url = MSystem.locateResource(this, "SqlDbStorage.xml");
                     DbConnection con = pool.getConnection();
-                    XmlConfigFile data = new XmlConfigFile(url.openStream());
+                    IConfig data = M.l(IConfigFactory.class).read(url);
                     data.setString("prefix", prefix);
                     pool.getDialect().createStructure(data, con, null, false);
                     con.close();

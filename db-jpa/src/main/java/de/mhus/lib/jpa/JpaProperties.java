@@ -15,8 +15,8 @@ package de.mhus.lib.jpa;
 
 import java.util.Properties;
 
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 
 public class JpaProperties extends Properties {
 
@@ -30,9 +30,9 @@ public class JpaProperties extends Properties {
         super();
         this.config = config;
         // fill from config
-        IConfig cproperties = config.getNode("properties");
+        IConfig cproperties = config.getObjectOrNull("properties");
         if (cproperties != null) {
-            for (IConfig prop : cproperties.getNodes("property")) {
+            for (IConfig prop : cproperties.getObjectList("property")) {
                 setProperty(prop.getExtracted("name"), prop.getExtracted("value"));
             }
         }
@@ -40,12 +40,12 @@ public class JpaProperties extends Properties {
 
     public JpaProperties() {
         super();
-        config = new HashConfig();
+        config = new MConfig();
     }
 
     public JpaProperties(Properties arg0) {
         super(arg0);
-        config = new HashConfig();
+        config = new MConfig();
     }
 
     public JpaSchema getSchema() {

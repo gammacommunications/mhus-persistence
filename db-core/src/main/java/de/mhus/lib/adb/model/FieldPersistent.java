@@ -27,7 +27,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.io.MObjectInputStream;
 import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -53,7 +53,7 @@ public class FieldPersistent extends Field {
      * @param isPrimary a boolean.
      * @param readOnly a boolean.
      * @param attribute a {@link de.mhus.lib.core.pojo.PojoAttribute} object.
-     * @param attr2 a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @param attr2 a  object.
      * @param dynamicField a {@link de.mhus.lib.adb.DbDynamic.Field} object.
      * @param features an array of {@link java.lang.String} objects.
      * @throws de.mhus.lib.errors.MException if any.
@@ -65,7 +65,7 @@ public class FieldPersistent extends Field {
             boolean isPrimary,
             boolean readOnly,
             PojoAttribute<?> attribute,
-            ResourceNode<?> attr2,
+            IConfig attr2,
             DbDynamic.Field dynamicField,
             String[] features)
             throws MException {
@@ -111,7 +111,7 @@ public class FieldPersistent extends Field {
         defValue = attr.getString("default", null);
         nullable = attr.getBoolean("nullable", true);
         description = attr.getExtracted("description");
-        hints = MUri.explodeArray(attr.getString("hints"));
+        hints = MUri.explodeArray(attr.getString("hints", null));
         if (isPrimary) nullable = false;
 
         super.init(features);

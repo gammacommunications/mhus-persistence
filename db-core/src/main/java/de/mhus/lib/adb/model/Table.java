@@ -33,10 +33,10 @@ import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.config.ConfigList;
+import de.mhus.lib.core.config.DefaultConfigFactory;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.util.MUri;
@@ -74,7 +74,7 @@ public abstract class Table extends MObject {
     private DbPrepared sqlUpdateForce;
     private DbPrepared sqlDelete;
     private LinkedList<Feature> features = new LinkedList<Feature>();
-    protected ResourceNode<?> attributes;
+    protected IConfig attributes;
 
     /**
      * init.
@@ -111,9 +111,9 @@ public abstract class Table extends MObject {
         }
 
         if (table != null && !MString.isEmptyTrim(table.attributes())) {
-            attributes = MConfig.toConfig(table.attributes());
+            attributes = DefaultConfigFactory.readConfigFromString(table.attributes());
         } else {
-            attributes = new HashConfig();
+            attributes = new MConfig();
         }
 
         tableNameOrg = schema.getTableName(name);
@@ -692,14 +692,15 @@ public abstract class Table extends MObject {
      */
     public void createTable(DbConnection con, boolean cleanup) throws Exception {
 
-        HashConfig cstr = new HashConfig();
-        WritableResourceNode<?> ctable = cstr.createConfig("table");
+        IConfig cstr = new MConfig();
+        IConfig ctable = cstr.createObject("table");
         ctable.setProperty("name", tableNameOrg);
 
         LinkedList<String> pk = new LinkedList<String>();
 
+        ConfigList cfList = ctable.createArray("field");
         for (Field f : fList) {
-            ResourceNode<?> cfield = ctable.createConfig("field");
+            IConfig cfield = cfList.createObject();
             cfield.setProperty(Dialect.K_NAME, f.createName);
             cfield.setProperty(Dialect.K_TYPE, f.retDbType);
             cfield.setProperty(Dialect.K_SIZE, String.valueOf(f.size));
@@ -722,8 +723,9 @@ public abstract class Table extends MObject {
         }
 
         // create index entries
+        ConfigList cIndexList = cstr.createArray("index");
         for (IndexStruc item : iIdx.values()) {
-            ResourceNode<?> cindex = cstr.createConfig("index");
+            IConfig cindex = cIndexList.createObject();
             String n = item.getName();
             if (item.isUnique()) {
                 cindex.setString(Dialect.I_TYPE, Dialect.I_UNIQUE);
@@ -892,7 +894,7 @@ public abstract class Table extends MObject {
      *
      * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
      */
-    public ResourceNode<?> getAttributes() {
+    public IConfig getAttributes() {
         return attributes;
     }
 

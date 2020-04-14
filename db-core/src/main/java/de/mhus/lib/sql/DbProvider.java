@@ -15,8 +15,8 @@ package de.mhus.lib.sql;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.lang.MObject;
 
 /**
@@ -47,7 +47,7 @@ public abstract class DbProvider extends MObject {
      * @param activator
      */
     public void doInitialize(IConfig config, MActivator activator) {
-        if (config == null) config = new HashConfig();
+        if (config == null) config = new MConfig();
         if (activator == null) activator = M.l(MActivator.class);
         this.config = config;
         this.activator = activator;
@@ -61,7 +61,7 @@ public abstract class DbProvider extends MObject {
      * @return x The query string or null.
      */
     public String[] getQuery(String name) {
-        IConfig query = config.getNode("queries");
+        IConfig query = config.getObjectOrNull("queries");
         if (query == null) return new String[0];
 
         String queryLanguage = null;
@@ -69,7 +69,7 @@ public abstract class DbProvider extends MObject {
         String[] out = new String[] {queryLanguage, queryString};
 
         if (queryString == null) {
-            for (IConfig q : query.getNodes("query")) {
+            for (IConfig q : query.getObjectList("query")) {
                 if (q.getString("name", "").equals(name)) {
                     queryLanguage = q.getExtracted("language");
                     queryString = q.getExtracted("string");

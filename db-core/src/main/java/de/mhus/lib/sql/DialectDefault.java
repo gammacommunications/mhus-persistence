@@ -88,7 +88,7 @@ public class DialectDefault extends Dialect {
         DatabaseMetaData meta = con.getMetaData();
 
         // first check tables
-        for (IConfig ctable : data.getNodes("table")) {
+        for (IConfig ctable : data.getObjectList("table")) {
             String tName = ctable.getExtracted("name");
             String tPrefix = ctable.getExtracted("prefix", "");
 
@@ -123,7 +123,7 @@ public class DialectDefault extends Dialect {
                 LinkedList<String> fieldsInTable = null;
                 if (cleanup) fieldsInTable = new LinkedList<>();
 
-                for (IConfig cfield : ctable.getNodes("field")) {
+                for (IConfig cfield : ctable.getObjectList("field")) {
 
                     String fNameOrg = cfield.getExtracted("name");
                     String fName = normalizeColumnName(fNameOrg);
@@ -213,7 +213,7 @@ public class DialectDefault extends Dialect {
                 }
 
                 createTable(sth, tn, ctable);
-                for (IConfig f : ctable.getNodes("field")) {
+                for (IConfig f : ctable.getObjectList("field")) {
                     if (caoMeta != null) {
                         List<CaoMetaDefinition> metaMap = caoMeta.getMap();
                         CaoMetaDefinition.TYPE caoType = getCaoType(f);
@@ -288,10 +288,11 @@ public class DialectDefault extends Dialect {
     }
 
     protected void createTable(Statement sth, String tn, IConfig ctable) {
+        log().d("createTable",tn,ctable);
         StringBuilder sql = new StringBuilder();
         sql.append("create table " + tn + " ( ");
         boolean first = true;
-        for (IConfig f : ctable.getNodes("field")) {
+        for (IConfig f : ctable.getObjectList("field")) {
             if (!first) sql.append(",");
             sql.append(getFieldConfig(f));
             first = false;
@@ -416,7 +417,7 @@ public class DialectDefault extends Dialect {
         DatabaseMetaData meta = con.getMetaData();
 
         // first check tables
-        for (IConfig cindex : data.getNodes("index")) {
+        for (IConfig cindex : data.getObjectList("index")) {
             String iNameOrg = cindex.getExtracted("name");
             String tableName = cindex.getExtracted("table");
             String prefix = cindex.getExtracted("prefix", "");
@@ -559,7 +560,7 @@ public class DialectDefault extends Dialect {
         Statement sth = con.createStatement();
 
         // first check tables
-        for (IConfig cdata : data.getNodes("data")) {
+        for (IConfig cdata : data.getObjectList("data")) {
             // String table  = cdata.getExtracted("table");
             String select = cdata.getExtracted("select");
             String set = cdata.getExtracted("set");
@@ -596,7 +597,7 @@ public class DialectDefault extends Dialect {
             }
 
             if (accepted) {
-                for (IConfig cexecute : cdata.getNodes("execute")) {
+                for (IConfig cexecute : cdata.getObjectList("execute")) {
                     String sql = cexecute.getExtracted("sql");
                     if (sql != null) {
                         log().t("execute", sql);

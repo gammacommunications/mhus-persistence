@@ -17,7 +17,7 @@ import java.util.UUID;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.NodeConfig;
+import de.mhus.lib.core.config.MConfig;
 
 /**
  * HsqlDbProvider class.
@@ -38,7 +38,7 @@ public class HsqlDbProvider extends JdbcProvider {
      * @param memoryDbName a {@link java.lang.String} object.
      */
     public HsqlDbProvider(String memoryDbName) {
-        config = new NodeConfig();
+        config = new MConfig();
         config.setProperty("driver", "org.hsqldb.jdbcDriver");
         config.setProperty("url", "jdbc:hsqldb:mem:" + memoryDbName);
         config.setProperty("user", "sa");
@@ -55,7 +55,7 @@ public class HsqlDbProvider extends JdbcProvider {
      * @param pass a {@link java.lang.String} object.
      */
     public HsqlDbProvider(String file, String user, String pass) {
-        config = new NodeConfig();
+        config = new MConfig();
         config.setProperty("driver", "org.hsqldb.jdbcDriver");
         config.setProperty("url", "file:" + file);
         config.setProperty("user", user);

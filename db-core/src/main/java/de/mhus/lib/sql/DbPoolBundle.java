@@ -23,7 +23,6 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * The class holds a bundle of different database pools.
@@ -73,7 +72,7 @@ public class DbPoolBundle extends MObject {
         synchronized (bundle) {
             DbPool pool = bundle.get(name);
             if (pool == null) {
-                IConfig poolCon = config.getNode(name);
+                IConfig poolCon = config.getObject(name);
                 if (poolCon != null) {
                     pool = new DefaultDbPool(poolCon, activator);
                     bundle.put(name, pool);
@@ -92,12 +91,8 @@ public class DbPoolBundle extends MObject {
      */
     public String[] getNames() {
         LinkedList<String> out = new LinkedList<String>();
-        for (IConfig c : config.getNodes()) {
-            try {
-                out.add(c.getName());
-            } catch (MException e) {
-                throw new MRuntimeException(e);
-            }
+        for (IConfig c : config.getObjects()) {
+            out.add(c.getName());
         }
         return out.toArray(new String[out.size()]);
     }
@@ -106,16 +101,16 @@ public class DbPoolBundle extends MObject {
      * Getter for the field <code>config</code>.
      *
      * @param name a {@link java.lang.String} object.
-     * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @return a object.
      */
     public IConfig getConfig(String name) {
-        return config.getNode(name);
+        return config.getObjectOrNull(name);
     }
 
     /**
      * Getter for the field <code>config</code>.
      *
-     * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @return a object.
      */
     public IConfig getConfig() {
         return config;

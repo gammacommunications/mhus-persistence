@@ -39,7 +39,7 @@ public class DataSourceProvider extends DbProvider {
      *
      * @param dataSource a {@link javax.sql.DataSource} object.
      * @param dialect a {@link de.mhus.lib.sql.Dialect} object.
-     * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
+     * @param config a object.
      * @param activator a {@link de.mhus.lib.core.MActivator} object.
      */
     public DataSourceProvider(
