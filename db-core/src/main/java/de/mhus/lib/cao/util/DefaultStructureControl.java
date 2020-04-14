@@ -407,7 +407,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
                 configuration.setName(name);
                 configuration.getProperties().putAll(properties);
                 OperationResult ret = action.doExecute(configuration, null);
-                if (ret != null && ret.isSuccessful()) return ret.getResultAs();
+                if (ret != null && ret.isSuccessful()) return (CaoNode) ret.getResult();
             } catch (Exception e) {
                 log().e("createChildNode", node, name, e);
             }
@@ -441,7 +441,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
                 configuration.setNewParent(parent);
                 configuration.setRecursive(recursive);
                 OperationResult ret = action.doExecute(configuration, null);
-                if (ret != null && ret.isSuccessful()) return ret.getResultAs();
+                if (ret != null && ret.isSuccessful()) return (CaoNode) ret.getResult();
             } catch (Exception e) {
                 log().e("copyTo", node, recursive, e);
             }

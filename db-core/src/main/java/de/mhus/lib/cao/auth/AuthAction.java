@@ -69,9 +69,9 @@ public class AuthAction extends CaoAction {
 
         if (res != null) {
             if (res.isResult(CaoNode.class)) {
-                res.setResult(new AuthNode(con, res.getResultAs(CaoNode.class)));
+                res.setResult(new AuthNode(con, (CaoNode)res.getResult()));
             } else if (res.isResult(CaoList.class)) {
-                CaoList from = res.getResultAs(CaoList.class);
+                CaoList from = (CaoList)res.getResult();
                 CaoNode parent = from.getParent();
                 if (parent != null) parent = new AuthNode(con, parent);
                 CaoList to = new CaoList(parent);
