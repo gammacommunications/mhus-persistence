@@ -15,10 +15,12 @@ package de.mhus.db.karaf.xdb.adb;
 
 import java.util.Dictionary;
 
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.osgi.api.services.MOsgi;
@@ -29,6 +31,7 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     private String api = "adb";
     private String service = "common";
     private String datasource = "";
+    private ConfigurationAdmin configurationAdmin;
 
     @Activate
     public void doActivate() {
@@ -43,7 +46,7 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     @Override
     public void load() {
         try {
-            Dictionary<String, Object> prop = MOsgi.loadConfiguration(XdbKarafApiImpl.class);
+            Dictionary<String, Object> prop = MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
             if (prop.get("api") != null)
                 api = (String) prop.get("api");
             if (prop.get("service") != null)
@@ -58,11 +61,11 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     @Override
     public void save() {
         try {
-            Dictionary<String, Object> prop = MOsgi.loadConfiguration(XdbKarafApiImpl.class);
+            Dictionary<String, Object> prop = MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
             prop.put("api", api );
             prop.put("service", service );
             prop.put("datasource", datasource );
-            MOsgi.saveConfiguration(XdbKarafApiImpl.class, prop);
+            MOsgi.saveConfiguration(configurationAdmin, XdbKarafApiImpl.class, prop);
         } catch (Throwable t) {
             log().d(t);
         }
@@ -97,4 +100,10 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     public void setDatasource(String datasource) {
         this.datasource = datasource;
     }
+    
+    @Reference
+    public void setConfigurationAdmin(ConfigurationAdmin admin) {
+        configurationAdmin = admin;
+    }
+    
 }
