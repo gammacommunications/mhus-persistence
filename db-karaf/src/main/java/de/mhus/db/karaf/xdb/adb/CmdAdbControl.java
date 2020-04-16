@@ -28,7 +28,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import de.mhus.db.osgi.adb.CommonAdbService;
 import de.mhus.db.osgi.api.adb.AdbOsgiUtil;
 import de.mhus.db.osgi.api.adb.AdbService;
-import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
+import de.mhus.db.osgi.api.adb.CommonConsumer;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.sql.DbPool;
@@ -66,15 +66,17 @@ public class CmdAdbControl extends AbstractCmd {
     public Object execute2() throws Exception {
 
         if (cmd.equals("start")) {
-            CommonAdbService.instance().doStart(null);
+            CommonAdbService.instance(args[0]).doStart(null);
         }
         if (cmd.equals("consumers")) {
             ConsoleTable table = new ConsoleTable(tblOpt);
-            table.setHeaderValues("Consumer","Managed Types");
-            for (CommonAdbConsumer consumer : CommonAdbService.instance().getConsumer()) {
-                LinkedList<Class<? extends Object>> list = new LinkedList<>();
-                consumer.registerObjectTypes(list);
-                table.addRowValues(consumer.getClass().getCanonicalName(), list);
+            table.setHeaderValues("Consumer","Managed Types","Instance");
+            for (String commonName : CommonAdbService.instances()) {
+                for (CommonConsumer consumer : CommonAdbService.instance(commonName).getConsumer()) {
+                    LinkedList<Class<? extends Object>> list = new LinkedList<>();
+                    consumer.registerObjectTypes(list);
+                    table.addRowValues(consumer.getClass().getCanonicalName(), list,commonName);
+                }
             }
             table.print();
         } else

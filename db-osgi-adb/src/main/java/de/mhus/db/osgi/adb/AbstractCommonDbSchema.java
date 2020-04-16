@@ -16,15 +16,13 @@ package de.mhus.db.osgi.adb;
 import java.util.List;
 
 import de.mhus.db.osgi.api.adb.AbstractDbSchema;
-import de.mhus.db.osgi.api.adb.AdbService;
-import de.mhus.db.osgi.api.adb.CommonAdbConsumer;
+import de.mhus.db.osgi.api.adb.CommonConsumer;
 import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
 import de.mhus.lib.adb.DbObject;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.DbLockObject;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbResult;
@@ -36,30 +34,24 @@ import de.mhus.lib.sql.DbResult;
  * @author mikehummel
  *
  */
-public class CommonDbSchema extends AbstractDbSchema {
+public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
 
-    private CommonAdbService admin;
-    private DbAccessManager accessManager;
+    protected AbstractCommonService admin;
+    protected DbAccessManager accessManager;
 
-    public CommonDbSchema() {
-        init();
-    }
-
-    public CommonDbSchema(CommonAdbService admin) {
+    public AbstractCommonDbSchema(AbstractCommonService admin) {
         this.admin = admin;
         init();
     }
 
-    private void init() {
-        tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "adb_");
-    }
+    protected abstract void init();
 
     @Override
     public void findObjectTypes(List<Class<? extends Object>> list) {
 
         list.add(DbLockObject.class); // needed for object locking
 
-        for (CommonAdbConsumer schema : admin.getConsumer()) {
+        for (CommonConsumer schema : admin.getConsumer()) {
             schema.registerObjectTypes(list);
         }
     }
@@ -85,7 +77,7 @@ public class CommonDbSchema extends AbstractDbSchema {
         return accessManager;
     }
 
-    private class MyAccessManager extends DbAccessManager {
+    protected class MyAccessManager extends DbAccessManager {
 
         @Override
         public void hasAccess(

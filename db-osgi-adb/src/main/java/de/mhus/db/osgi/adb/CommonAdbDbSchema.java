@@ -13,28 +13,25 @@
  */
 package de.mhus.db.osgi.adb;
 
-import org.osgi.service.component.annotations.Component;
-
 import de.mhus.db.osgi.api.adb.AdbService;
-import de.mhus.lib.adb.DbSchema;
-import de.mhus.lib.errors.MException;
+import de.mhus.lib.core.MApi;
 
-@Component(service = AdbService.class, immediate = true)
-public class CommonAdbService extends AbstractCommonService {
+/**
+ * Common used DB Schema, created by CommonAdbService for all
+ * CommonAdbProvider services.
+ * 
+ * @author mikehummel
+ *
+ */
+public class CommonAdbDbSchema extends AbstractCommonDbSchema {
 
-    @Override
-    protected DbSchema doCreateSchema() {
-        return new CommonAdbDbSchema(this);
+    public CommonAdbDbSchema(CommonAdbService admin) {
+        super(admin);
     }
 
     @Override
-    public void doInitialize() throws MException {
-        
-    }
-
-    @Override
-    protected String getCommonServiceName() {
-        return "adb";
+    protected void init() {
+        tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "adb_");
     }
 
 }
