@@ -16,7 +16,7 @@ package de.mhus.db.osgi.adb;
 import java.util.List;
 
 import de.mhus.db.osgi.api.adb.AbstractDbSchema;
-import de.mhus.db.osgi.api.adb.CommonConsumer;
+import de.mhus.db.osgi.api.adb.CommonDbConsumer;
 import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
@@ -51,7 +51,7 @@ public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
 
         list.add(DbLockObject.class); // needed for object locking
 
-        for (CommonConsumer schema : admin.getConsumer()) {
+        for (CommonDbConsumer schema : admin.getConsumer()) {
             schema.registerObjectTypes(list);
         }
     }

@@ -25,10 +25,10 @@ import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbService;
 
-public abstract class AbstractCommonAdbConsumer extends MLog implements CommonConsumer {
+public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDbConsumer {
 
     public static CfgLong CFG_TIMEOUT =
-            new CfgLong(CommonConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
+            new CfgLong(CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
     protected DbManager manager;
 
     @Override

@@ -29,7 +29,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import de.mhus.db.osgi.api.adb.CommonConsumer;
+import de.mhus.db.osgi.api.adb.CommonDbConsumer;
 import de.mhus.db.osgi.api.adb.Reference;
 import de.mhus.db.osgi.api.adb.Reference.TYPE;
 import de.mhus.db.osgi.api.adb.ReferenceCollector;
@@ -55,8 +55,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
     private static HashMap<String,AbstractCommonService> instances = new HashMap<>();
 
-    private ServiceTracker<CommonConsumer, CommonConsumer> tracker;
-    private TreeMap<String, CommonConsumer> schemaList = new TreeMap<>();
+    private ServiceTracker<CommonDbConsumer, CommonDbConsumer> tracker;
+    private TreeMap<String, CommonDbConsumer> schemaList = new TreeMap<>();
 
     private BundleContext context;
 
@@ -126,7 +126,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
                         try {
                             tracker =
                                     new ServiceTracker<>(
-                                            context, CommonConsumer.class, new MyTrackerCustomizer());
+                                            context, CommonDbConsumer.class, new MyTrackerCustomizer());
                             tracker.open();
                         } finally {
                             status = STATUS.STARTED;
@@ -192,15 +192,15 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     }
 
     private class MyTrackerCustomizer
-            implements ServiceTrackerCustomizer<CommonConsumer, CommonConsumer> {
+            implements ServiceTrackerCustomizer<CommonDbConsumer, CommonDbConsumer> {
 
         @Override
-        public CommonConsumer addingService(ServiceReference<CommonConsumer> reference) {
+        public CommonDbConsumer addingService(ServiceReference<CommonDbConsumer> reference) {
 
             if (!AbstractCommonService.this.acceptService(reference))
                 return null;
             
-            CommonConsumer service = context.getService(reference);
+            CommonDbConsumer service = context.getService(reference);
             String name = service.getClass().getCanonicalName();
             service.doInitialize(AbstractCommonService.this.getManager());
 
@@ -217,7 +217,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
         @Override
         public void modifiedService(
-                ServiceReference<CommonConsumer> reference, CommonConsumer service) {
+                ServiceReference<CommonDbConsumer> reference, CommonDbConsumer service) {
 
             if (!AbstractCommonService.this.acceptService(reference))
                 return;
@@ -229,7 +229,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
         @Override
         public void removedService(
-                ServiceReference<CommonConsumer> reference, CommonConsumer service) {
+                ServiceReference<CommonDbConsumer> reference, CommonDbConsumer service) {
 
             if (!AbstractCommonService.this.acceptService(reference))
                 return;
@@ -252,7 +252,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         }
     }
 
-    protected boolean acceptService(ServiceReference<CommonConsumer> reference) {
+    protected boolean acceptService(ServiceReference<CommonDbConsumer> reference) {
         String name = getCommonServiceName();
         Object refName = reference.getProperty("commonService");
         return name.equals(refName);
@@ -260,7 +260,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
     protected abstract String getCommonServiceName();
 
-    protected void servicePostInitialize(CommonConsumer service, String name) {
+    protected void servicePostInitialize(CommonDbConsumer service, String name) {
         MThread.asynchron(
                 new Runnable() {
                     @Override
@@ -282,9 +282,9 @@ public abstract class AbstractCommonService extends AbstractAdbService {
                 });
     }
 
-    public CommonConsumer[] getConsumer() {
+    public CommonDbConsumer[] getConsumer() {
         synchronized (schemaList) {
-            return schemaList.values().toArray(new CommonConsumer[schemaList.size()]);
+            return schemaList.values().toArray(new CommonDbConsumer[schemaList.size()]);
         }
     }
 
@@ -311,9 +311,9 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     // ----
     // Access
     
-    public CommonConsumer getConsumer(String type) throws MException {
+    public CommonDbConsumer getConsumer(String type) throws MException {
         if (type == null) throw new MException("type is null");
-        CommonConsumer ret =  schemaList.get(type);
+        CommonDbConsumer ret =  schemaList.get(type);
         if (ret == null) throw new MException("Access Controller not found", type);
         return ret;
     }
@@ -324,7 +324,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 //XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
 //        if (item != null) return item;
 
-        CommonConsumer controller = getConsumer(obj.getClass().getCanonicalName());
+        CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
@@ -340,7 +340,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
 //        if (item != null) return item;
 
-        CommonConsumer controller = getConsumer(obj.getClass().getCanonicalName());
+        CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
@@ -356,7 +356,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
 //        if (item != null) return item;
 
-        CommonConsumer controller = getConsumer(obj.getClass().getCanonicalName());
+        CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
@@ -371,7 +371,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 //        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
 //        if (item != null) return item;
 
-        CommonConsumer controller = getConsumer(obj.getClass().getCanonicalName());
+        CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
@@ -383,14 +383,14 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
     @SuppressWarnings("unchecked")
     public <T extends Object> T getObject(String type, UUID id) throws MException {
-        CommonConsumer controller = getConsumer(type);
+        CommonDbConsumer controller = getConsumer(type);
         if (controller == null) return null;
         return (T) controller.getObject(type, id);
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Object> T getObject(String type, String id) throws MException {
-        CommonConsumer controller = getConsumer(type);
+        CommonDbConsumer controller = getConsumer(type);
         if (controller == null) return null;
         return (T) controller.getObject(type, id);
     }
@@ -442,12 +442,12 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
         if (object == null) return;
 
-        HashSet<CommonConsumer> distinct = new HashSet<CommonConsumer>();
+        HashSet<CommonDbConsumer> distinct = new HashSet<CommonDbConsumer>();
         synchronized (schemaList) {
             distinct.addAll(schemaList.values());
         }
 
-        for (CommonConsumer service : distinct)
+        for (CommonDbConsumer service : distinct)
             try {
                 service.collectReferences(object, collector);
             } catch (Throwable t) {

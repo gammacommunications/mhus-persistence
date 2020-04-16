@@ -19,7 +19,7 @@ import java.util.UUID;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbService;
 
-public interface CommonConsumer {
+public interface CommonDbConsumer {
 
     void registerObjectTypes(List<Class<? extends Object>> list);
 
