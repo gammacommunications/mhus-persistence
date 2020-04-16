@@ -27,8 +27,8 @@ import de.mhus.osgi.api.services.MOsgi;
 public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
 
     private String api = "adb";
-    private String service = null;
-    private String datasource = null;
+    private String service = "common";
+    private String datasource = "";
 
     @Activate
     public void doActivate() {
@@ -44,9 +44,12 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     public void load() {
         try {
             Dictionary<String, Object> prop = MOsgi.loadConfiguration(XdbKarafApiImpl.class);
-            api = (String) prop.get("api");
-            service = (String) prop.get("service");
-            datasource = (String) prop.get("datasource");
+            if (prop.get("api") != null)
+                api = (String) prop.get("api");
+            if (prop.get("service") != null)
+                service = (String) prop.get("service");
+            if (prop.get("datasource") != null)
+                datasource = (String) prop.get("datasource");
         } catch (Throwable t) {
             log().d(t);
         }
