@@ -13,16 +13,15 @@
  */
 package de.mhus.db.karaf.xdb.adb;
 
-import java.io.File;
+import java.util.Dictionary;
 
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 
-import de.mhus.db.karaf.xdb.cmd.CmdUse;
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.util.MUri;
+import de.mhus.osgi.api.services.MOsgi;
 
 @Component
 public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
@@ -36,22 +35,18 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
         load();
     }
 
+    @Modified
+    public void modified(ComponentContext ctx) {
+        load();
+    }
+
     @Override
     public void load() {
         try {
-            File f = getFile();
-            if (f.exists()) {
-                log().d("load from", f);
-                MUri uri = MUri.toUri(MFile.readFile(f).trim());
-                if ("xdb".equals(uri.getScheme())) {
-                    if (uri.getPathParts().length > 0) api = uri.getPathParts()[0];
-                    if (uri.getPathParts().length > 1) service = uri.getPathParts()[1];
-                    if (uri.getPathParts().length > 2) datasource = uri.getPathParts()[2];
-                }
-                log().i("XDB loaded", uri);
-            } else {
-                log().d("not found", f);
-            }
+            Dictionary<String, Object> prop = MOsgi.loadConfiguration(XdbKarafApiImpl.class);
+            api = (String) prop.get("api");
+            service = (String) prop.get("service");
+            datasource = (String) prop.get("datasource");
         } catch (Throwable t) {
             log().d(t);
         }
@@ -59,20 +54,15 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
 
     @Override
     public void save() {
-        File f = getFile();
-        String content =
-                "xdb:"
-                        + MUri.encode(api)
-                        + "/"
-                        + MUri.encode(service)
-                        + "/"
-                        + MUri.encode(datasource);
-        log().d("save to", f);
-        MFile.writeFile(f, content);
-    }
-
-    private File getFile() {
-        return MApi.getFile(MApi.SCOPE.ETC, CmdUse.class.getCanonicalName() + ".cfg");
+        try {
+            Dictionary<String, Object> prop = MOsgi.loadConfiguration(XdbKarafApiImpl.class);
+            prop.put("api", api );
+            prop.put("service", service );
+            prop.put("datasource", datasource );
+            MOsgi.saveConfiguration(XdbKarafApiImpl.class, prop);
+        } catch (Throwable t) {
+            log().d(t);
+        }
     }
 
     @Override
