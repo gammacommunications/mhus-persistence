@@ -59,7 +59,7 @@ public class CommonAdbService extends AbstractAdbService {
     private static final CfgBoolean CFG_ENABLED =
             new CfgBoolean(CommonAdbService.class, "enabled", true);
     private static final CfgInt CFG_INIT_RETRY_SEC =
-            new CfgInt(CommonAdbService.class, "initRetrySec", 10);
+            new CfgInt(CommonAdbService.class, "initRetrySec", 1); // XXX should be 10 to 30 by default and listen for events
     private static final CfgString CFG_DATASOURCE =
             new CfgString(CommonAdbService.class, "dataSourceName", "adb/common").updateAction(s -> {
                 if (instance() != null)
