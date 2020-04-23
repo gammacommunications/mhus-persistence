@@ -117,7 +117,7 @@ public class CmdSql extends AbstractCmd {
 
                                     @Override
                                     public int compare(String o1, String o2) {
-                                        return -Integer.compare(M.c(o1, 0), M.c(o2, 0));
+                                        return -Integer.compare(M.to(o1, 0), M.to(o2, 0));
                                     }
                                 });
                         table.print(System.out);
