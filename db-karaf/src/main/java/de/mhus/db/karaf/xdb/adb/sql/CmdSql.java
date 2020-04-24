@@ -22,9 +22,9 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.config.DefaultConfigFactory;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.sql.analytics.SqlAnalytics;
 import de.mhus.lib.sql.analytics.SqlAnalyzer;
@@ -85,7 +85,7 @@ public class CmdSql extends AbstractCmd {
                     }
 
                     if (parameters != null)
-                        analyzer.doConfigure(DefaultConfigFactory.readFromProperties(MProperties.explodeToMProperties(parameters)));
+                        analyzer.doConfigure(IConfig.readFromProperties(IProperties.explodeToMProperties(parameters)));
 
                     SqlAnalytics.setAnalyzer(analyzer);
                     System.out.println(analyzer);

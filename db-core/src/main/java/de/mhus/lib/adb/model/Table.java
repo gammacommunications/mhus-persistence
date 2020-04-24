@@ -34,7 +34,6 @@ import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.DefaultConfigFactory;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.lang.MObject;
@@ -111,7 +110,7 @@ public abstract class Table extends MObject {
         }
 
         if (table != null && !MString.isEmptyTrim(table.attributes())) {
-            attributes = DefaultConfigFactory.readConfigFromString(table.attributes());
+            attributes = IConfig.readConfigFromString(table.attributes());
         } else {
             attributes = new MConfig();
         }
