@@ -149,7 +149,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     @Override
     protected DataSource getDataSource() {
         DataSource ds = DataSourceUtil.getDataSource(dataSourceName,context);
-        if (ds == null) log().w("DataSource is unknown", dataSourceName);
+        if (ds == null) log().t("DataSource is unknown", dataSourceName);
         return ds;
     }
     
