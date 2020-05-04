@@ -25,7 +25,7 @@ import de.mhus.lib.adb.transaction.NestedTransactionException;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.util.ObjectContainer;
+import de.mhus.lib.core.util.Value;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
 import de.mhus.lib.test.adb.model.TransactionDummy;
@@ -91,8 +91,8 @@ public class TransactionTest {
         // concurrent locking ...
         DbTransaction.lockDefault(obj1, obj2);
 
-        final ObjectContainer<Boolean> done = new ObjectContainer<>(false);
-        final ObjectContainer<String> fail = new ObjectContainer<>();
+        final Value<Boolean> done = new Value<>(false);
+        final Value<String> fail = new Value<>();
 
         new MThread(
                         new Runnable() {
@@ -102,7 +102,7 @@ public class TransactionTest {
                                 // concurrent
                                 try {
                                     DbTransaction.lock(2000, obj1, obj2);
-                                    fail.setObject("Concurrent Lock Possible");
+                                    fail.setValue("Concurrent Lock Possible");
                                     return;
                                 } catch (Throwable t) {
                                     System.out.println(t);
@@ -114,14 +114,14 @@ public class TransactionTest {
                                 DbTransaction.lock(2000, obj3);
                                 DbTransaction.releaseLock();
 
-                                done.setObject(true);
+                                done.setValue(true);
                             }
                         })
                 .start();
 
-        while (done.getObject() == false && fail.getObject() == null) MThread.sleep(200);
+        while (done.getValue() == false && fail.getValue() == null) MThread.sleep(200);
 
-        if (fail.getObject() != null) fail(fail.getObject());
+        if (fail.getValue() != null) fail(fail.getValue());
 
         DbTransaction.releaseLock();
     }
