@@ -16,8 +16,8 @@ package de.mhus.lib.adb.model;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.IRelationObject;
 import de.mhus.lib.annotations.adb.DbRelation;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.sql.DbConnection;
 
 /**

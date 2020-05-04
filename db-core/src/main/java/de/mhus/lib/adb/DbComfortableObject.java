@@ -14,7 +14,7 @@
 package de.mhus.lib.adb;
 
 import de.mhus.lib.basics.consts.GenerateHidden;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 

@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import de.mhus.lib.adb.model.Field;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.core.util.Table;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;

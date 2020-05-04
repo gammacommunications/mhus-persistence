@@ -14,7 +14,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.cfg.CfgTimeInterval;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public abstract class InternalDbConnection extends MObject implements DbConnection {
 

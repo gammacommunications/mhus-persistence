@@ -14,7 +14,7 @@
 package de.mhus.lib.adb.model;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbResult;

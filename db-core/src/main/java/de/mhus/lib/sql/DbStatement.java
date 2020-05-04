@@ -16,7 +16,7 @@ package de.mhus.lib.sql;
 import java.sql.SQLException;
 import java.util.Map;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 /**
  * This represents a qyery statement. Use it to execute queries.

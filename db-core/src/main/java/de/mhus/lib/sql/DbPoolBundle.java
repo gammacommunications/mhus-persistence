@@ -21,7 +21,7 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 /**

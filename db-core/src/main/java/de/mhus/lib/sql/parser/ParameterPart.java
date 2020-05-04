@@ -24,11 +24,11 @@ import java.util.Map;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.core.parser.ParseReader;
 import de.mhus.lib.core.parser.StringParsingPart;
 import de.mhus.lib.core.util.FallbackMap;
+import de.mhus.lib.core.util.Raw;
 import de.mhus.lib.sql.DbStatement;
 
 public class ParameterPart extends StringParsingPart {

@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.osgi.api.services.MOsgi;
 
 @Component

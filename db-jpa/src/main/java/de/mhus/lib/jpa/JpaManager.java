@@ -24,7 +24,7 @@ import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.metamodel.Metamodel;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 /**
  * JpaManager class.

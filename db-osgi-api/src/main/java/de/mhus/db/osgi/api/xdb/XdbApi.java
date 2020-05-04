@@ -15,7 +15,7 @@ package de.mhus.db.osgi.api.xdb;
 
 import java.util.List;
 
-import de.mhus.lib.core.lang.Adaptable;
+import de.mhus.lib.basics.Adaptable;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;

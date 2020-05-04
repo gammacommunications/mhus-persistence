@@ -17,8 +17,8 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.base.service.UniqueId;
 import de.mhus.lib.core.cfg.CfgBoolean;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.Parser;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 /**

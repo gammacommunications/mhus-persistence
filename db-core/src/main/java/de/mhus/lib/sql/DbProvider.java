@@ -17,7 +17,7 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 /**
  * Provide the database connections and other db specific stuff. The default implementation is the

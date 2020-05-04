@@ -14,7 +14,7 @@
 package de.mhus.lib.jpa;
 
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public abstract class JpaSchema extends MObject {
 

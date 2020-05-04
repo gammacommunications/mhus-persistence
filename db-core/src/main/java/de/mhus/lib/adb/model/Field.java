@@ -21,8 +21,8 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbResult;
 

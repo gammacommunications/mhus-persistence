@@ -27,7 +27,7 @@ import javax.persistence.metamodel.Metamodel;
 
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 /**
  * JpaEntityManager class.

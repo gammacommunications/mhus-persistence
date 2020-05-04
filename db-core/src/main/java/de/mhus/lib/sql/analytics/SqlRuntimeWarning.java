@@ -18,8 +18,8 @@ import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.system.CfgManager;
-import de.mhus.lib.core.system.IApiInternal;
+import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.mapi.IApiInternal;
 
 public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator {
 

@@ -29,9 +29,9 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.io.MObjectInputStream;
-import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.core.util.Raw;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbResult;
 
