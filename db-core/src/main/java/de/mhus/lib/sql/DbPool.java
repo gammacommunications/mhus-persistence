@@ -25,12 +25,12 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.base.service.UniqueId;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgTimeInterval;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.jmx.MJmx;
+import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
 
 /**

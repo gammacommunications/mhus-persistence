@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.sql.Connection;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.base.service.UniqueId;
 import de.mhus.lib.core.parser.Parser;
+import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.parser.SimpleQueryCompiler;
 
