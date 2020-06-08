@@ -32,6 +32,7 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.concurrent.ThreadLock;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
@@ -40,6 +41,7 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
 import de.mhus.lib.sql.DbStatement;
 import de.mhus.lib.sql.SqlDialectCreateContext;
+import io.opentracing.Scope;
 
 /**
  * The implementation hold the table definitions and handle all operations on the objects. It's the
@@ -169,7 +171,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         Class<?> clazz = schema.findClassForObject(object, this);
         String s = createSqlSelect(clazz, "*", qualification);
-        log().d("getByQualification", registryName == null ? clazz : registryName, s, attributes);
+        log().t("getByQualification", registryName == null ? clazz : registryName, s, attributes);
         return executeQuery(con, object, registryName, s, attributes);
     }
 
@@ -400,26 +402,33 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        log().t("query", clazz, registryName, query, attributes);
-        Map<String, Object> map = null;
-
-        DbConnection myCon = null;
-        if (con == null) {
+        
+        try (Scope scope = ITracer.get().enter("executeQuery", 
+                "class", clazz, 
+                "registryName", registryName, 
+                "query", query, 
+                "attributes", attributes)) {
+            log().t("query", clazz, registryName, query, attributes);
+            Map<String, Object> map = null;
+    
+            DbConnection myCon = null;
+            if (con == null) {
+                try {
+                    myCon = schema.getConnection(pool);
+                } catch (Throwable t) {
+                    throw new MException(con, query, attributes, t);
+                }
+                con = myCon;
+            }
+            if (attributes == null) map = nameMappingRO;
+            else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
             try {
-                myCon = schema.getConnection(pool);
+                DbStatement sth = con.createStatement(query);
+                DbResult res = sth.executeQuery(map);
+                return new DbCollectionImpl<T>(this, con, myCon != null, registryName, clazz, res);
             } catch (Throwable t) {
                 throw new MException(con, query, attributes, t);
             }
-            con = myCon;
-        }
-        if (attributes == null) map = nameMappingRO;
-        else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
-        try {
-            DbStatement sth = con.createStatement(query);
-            DbResult res = sth.executeQuery(map);
-            return new DbCollectionImpl<T>(this, con, myCon != null, registryName, clazz, res);
-        } catch (Throwable t) {
-            throw new MException(con, query, attributes, t);
         }
     }
 
@@ -438,38 +447,43 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection con, String attributeName, String query, Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        log().t("count", attributeName, query, attributes);
-        Map<String, Object> map = null;
-
-        DbConnection myCon = null;
-        if (con == null) {
+        try (Scope scope = ITracer.get().enter("executeQuery", 
+                "attributeName", attributeName,
+                "query", query, 
+                "attributes", attributes)) {
+            log().t("count", attributeName, query, attributes);
+            Map<String, Object> map = null;
+    
+            DbConnection myCon = null;
+            if (con == null) {
+                try {
+                    myCon = schema.getConnection(pool);
+                } catch (Throwable t) {
+                    throw new MException(con, query, attributes, t);
+                }
+                con = myCon;
+            }
+            if (attributes == null) map = nameMappingRO;
+            else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
+            DbStatement sth = null;
+            DbResult res = null;
             try {
-                myCon = schema.getConnection(pool);
+                sth = con.createStatement(query);
+                res = sth.executeQuery(map);
+                long count = -1;
+                while (res.next()) count = res.getLong(attributeName);
+                return count;
+    
             } catch (Throwable t) {
                 throw new MException(con, query, attributes, t);
-            }
-            con = myCon;
-        }
-        if (attributes == null) map = nameMappingRO;
-        else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
-        DbStatement sth = null;
-        DbResult res = null;
-        try {
-            sth = con.createStatement(query);
-            res = sth.executeQuery(map);
-            long count = -1;
-            while (res.next()) count = res.getLong(attributeName);
-            return count;
-
-        } catch (Throwable t) {
-            throw new MException(con, query, attributes, t);
-        } finally {
-            try {
-                if (res != null) res.close();
-                if (sth != null) sth.close();
-                if (myCon != null) schema.closeConnection(pool, myCon);
-            } catch (Throwable t) {
-                log().w(query, attributeName, t);
+            } finally {
+                try {
+                    if (res != null) res.close();
+                    if (sth != null) sth.close();
+                    if (myCon != null) schema.closeConnection(pool, myCon);
+                } catch (Throwable t) {
+                    log().w(query, attributeName, t);
+                }
             }
         }
     }
@@ -479,41 +493,46 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection con, String alias, String query, Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        log().t("query", alias, query, attributes);
-        Map<String, Object> map = null;
-
-        DbConnection myCon = null;
-        if (con == null) {
+        try (Scope scope = ITracer.get().enter("executeQuery", 
+                "alias", alias, 
+                "query", query, 
+                "attributes", attributes)) {
+            log().t("query", alias, query, attributes);
+            Map<String, Object> map = null;
+    
+            DbConnection myCon = null;
+            if (con == null) {
+                try {
+                    myCon = schema.getConnection(pool);
+                } catch (Throwable t) {
+                    throw new MException(con, query, attributes, t);
+                }
+                con = myCon;
+            }
+            if (attributes == null) map = nameMappingRO;
+            else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
             try {
-                myCon = schema.getConnection(pool);
+                DbStatement sth = con.createStatement(query);
+                DbResult res = sth.executeQuery(map);
+                LinkedList<T> out = new LinkedList<>();
+                while (res.next()) {
+                    out.add((T) res.getObject(alias));
+                }
+                try {
+                    res.close();
+                    sth.close();
+                } catch (Throwable t) {
+                    log().w(query, alias, t);
+                }
+                return out;
             } catch (Throwable t) {
                 throw new MException(con, query, attributes, t);
-            }
-            con = myCon;
-        }
-        if (attributes == null) map = nameMappingRO;
-        else map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
-        try {
-            DbStatement sth = con.createStatement(query);
-            DbResult res = sth.executeQuery(map);
-            LinkedList<T> out = new LinkedList<>();
-            while (res.next()) {
-                out.add((T) res.getObject(alias));
-            }
-            try {
-                res.close();
-                sth.close();
-            } catch (Throwable t) {
-                log().w(query, alias, t);
-            }
-            return out;
-        } catch (Throwable t) {
-            throw new MException(con, query, attributes, t);
-        } finally {
-            try {
-                if (myCon != null) myCon.close();
-            } catch (Throwable t) {
-                log().w(query, alias, t);
+            } finally {
+                try {
+                    if (myCon != null) myCon.close();
+                } catch (Throwable t) {
+                    log().w(query, alias, t);
+                }
             }
         }
     }
@@ -574,7 +593,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             }
         }
 
-        log().d("get", registryName, keys);
+        log().t("get", registryName, keys);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -635,7 +654,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     public boolean existsObject(DbConnection con, String registryName, Object... keys)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-
+        log().t("existsObject",registryName, keys);
         //		registryName = registryName.toLowerCase();
 
         DbConnection myCon = null;
@@ -751,7 +770,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             registryName = getRegistryName(clazz);
         }
 
-        log().d("reload", registryName, object);
+        log().t("reload", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -861,7 +880,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             }
         }
 
-        log().d("changed", registryName, object, ret);
+        log().t("changed", registryName, object, ret);
         return ret;
     }
 
@@ -969,7 +988,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                         registryName);
             registryName = getRegistryName(clazz);
         }
-        log().d("create", registryName, object);
+        log().t("create", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -1047,7 +1066,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                         object.getClass().getCanonicalName());
             registryName = getRegistryName(clazz);
         }
-        log().d("save", registryName, object);
+        log().t("save", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -1123,7 +1142,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                         object.getClass().getCanonicalName());
             registryName = getRegistryName(clazz);
         }
-        log().d("save force", registryName, object);
+        log().t("save force", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -1199,7 +1218,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                         object.getClass().getCanonicalName());
             registryName = getRegistryName(clazz);
         }
-        log().d("save force", registryName, object);
+        log().t("save force", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -1272,7 +1291,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                         object.getClass().getCanonicalName());
             registryName = getRegistryName(clazz);
         }
-        log().d("delete", registryName, object);
+        log().t("delete", registryName, object);
         Table c = cIndex.get(registryName);
         if (c == null) throw new MException("class definition not found in schema", registryName);
 
@@ -1351,7 +1370,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         if (nameMapping != null) return;
 
-        try {
+        try (Scope scope = ITracer.get().enter("initDatabase", "cleanup", cleanup)) {
             schema.resetObjectTypes();
             pool.cleanup(true);
             Class<? extends Object>[] types = schema.getObjectTypes();

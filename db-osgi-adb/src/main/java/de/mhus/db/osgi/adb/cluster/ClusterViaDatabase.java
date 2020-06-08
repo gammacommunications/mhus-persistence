@@ -18,6 +18,7 @@ import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.IConfigFactory;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.service.ClusterApi;
 import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.sql.DataSourceProvider;
@@ -28,6 +29,7 @@ import de.mhus.lib.sql.DbStatement;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
 import de.mhus.osgi.api.util.DataSourceUtil;
+import io.opentracing.Scope;
 
 public class ClusterViaDatabase extends MLog implements ClusterApi {
 
@@ -213,38 +215,56 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
             this.name = name;
         }
 
+        @SuppressWarnings("resource")
         @Override
         public Lock lock() {
-            while (true) {
-                Con con = tryLock(name);
-                if (con != null) {
-                    this.con = con;
-                    lockStart = System.currentTimeMillis();
-                    lockCnt++;
-                    lockOwner = MSystem.findCalling(3) + " " + Thread.currentThread().getId();
-                    lockStacktrace = MCast.toString("", Thread.currentThread().getStackTrace());
-                    return this;
+            Scope scope = null;
+            try {
+                while (true) {
+                    Con con = tryLock(name);
+                    if (con != null) {
+                        this.con = con;
+                        lockStart = System.currentTimeMillis();
+                        lockCnt++;
+                        lockOwner = MSystem.findCalling(3) + " " + Thread.currentThread().getId();
+                        lockStacktrace = MCast.toString("", Thread.currentThread().getStackTrace());
+                        return this;
+                    }
+                    if (scope != null)
+                        scope = ITracer.get().enter("DbLock.lock", "name", getName());
+                    MThread.sleep(200);
                 }
-                MThread.sleep(200);
+            } finally {
+                if (scope != null)
+                    scope.close();
             }
         }
 
+        @SuppressWarnings("resource")
         @Override
         public boolean lock(long timeout) {
             long start = System.currentTimeMillis();
-            while (true) {
-                Con con = tryLock(name);
-                if (con != null) {
-                    this.con = con;
-                    lockStart = System.currentTimeMillis();
-                    lockCnt++;
-                    lockOwner = MSystem.findCalling(3) + " " + Thread.currentThread().getId();
-                    lockStacktrace = MCast.toString("", Thread.currentThread().getStackTrace());
-                    return true;
+            Scope scope = null;
+            try {
+                while (true) {
+                    Con con = tryLock(name);
+                    if (con != null) {
+                        this.con = con;
+                        lockStart = System.currentTimeMillis();
+                        lockCnt++;
+                        lockOwner = MSystem.findCalling(3) + " " + Thread.currentThread().getId();
+                        lockStacktrace = MCast.toString("", Thread.currentThread().getStackTrace());
+                        return true;
+                    }
+                    if (scope != null)
+                        scope = ITracer.get().enter("waitUntilUnlock", "name", getName());
+                    if (MPeriod.isTimeOut(start, timeout))
+                        return false;
+                    MThread.sleep(200);
                 }
-                if (MPeriod.isTimeOut(start, timeout))
-                    return false;
-                MThread.sleep(200);
+            } finally {
+                if (scope != null)
+                    scope.close();
             }
         }
 
