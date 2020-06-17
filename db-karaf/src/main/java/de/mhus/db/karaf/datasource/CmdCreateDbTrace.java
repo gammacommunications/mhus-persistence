@@ -71,7 +71,7 @@ public class CmdCreateDbTrace extends AbstractCmd {
             File deployFolder = new File(karafBase, "deploy");
             File outFile = new File(deployFolder, "datasource-trace_" + target + ".xml");
 
-            HashMap<String, String> properties = new HashMap<String, String>();
+            HashMap<String, Object> properties = new HashMap<>();
             properties.put("name", target);
             properties.put("source", source);
             String templateFile = "datasource-trace.xml";

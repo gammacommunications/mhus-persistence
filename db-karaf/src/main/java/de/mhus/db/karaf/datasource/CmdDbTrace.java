@@ -23,8 +23,6 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.osgi.framework.BundleContext;
 
-import de.mhus.db.karaf.datasource.TraceDataSource;
-import de.mhus.db.karaf.datasource.TracedConnection;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 import de.mhus.osgi.api.util.DataSourceUtil;
 

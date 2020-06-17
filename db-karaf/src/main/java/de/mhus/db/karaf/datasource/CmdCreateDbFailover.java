@@ -70,7 +70,7 @@ public class CmdCreateDbFailover extends AbstractCmd {
             File deployFolder = new File(karafBase, "deploy");
             File outFile = new File(deployFolder, "datasource-failover_" + target + ".xml");
 
-            HashMap<String, String> properties = new HashMap<String, String>();
+            HashMap<String, Object> properties = new HashMap<>();
             properties.put("name", target);
             properties.put("source", sources);
             String templateFile = "datasource-failover.xml";
