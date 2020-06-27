@@ -25,7 +25,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
-import de.mhus.osgi.api.services.MOsgi;
+import de.mhus.osgi.api.MOsgi;
 
 public class AdbOsgiUtil {
 

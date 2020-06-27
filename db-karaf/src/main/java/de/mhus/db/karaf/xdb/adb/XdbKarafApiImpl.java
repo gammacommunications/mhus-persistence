@@ -23,7 +23,7 @@ import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 import de.mhus.lib.core.util.MObject;
-import de.mhus.osgi.api.services.MOsgi;
+import de.mhus.osgi.api.MOsgi;
 
 @Component
 public class XdbKarafApiImpl extends MObject implements XdbKarafApi {

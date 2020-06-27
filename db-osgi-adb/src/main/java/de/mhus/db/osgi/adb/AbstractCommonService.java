@@ -46,8 +46,8 @@ import de.mhus.lib.sql.DataSourceProvider;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.PseudoDbPool;
+import de.mhus.osgi.api.MOsgi;
 import de.mhus.osgi.api.aaa.ContextCachedItem;
-import de.mhus.osgi.api.services.MOsgi;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 //@Component(service = AdbService.class, immediate = true)

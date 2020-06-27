@@ -30,8 +30,8 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
-import de.mhus.osgi.api.services.MOsgi;
-import de.mhus.osgi.api.services.MOsgi.Service;
+import de.mhus.osgi.api.MOsgi;
+import de.mhus.osgi.api.MOsgi.Service;
 
 public class XdbUtil {
 
