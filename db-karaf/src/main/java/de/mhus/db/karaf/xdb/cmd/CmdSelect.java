@@ -33,6 +33,7 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
+import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbType;
 import de.mhus.osgi.api.karaf.AbstractCmd;
@@ -73,9 +74,8 @@ public class CmdSelect extends AbstractCmd {
             name = "-f",
             aliases = "--filter",
             description = "Additional filters after loading or results",
-            multiValued = true,
             required = false)
-    String[] filter;
+    String filter;
     
     @Option(
             name = "-m",
@@ -124,10 +124,15 @@ public class CmdSelect extends AbstractCmd {
 
     @Reference private Session session;
 
+    private Condition condition;
+
     @Override
     public Object execute2() throws Exception {
 
         Object output = null;
+
+        if (MString.isSet(filter))
+            condition = new Condition(filter);
 
         apiName = XdbKarafUtil.getApiName(session, apiName);
         serviceName = XdbKarafUtil.getServiceName(session, serviceName);
@@ -189,6 +194,9 @@ public class CmdSelect extends AbstractCmd {
         if (page == null) {
             for (Object object : type.getByQualification(qualification, queryParam)) {
 
+                if (skipResult(type,object))
+                    continue;
+
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
                     Object value = getValueValue(type,object, name);
@@ -200,6 +208,10 @@ public class CmdSelect extends AbstractCmd {
             int lines = MCast.toint(page.substring(1), 100);
             DbCollection<?> res = type.getByQualification(qualification, null);
             for (Object object : res) {
+
+                if (skipResult(type,object))
+                    continue;
+
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
                     Object value = getValueValue(type,object, name);
@@ -215,6 +227,9 @@ public class CmdSelect extends AbstractCmd {
         } else if (page.startsWith("l")) {
             int lines = MCast.toint(page.substring(1), 100);
             for (Object object : type.getByQualification(qualification, null)) {
+
+                if (skipResult(type,object))
+                    continue;
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
@@ -245,6 +260,10 @@ public class CmdSelect extends AbstractCmd {
             }
             while (iter.hasNext()) {
                 Object object = iter.next();
+
+                if (skipResult(type, object))
+                    continue;
+
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
                     Object value = getValueValue(type,object, name);
@@ -265,6 +284,36 @@ public class CmdSelect extends AbstractCmd {
         return null;
     }
 
+    private boolean skipResult(XdbType<?> type, Object object) throws MException {
+        if (condition == null)
+            return false;
+        
+        return condition.matches(new ConditionMap(type, object));
+        
+    }
+
+    private class ConditionMap extends HashMap<String, Object> {
+        
+        private static final long serialVersionUID = 1L;
+        private Object object;
+        private XdbType<?> type;
+
+        ConditionMap(XdbType<?> type, Object object) {
+            this.type = type;
+            this.object = object;
+        }
+        
+        @Override
+        public Object get(Object key) {
+            try {
+                return getValueValue(type, object, String.valueOf(key));
+            } catch (MException e) {
+                return null;
+            }
+        }
+        
+    }
+    
     @SuppressWarnings("rawtypes")
     private Object getValueValue(XdbType<?> type, Object object, String name) throws MException {
         int pos = name.indexOf('.');
