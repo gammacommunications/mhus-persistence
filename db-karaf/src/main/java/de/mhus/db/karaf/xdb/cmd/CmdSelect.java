@@ -17,6 +17,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
@@ -27,9 +29,11 @@ import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.adb.DbCollection;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbType;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 
@@ -65,6 +69,14 @@ public class CmdSelect extends AbstractCmd {
             required = false)
     boolean oneLine = false;
 
+    @Option(
+            name = "-f",
+            aliases = "--filter",
+            description = "Additional filters after loading or results",
+            multiValued = true,
+            required = false)
+    String[] filter;
+    
     @Option(
             name = "-m",
             aliases = "--max",
@@ -179,7 +191,7 @@ public class CmdSelect extends AbstractCmd {
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = toValue(type.get(object, name));
+                    Object value = getValueValue(type,object, name);
                     row.add(value);
                 }
                 output = object;
@@ -190,7 +202,7 @@ public class CmdSelect extends AbstractCmd {
             for (Object object : res) {
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = toValue(type.get(object, name));
+                    Object value = getValueValue(type,object, name);
                     row.add(value);
                 }
                 output = object;
@@ -206,7 +218,7 @@ public class CmdSelect extends AbstractCmd {
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = toValue(type.get(object, name));
+                    Object value = getValueValue(type,object, name);
                     row.add(value);
                 }
                 output = object;
@@ -235,7 +247,7 @@ public class CmdSelect extends AbstractCmd {
                 Object object = iter.next();
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = toValue(type.get(object, name));
+                    Object value = getValueValue(type,object, name);
                     row.add(value);
                 }
                 output = object;
@@ -253,8 +265,42 @@ public class CmdSelect extends AbstractCmd {
         return null;
     }
 
-    private Object toValue(Object object) {
-        if (object == null) return "[null]";
-        return object;
+    @SuppressWarnings("rawtypes")
+    private Object getValueValue(XdbType<?> type, Object object, String name) throws MException {
+        int pos = name.indexOf('.');
+        Object value = null;
+        if (pos < 0) {
+            value = type.get(object, name);
+        } else {
+            String key = name.substring(pos+1);
+            name = name.substring(0, pos);
+            value = type.get(object, name);
+            if (value == null) {
+                // nothing
+            } else
+            if (value instanceof List) {
+                int idx = M.to(key, 0);
+                List c = (List)value;
+                if (idx < c.size())
+                    value = c.get(idx);
+                else
+                    value = null;
+            } else
+            if (value.getClass().isArray()) {
+                int idx = M.to(key, 0);
+                Object[] a = (Object[])value;
+                if (idx < a.length)
+                    value = a[idx];
+                else
+                    a = null;
+            } else
+            if (value instanceof Map) {
+                Map m = (Map)value;
+                value = m.get(key);
+            }
+        }
+        if (value == null) return "[null]";
+        return value;
     }
+
 }

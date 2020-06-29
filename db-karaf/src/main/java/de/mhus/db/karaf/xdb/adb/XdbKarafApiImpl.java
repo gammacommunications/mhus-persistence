@@ -29,7 +29,7 @@ import de.mhus.osgi.api.MOsgi;
 public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
 
     private String api = "adb";
-    private String service = "adb";
+    private String service = "common";
     private String datasource = "";
     private ConfigurationAdmin configurationAdmin;
 
