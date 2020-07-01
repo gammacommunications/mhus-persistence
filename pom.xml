@@ -26,7 +26,6 @@
 	<artifactId>mhus-persistence</artifactId>
 	<version>7.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>mhus-rest</name>
 	<description>Persistence framework</description>
 	<url>http://www.mhus.de</url>
     <properties>
