@@ -63,4 +63,11 @@
         <module>db-karaf</module>
      </modules>
 
+	<dependencies>
+	    <dependency>
+	        <groupId>de.mhus.lib</groupId>
+	        <artifactId>lib-tests</artifactId>
+	        <scope>test</scope>
+	    </dependency>
+	</dependencies>
 </project>

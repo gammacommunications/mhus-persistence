@@ -16,8 +16,9 @@ import de.mhus.lib.adb.util.ParserJdbcDebug;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.test.adb.model.Person;
+import de.mhus.lib.tests.TestCase;
 
-public class ParserTest {
+public class ParserTest extends TestCase {
 
     @BeforeAll
     public static void begin() {
@@ -58,7 +59,7 @@ public class ParserTest {
         System.out.println("Query: " + parser.getQualification());
 
         assertEquals("book", parser.getEntityName());
-        assertEquals("$book.name$ = 'test' AND $book.created$ < '1.1.2020'", parser.getQualification());
+        assertEquals("$db.book.name$ = 'test' AND $db.book.created$ < '1.1.2020'", parser.getQualification());
         assertEquals("[*]", parser.getColumnNames().toString());
     }
 
@@ -75,7 +76,7 @@ public class ParserTest {
         System.out.println("Query: " + parser.getQualification());
 
         assertEquals("book", parser.getEntityName());
-        assertEquals("$book.name$ = 'test'", parser.getQualification());
+        assertEquals("$db.book.name$ = 'test'", parser.getQualification());
         assertEquals("[name, created]", parser.getColumnNames().toString());
     }
     

@@ -46,6 +46,7 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
+import de.mhus.lib.tests.TestCase;
 import de.mhus.lib.test.adb.model.Book;
 import de.mhus.lib.test.adb.model.BookStoreSchema;
 import de.mhus.lib.test.adb.model.Finances;
@@ -54,7 +55,7 @@ import de.mhus.lib.test.adb.model.Person2;
 import de.mhus.lib.test.adb.model.Regal;
 import de.mhus.lib.test.adb.model.Store;
 
-public class AdbTest {
+public class AdbTest extends TestCase {
 
     @BeforeAll
     public static void begin() {
