@@ -29,33 +29,39 @@ import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.adb.DbCollection;
-import de.mhus.lib.adb.QueryParser;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
 import de.mhus.osgi.api.karaf.AbstractCmd;
 
 @Command(
         scope = "xdb",
-        name = "select",
+        name = "rawselect",
         description = "Select data from DB DataSource and print the results")
 // @Parsing(XdbParser.class) see
 // https://github.com/apache/karaf/tree/master/jdbc/src/main/java/org/apache/karaf/jdbc/command/parsing
 @Service
-public class CmdSelect extends AbstractCmd {
+public class CmdXRawSelect extends AbstractCmd {
 
     @Argument(
             index = 0,
-            name = "select",
+            name = "type",
+            required = true,
+            description = "Type to select",
+            multiValued = false)
+    String typeName;
+
+    @Argument(
+            index = 1,
+            name = "qualification",
             required = false,
-            description = "Select, e.g. * from Book where a=b",
-            multiValued = true)
-    String[] select;
+            description = "Select qualification",
+            multiValued = false)
+    String qualification;
 
     @Option(
             name = "-l",
@@ -77,6 +83,13 @@ public class CmdSelect extends AbstractCmd {
             description = "Maximum amount of chars for a value (if not full)",
             required = false)
     int max = 40;
+
+    @Option(
+            name = "-o",
+            aliases = "--out",
+            description = "Comma separated list of fields to print",
+            required = false)
+    String fieldsComma = null;
 
     @Option(name = "-x", description = "Output parameter", required = false)
     String outputParam = null;
@@ -124,23 +137,11 @@ public class CmdSelect extends AbstractCmd {
         apiName = XdbKarafUtil.getApiName(session, apiName);
         serviceName = XdbKarafUtil.getServiceName(session, serviceName);
 
-        XdbService service = XdbKarafUtil.getService(apiName, serviceName);
-        
-        String sql = "SELECT " + MString.join(select, ' ');
-        QueryParser parser = QueryParser.parse(service, sql);
-        
-        String typeName = parser.getEntityName();
-        
         XdbType<?> type = XdbKarafUtil.getType(apiName, serviceName, typeName);
-        
-        List<String> columns = parser.getColumnNames();
-        if (columns.size() == 1 && columns.get(0).equals("*")) {
-            columns = null;
-        }
-        
+
         // sort columns to print
         final LinkedList<String> fieldNames = new LinkedList<>();
-        if (columns == null) {
+        if (fieldsComma == null) {
             for (String name : type.getAttributeNames()) {
                 fieldNames.add(name);
             }
@@ -160,7 +161,7 @@ public class CmdSelect extends AbstractCmd {
                     });
 
         } else {
-            for (String name : columns) fieldNames.add(name);
+            for (String name : fieldsComma.split(",")) fieldNames.add(name);
         }
 
         ConsoleTable out = new ConsoleTable(tblOpt);
@@ -191,7 +192,7 @@ public class CmdSelect extends AbstractCmd {
         //		}
 
         if (page == null) {
-            for (Object object : type.getByQualification(parser.getQualification(), queryParam)) {
+            for (Object object : type.getByQualification(qualification, queryParam)) {
 
                 if (skipResult(type,object))
                     continue;
@@ -205,7 +206,7 @@ public class CmdSelect extends AbstractCmd {
             }
         } else if (page.startsWith("f")) {
             int lines = MCast.toint(page.substring(1), 100);
-            DbCollection<?> res = type.getByQualification(parser.getQualification(), null);
+            DbCollection<?> res = type.getByQualification(qualification, null);
             for (Object object : res) {
 
                 if (skipResult(type,object))
@@ -225,7 +226,7 @@ public class CmdSelect extends AbstractCmd {
             }
         } else if (page.startsWith("l")) {
             int lines = MCast.toint(page.substring(1), 100);
-            for (Object object : type.getByQualification(parser.getQualification(), null)) {
+            for (Object object : type.getByQualification(qualification, null)) {
 
                 if (skipResult(type,object))
                     continue;
@@ -249,7 +250,7 @@ public class CmdSelect extends AbstractCmd {
             }
             System.out.println("Page size: " + lines + ", Page: " + p);
 
-            DbCollection<?> res = type.getByQualification(parser.getQualification(), null);
+            DbCollection<?> res = type.getByQualification(qualification, null);
             int cnt = 0;
             Iterator<?> iter = res.iterator();
             while (iter.hasNext()) {

@@ -67,7 +67,7 @@ public class AdbTest {
 
     private static int poolCnt = 0;
 
-    public DbPoolBundle createPool(String name) throws Exception {
+    public static DbPoolBundle createPool(String name) throws Exception {
 
         name = name.toLowerCase().trim() + (poolCnt++);
 
@@ -210,19 +210,22 @@ public class AdbTest {
 
         return pool;
     }
+    
+    public static DbManager createBookstoreManager() throws Throwable {
+        DbPool pool = createPool("testModel").getPool("test");
+        BookStoreSchema schema = new BookStoreSchema();
+        DbManager manager = new DbManagerJdbc("", pool, schema);
+        return manager;
+    }
 
     @Test
     public void testModel() throws Throwable {
-
-        DbPool pool = createPool("testModel").getPool("test");
-
-        BookStoreSchema schema = new BookStoreSchema();
 
         MStopWatch timer = new MStopWatch();
         timer.start();
 
         //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = createBookstoreManager();
         //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
         // create persons
@@ -497,7 +500,7 @@ public class AdbTest {
         timer.stop();
         System.out.println("Time: " + timer.getCurrentTimeAsString());
 
-        pool.close();
+        manager.getPool().close();
     }
 
     @Test

@@ -59,4 +59,9 @@ public class XdbKarafUtil {
         return service.getType(typeName);
     }
     
+    public static XdbService getService(String apiName, String serviceName) throws NotFoundException {
+        XdbApi api = XdbUtil.getApi(apiName);
+        return api.getService(serviceName);
+    }
+    
 }

@@ -23,6 +23,7 @@ import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.DbProperties;
+import de.mhus.lib.adb.util.ParserJdbcDebug;
 import de.mhus.lib.adb.util.Property;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.cao.util.MetadataBundle;
@@ -30,6 +31,7 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.concurrent.ThreadLock;
 import de.mhus.lib.core.logging.ITracer;
@@ -50,6 +52,7 @@ import io.opentracing.Scope;
 @JmxManaged(descrition = "ADB manager information interface")
 public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
+    private static CfgBoolean CFG_DEBUG_PARSER = new CfgBoolean(DbManagerJdbc.class, "debugParser", false);
     public static final String DATABASE_VERSION = "db.version";
     public static final String DATABASE_CREATED = "db.created";
     public static final String DATABASE_MANAGER_VERSION = "db.manager.version";
@@ -1532,6 +1535,13 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     @Override
     public String getDataSourceName() {
         return dataSourceName;
+    }
+
+    @Override
+    public QueryParser createParser() {
+        ParserJdbc ret = CFG_DEBUG_PARSER.value() ? new ParserJdbcDebug() : new ParserJdbc();
+        ret.init(this);
+        return ret;
     }
 
 }

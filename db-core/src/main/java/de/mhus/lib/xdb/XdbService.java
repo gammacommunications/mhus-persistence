@@ -16,6 +16,7 @@ package de.mhus.lib.xdb;
 import java.util.List;
 
 import de.mhus.lib.adb.DbCollection;
+import de.mhus.lib.adb.QueryParser;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.basics.Adaptable;
 import de.mhus.lib.core.pojo.PojoModelFactory;
@@ -74,4 +75,6 @@ public interface XdbService extends Adaptable {
     void delete(Object object) throws MException;
 
     void save(Object object) throws MException;
+
+    QueryParser createParser();
 }
