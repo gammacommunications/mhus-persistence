@@ -57,9 +57,13 @@ public class CmdList extends AbstractCmd {
             XdbApi api = XdbUtil.getApi(name);
 
             for (String serviceName : api.getServiceNames()) {
+                if (serviceName == null) {
+                    System.err.println("*** Service name is null");
+                    continue;
+                }
                 XdbService service = api.getService(serviceName);
                 if (service == null) {
-                    System.out.println("*** Service is null: " + serviceName);
+                    System.err.println("*** Service is null: " + serviceName);
                     continue;
                 }
 

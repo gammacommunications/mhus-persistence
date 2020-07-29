@@ -66,6 +66,8 @@ public class AdbOsgiUtil {
 
     public static AdbService getService(String serviceName)
             throws IOException, InvalidSyntaxException {
+        if (serviceName == null) 
+            throw new NullPointerException("service name is null");
         int cnt = 0;
 
         for (AdbService service : MOsgi.getServices(AdbService.class, null)) {

@@ -105,20 +105,20 @@ public class CmdUse implements Action {
 
         System.out.println(
                 "Global : xdb:"
-                        + M.l(XdbKarafApi.class).getApi()
+                        + encode(M.l(XdbKarafApi.class).getApi())
                         + "/"
-                        + M.l(XdbKarafApi.class).getService()
+                        + encode(M.l(XdbKarafApi.class).getService())
                         + (M.l(XdbKarafApi.class).getDatasource() != null
-                                ? "/" + M.l(XdbKarafApi.class).getDatasource()
+                                ? "/" + encode(M.l(XdbKarafApi.class).getDatasource())
                                 : ""));
 
         System.out.println(
                 "Session: xdb:"
-                        + XdbKarafUtil.getApiName(session, null)
+                        + encode(XdbKarafUtil.getApiName(session, null))
                         + "/"
-                        + XdbKarafUtil.getServiceName(session, null)
+                        + encode(XdbKarafUtil.getServiceName(session, null))
                         + (XdbKarafUtil.getDatasourceName(session, null) != null
-                                ? "/" + XdbKarafUtil.getDatasourceName(session, null)
+                                ? "/" + encode(XdbKarafUtil.getDatasourceName(session, null))
                                 : ""));
 
         if ("apis".equals(cmd))
@@ -137,5 +137,10 @@ public class CmdUse implements Action {
         }
 
         return null;
+    }
+
+    private String encode(String in) {
+        if (in == null) return null;
+        return MUri.encode(in).replaceAll("/", "%2F");
     }
 }

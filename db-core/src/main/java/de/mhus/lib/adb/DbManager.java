@@ -30,6 +30,7 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -518,7 +519,10 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         @SuppressWarnings("unchecked")
         @Override
         public <F> F prepareManualValue(String name, Object value) {
-            return (F) AdbUtil.createAttribute(table.getField(name).getType(), value);
+            Field field = table.getField(name);
+            if (field == null)
+                throw new MRuntimeException("field not found",name,table);
+            return (F) AdbUtil.createAttribute(field.getType(), value);
         }
 
         @Override

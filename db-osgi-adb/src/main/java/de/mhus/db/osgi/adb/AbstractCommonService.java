@@ -70,10 +70,10 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     private STATUS status = STATUS.NONE;
 
     // static service name
-    protected final String SERVICE_NAME = getServiceName();
+    protected final String SERVICE_NAME = getCommonServiceName();
     
     private final CfgString CFG_DATASOURCE =
-            new CfgString(AbstractCommonService.class, SERVICE_NAME+"@dataSourceName", "adb/common").updateAction(s -> {
+            new CfgString(AbstractCommonService.class, SERVICE_NAME+"@dataSourceName", "adb_common").updateAction(s -> {
                 setDataSourceName(s);
             });
     private final CfgBoolean CFG_USE_PSEUDO =
