@@ -85,7 +85,7 @@ public class TableDynamic extends Table {
         }
 
         @Override
-        public void set(Object pojo, Object value) throws IOException {}
+        public void set(Object pojo, Object value, boolean force) throws IOException {}
 
         @Override
         public Class<?> getType() {

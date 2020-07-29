@@ -115,7 +115,7 @@ public abstract class DbMetadata extends DbComfortableObject
             @SuppressWarnings("rawtypes")
             PojoAttribute attr = model.getAttribute(name);
             if (attr != null) {
-                if (attr.canWrite()) attr.set(this, value);
+                if (attr.canWrite()) attr.set(this, value, false);
             } else log().d("can't read external", name);
         }
     }

@@ -96,7 +96,7 @@ public abstract class Field extends MObject {
 
         if (dynamicField != null && obj instanceof DbDynamic)
             ((DbDynamic) obj).setValue(dynamicField, value);
-        else attribute.set(obj, value);
+        else attribute.set(obj, value, false);
     }
 
     public boolean different(Object obj, Object value) throws Exception {
