@@ -23,6 +23,7 @@ import org.osgi.framework.InvalidSyntaxException;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 import de.mhus.osgi.api.MOsgi;
@@ -142,9 +143,12 @@ public class AdbOsgiUtil {
     
     public static AdbService getCommonAdbService() {
         try {
-            AdbService service = getService("common");
+            AdbService service = getService("common_adb");
+            if (service == null)
+                MLogUtil.log().i("CommonAdbService not found");
             return service;
         } catch (Throwable t) {
+            MLogUtil.log().i(t.toString());
             return null;
         }
     }

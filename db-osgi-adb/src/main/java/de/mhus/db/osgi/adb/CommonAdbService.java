@@ -34,7 +34,7 @@ public class CommonAdbService extends AbstractCommonService {
 
     @Override
     protected String getCommonServiceName() {
-        return "adb";
+        return "common_adb";
     }
 
 }
