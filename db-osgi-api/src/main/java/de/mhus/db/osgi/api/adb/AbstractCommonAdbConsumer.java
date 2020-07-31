@@ -16,12 +16,10 @@ package de.mhus.db.osgi.api.adb;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.cfg.CfgLong;
-import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.xdb.XdbService;
 
@@ -41,46 +39,22 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
 
     @Override
     public boolean canCreate(Object obj) throws MException {
-        String type = obj.getClass().getCanonicalName();
-        String ident = "*";
-        if (obj instanceof UuidIdentificable) {
-            UUID uuid = ((UuidIdentificable) obj).getId();
-            if (uuid != null) ident = uuid.toString();
-        }
-        return AccessUtil.isPermitted(type + ":create:" + ident);
+        return true;
     }
     
     @Override
     public boolean canRead(Object obj) throws MException {
-        String type = obj.getClass().getCanonicalName();
-        String ident = "*";
-        if (obj instanceof UuidIdentificable) {
-            UUID uuid = ((UuidIdentificable) obj).getId();
-            if (uuid != null) ident = uuid.toString();
-        }
-        return AccessUtil.isPermitted(type + ":read:" + ident);
+        return true;
     }
 
     @Override
     public boolean canUpdate(Object obj) throws MException {
-        String type = obj.getClass().getCanonicalName();
-        String ident = "*";
-        if (obj instanceof UuidIdentificable) {
-            UUID uuid = ((UuidIdentificable) obj).getId();
-            if (uuid != null) ident = uuid.toString();
-        }
-        return AccessUtil.isPermitted(type + ":update:" + ident);
+        return true;
     }
 
     @Override
     public boolean canDelete(Object obj) throws MException {
-        String type = obj.getClass().getCanonicalName();
-        String ident = "*";
-        if (obj instanceof UuidIdentificable) {
-            UUID uuid = ((UuidIdentificable) obj).getId();
-            if (uuid != null) ident = uuid.toString();
-        }
-        return AccessUtil.isPermitted(type + ":delete:" + ident);
+        return true;
     }
 
     @Override
