@@ -20,8 +20,6 @@ import java.util.Date;
 
 import de.mhus.lib.adb.query.AQueryCreator;
 import de.mhus.lib.annotations.adb.DbType;
-import de.mhus.lib.cao.CaoMetaDefinition;
-import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSql;
@@ -198,40 +196,40 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @param f
      * @return x
      */
-    protected CaoMetaDefinition.TYPE getCaoType(IConfig f) {
+    protected SqlMetaDefinition.TYPE getCaoType(IConfig f) {
         String type = f.getString("type", DbType.TYPE.STRING.name()).toUpperCase();
-        CaoMetaDefinition.TYPE t = CaoMetaDefinition.TYPE.STRING;
+        SqlMetaDefinition.TYPE t = SqlMetaDefinition.TYPE.STRING;
         if (f.getString(K_CATEGORIES, "").indexOf(C_ENUMERATION) > -1) {
-            t = CaoMetaDefinition.TYPE.STRING;
+            t = SqlMetaDefinition.TYPE.STRING;
         } else if (type.equals(DbType.TYPE.STRING.name())
                 || type.equals("CHAR")
                 || type.equals("VARCHAR")) {
         } else if (type.equals(DbType.TYPE.INT.name()) || type.equals("INTEGER")) {
-            t = CaoMetaDefinition.TYPE.LONG;
+            t = SqlMetaDefinition.TYPE.LONG;
         } else if (type.equals(DbType.TYPE.BIGDECIMAL.name())) {
-            t = CaoMetaDefinition.TYPE.STRING;
+            t = SqlMetaDefinition.TYPE.STRING;
         } else if (type.equals("DATE")) {
-            t = CaoMetaDefinition.TYPE.DATETIME;
+            t = SqlMetaDefinition.TYPE.DATETIME;
         } else if (type.equals(DbType.TYPE.DATETIME.name())) {
-            t = CaoMetaDefinition.TYPE.DATETIME;
+            t = SqlMetaDefinition.TYPE.DATETIME;
         } else if (type.equals("TIME")) {
-            t = CaoMetaDefinition.TYPE.DATETIME;
+            t = SqlMetaDefinition.TYPE.DATETIME;
         } else if (type.equals("TIMESTAMP")) {
-            t = CaoMetaDefinition.TYPE.DATETIME;
+            t = SqlMetaDefinition.TYPE.DATETIME;
         } else if (type.equals(DbType.TYPE.BOOL.name()) || type.equals("BOOLEAN")) {
-            t = CaoMetaDefinition.TYPE.BOOLEAN;
+            t = SqlMetaDefinition.TYPE.BOOLEAN;
         } else if (type.equals(DbType.TYPE.BLOB.name())) {
-            t = CaoMetaDefinition.TYPE.BINARY;
+            t = SqlMetaDefinition.TYPE.BINARY;
         } else if (type.equals(DbType.TYPE.DOUBLE.name())) {
-            t = CaoMetaDefinition.TYPE.DOUBLE;
+            t = SqlMetaDefinition.TYPE.DOUBLE;
         } else if (type.equals(DbType.TYPE.FLOAT.name())) {
-            t = CaoMetaDefinition.TYPE.DOUBLE;
+            t = SqlMetaDefinition.TYPE.DOUBLE;
         } else if (type.equals("TEXT")) {
         } else if (type.equals("LONGTEXT")) {
         } else if (type.equals("LONGBLOB")) {
-            t = CaoMetaDefinition.TYPE.BINARY;
+            t = SqlMetaDefinition.TYPE.BINARY;
         } else if (type.equals(DbType.TYPE.UUID.name())) {
-            t = CaoMetaDefinition.TYPE.ELEMENT;
+            t = SqlMetaDefinition.TYPE.ELEMENT;
             //			} else
             //			if (type.equals("NUMERIC")) {
             //				t = CaoMetaDefinition.TYPE.BIGDECIMAL;

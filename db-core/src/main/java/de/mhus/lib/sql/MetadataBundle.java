@@ -11,6 +11,25 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.cao;
+package de.mhus.lib.sql;
 
-public interface CaoAspect {}
+import java.util.HashMap;
+import java.util.Map;
+
+public class MetadataBundle {
+
+//    private CaoDriver driver;
+    private Map<String, SqlMetadata> map = new HashMap<String, SqlMetadata>();
+
+//    public MetadataBundle(CaoDriver driver) {
+//        this.driver = driver;
+//    }
+
+    public Map<String, SqlMetadata> getBundle() {
+        return map;
+    }
+
+//    public CaoDriver getDriver() {
+//        return driver;
+//    }
+}

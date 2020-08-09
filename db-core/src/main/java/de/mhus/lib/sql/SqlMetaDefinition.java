@@ -11,9 +11,9 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.cao;
+package de.mhus.lib.sql;
 
-public class CaoMetaDefinition implements CaoAspect {
+public class SqlMetaDefinition {
 
     public enum TYPE {
         STRING,
@@ -35,8 +35,8 @@ public class CaoMetaDefinition implements CaoAspect {
     private String[] categories;
 //    private CaoDriver driver;
 
-    public CaoMetaDefinition(
-            CaoMetadata meta, String name, TYPE type, String nls, long size, String... categories) {
+    public SqlMetaDefinition(
+            SqlMetadata meta, String name, TYPE type, String nls, long size, String... categories) {
         this.name = name;
         this.type = type;
         this.nls = nls;

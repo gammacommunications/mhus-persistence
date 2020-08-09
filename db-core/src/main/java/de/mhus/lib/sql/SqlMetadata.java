@@ -11,17 +11,17 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.cao;
+package de.mhus.lib.sql;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CaoMetadata implements Iterable<CaoMetaDefinition> {
+public class SqlMetadata implements Iterable<SqlMetaDefinition> {
 
-    protected LinkedList<CaoMetaDefinition> definition = new LinkedList<CaoMetaDefinition>();
-    protected HashMap<String, CaoMetaDefinition> index = new HashMap<String, CaoMetaDefinition>();
+    protected LinkedList<SqlMetaDefinition> definition = new LinkedList<SqlMetaDefinition>();
+    protected HashMap<String, SqlMetaDefinition> index = new HashMap<String, SqlMetaDefinition>();
 
     //private CaoDriver driver;
 
@@ -30,7 +30,7 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition> {
 //    }
 
     @Override
-    public Iterator<CaoMetaDefinition> iterator() {
+    public Iterator<SqlMetaDefinition> iterator() {
         return definition.iterator();
     };
 
@@ -38,7 +38,7 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition> {
         return definition.size();
     }
 
-    public CaoMetaDefinition getDefinitionAt(int index) {
+    public SqlMetaDefinition getDefinitionAt(int index) {
         return definition.get(index);
     }
 
@@ -46,10 +46,10 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition> {
 //        return driver;
 //    }
 
-    public CaoMetaDefinition getDefinition(String name) {
+    public SqlMetaDefinition getDefinition(String name) {
         synchronized (this) {
             if (index.size() == 0) {
-                for (CaoMetaDefinition d : this) {
+                for (SqlMetaDefinition d : this) {
                     index.put(d.getName(), d);
                 }
             }
@@ -57,9 +57,9 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition> {
         return index.get(name);
     }
 
-    public List<CaoMetaDefinition> getDefinitionsWithCategory(String category) {
-        LinkedList<CaoMetaDefinition> out = new LinkedList<CaoMetaDefinition>();
-        for (CaoMetaDefinition meta : this) {
+    public List<SqlMetaDefinition> getDefinitionsWithCategory(String category) {
+        LinkedList<SqlMetaDefinition> out = new LinkedList<SqlMetaDefinition>();
+        for (SqlMetaDefinition meta : this) {
             if (meta.hasCategory(category)) out.add(meta);
         }
         return out;

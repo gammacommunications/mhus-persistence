@@ -44,8 +44,6 @@ import de.mhus.lib.adb.query.APart;
 import de.mhus.lib.adb.query.APrint;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.ASubQuery;
-import de.mhus.lib.cao.CaoMetaDefinition;
-import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
@@ -168,13 +166,13 @@ public class DialectDefault extends Dialect {
                             fieldsInTable.add(fName); // remember not to remove
                     }
                     if (caoMeta != null) {
-                        List<CaoMetaDefinition> metaMap = caoMeta.getMap();
-                        CaoMetaDefinition.TYPE caoType = getCaoType(cfield);
+                        List<SqlMetaDefinition> metaMap = caoMeta.getMap();
+                        SqlMetaDefinition.TYPE caoType = getCaoType(cfield);
                         String[] categories =
                                 MString.splitIgnoreEmpty(
                                         cfield.getString(K_CATEGORIES, ""), ",", true);
                         metaMap.add(
-                                new CaoMetaDefinition(
+                                new SqlMetaDefinition(
                                         caoMeta,
                                         cfield.getExtracted("name"),
                                         caoType,
@@ -215,10 +213,10 @@ public class DialectDefault extends Dialect {
                 createTable(sth, tn, ctable);
                 for (IConfig f : ctable.getObjectList("field")) {
                     if (caoMeta != null) {
-                        List<CaoMetaDefinition> metaMap = caoMeta.getMap();
-                        CaoMetaDefinition.TYPE caoType = getCaoType(f);
+                        List<SqlMetaDefinition> metaMap = caoMeta.getMap();
+                        SqlMetaDefinition.TYPE caoType = getCaoType(f);
                         metaMap.add(
-                                new CaoMetaDefinition(
+                                new SqlMetaDefinition(
                                         caoMeta,
                                         f.getExtracted("name"),
                                         caoType,

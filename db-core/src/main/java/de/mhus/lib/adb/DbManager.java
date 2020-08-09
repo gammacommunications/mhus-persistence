@@ -24,7 +24,6 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
-import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
@@ -35,6 +34,7 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
+import de.mhus.lib.sql.MetadataBundle;
 import de.mhus.lib.xdb.XdbService;
 import de.mhus.lib.xdb.XdbType;
 

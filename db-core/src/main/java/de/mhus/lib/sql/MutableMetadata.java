@@ -15,15 +15,12 @@ package de.mhus.lib.sql;
 
 import java.util.List;
 
-import de.mhus.lib.cao.CaoMetaDefinition;
-import de.mhus.lib.cao.CaoMetadata;
-
 /**
  * A mutable variant of the Metadata to rapid develop extensions.
  *
  * @author mikehummel
  */
-public class MutableMetadata extends CaoMetadata {
+public class MutableMetadata extends SqlMetadata {
 
     public MutableMetadata() {
     }
@@ -34,7 +31,7 @@ public class MutableMetadata extends CaoMetadata {
      *
      * @return x
      */
-    public List<CaoMetaDefinition> getMap() {
+    public List<SqlMetaDefinition> getMap() {
         synchronized (this) {
             index = null;
             return definition;

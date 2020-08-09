@@ -26,7 +26,6 @@ import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.adb.util.ParserJdbcDebug;
 import de.mhus.lib.adb.util.Property;
 import de.mhus.lib.annotations.jmx.JmxManaged;
-import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
@@ -42,6 +41,7 @@ import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
 import de.mhus.lib.sql.DbStatement;
+import de.mhus.lib.sql.MetadataBundle;
 import de.mhus.lib.sql.SqlDialectCreateContext;
 import io.opentracing.Scope;
 
