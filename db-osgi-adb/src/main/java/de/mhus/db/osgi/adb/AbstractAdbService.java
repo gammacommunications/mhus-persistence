@@ -31,7 +31,7 @@ import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
 import de.mhus.osgi.api.util.DataSourceUtil;
 // @Component(provide=DbManagerService.class,name="...",immediate=true)
-// 
+//
 public abstract class AbstractAdbService extends MLog implements AdbService {
 
     protected String dataSourceName;

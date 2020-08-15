@@ -46,13 +46,11 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     @Override
     public void load() {
         try {
-            Dictionary<String, Object> prop = MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
-            if (prop.get("api") != null)
-                api = (String) prop.get("api");
-            if (prop.get("service") != null)
-                service = (String) prop.get("service");
-            if (prop.get("datasource") != null)
-                datasource = (String) prop.get("datasource");
+            Dictionary<String, Object> prop =
+                    MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
+            if (prop.get("api") != null) api = (String) prop.get("api");
+            if (prop.get("service") != null) service = (String) prop.get("service");
+            if (prop.get("datasource") != null) datasource = (String) prop.get("datasource");
         } catch (Throwable t) {
             log().d(t);
         }
@@ -61,10 +59,11 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     @Override
     public void save() {
         try {
-            Dictionary<String, Object> prop = MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
-            prop.put("api", api );
-            prop.put("service", service );
-            prop.put("datasource", datasource );
+            Dictionary<String, Object> prop =
+                    MOsgi.loadConfiguration(configurationAdmin, XdbKarafApiImpl.class);
+            prop.put("api", api);
+            prop.put("service", service);
+            prop.put("datasource", datasource);
             MOsgi.saveConfiguration(configurationAdmin, XdbKarafApiImpl.class, prop);
         } catch (Throwable t) {
             log().d(t);
@@ -100,10 +99,9 @@ public class XdbKarafApiImpl extends MObject implements XdbKarafApi {
     public void setDatasource(String datasource) {
         this.datasource = datasource;
     }
-    
+
     @Reference
     public void setConfigurationAdmin(ConfigurationAdmin admin) {
         configurationAdmin = admin;
     }
-    
 }

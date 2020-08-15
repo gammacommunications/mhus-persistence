@@ -63,8 +63,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
 
     @Override
     public boolean isReady() {
-        if (!startInit)
-            init();
+        if (!startInit) init();
         if (ds == null) return false;
         return true; // TODO check data source status !!!!
     }
@@ -76,7 +75,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
             try {
                 ds = DataSourceUtil.getDataSource(dsName);
                 if (ds == null) {
-                    log().d("Datasource not found",dsName);
+                    log().d("Datasource not found", dsName);
                 } else {
                     // init pool object
                     DataSourceProvider dsProvider = new DataSourceProvider();
@@ -107,7 +106,15 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
         DbConnection con = null;
         try {
             con = pool.getConnection();
-            DbStatement sth = con.createStatement("SELECT "+key+" FROM " + table + " WHERE " + key + "=$key$ FOR UPDATE NOWAIT");
+            DbStatement sth =
+                    con.createStatement(
+                            "SELECT "
+                                    + key
+                                    + " FROM "
+                                    + table
+                                    + " WHERE "
+                                    + key
+                                    + "=$key$ FOR UPDATE NOWAIT");
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("key", value);
             try {
@@ -115,18 +122,18 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
                 if (res.next()) {
                     res.close();
                     log().t("=== Lock1", value);
-                    return new Con(con,sth);
+                    return new Con(con, sth);
                 }
                 res.close();
             } catch (SQLException e) {
-                if (!e.getMessage().contains("timeout"))
-                    throw e;
+                if (!e.getMessage().contains("timeout")) throw e;
                 sth.close();
                 con.close();
                 log().t("--- No0", value, e);
                 return null;
             }
-            DbStatement sthSet = con.createStatement("INSERT INTO " + table + "(" + key+") VALUES ($key$)");
+            DbStatement sthSet =
+                    con.createStatement("INSERT INTO " + table + "(" + key + ") VALUES ($key$)");
             boolean done = false;
             try {
                 sthSet.execute(attributes);
@@ -140,18 +147,17 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
             }
             sthSet.close();
             con.commit();
-            
+
             try {
                 DbResult res = sth.executeQuery(attributes);
                 if (res.next()) {
                     res.close();
                     log().t("=== Lock2", value);
-                    return new Con(con,sth);
+                    return new Con(con, sth);
                 }
                 res.close();
             } catch (SQLException e) {
-                if (!e.getMessage().contains("timeout"))
-                    throw e;
+                if (!e.getMessage().contains("timeout")) throw e;
                 sth.close();
                 con.commit();
                 con.close();
@@ -176,13 +182,12 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
             log().t("--- No3", value);
             return null;
         }
-
     }
-    
+
     private class Con {
         DbConnection con;
         DbStatement sth;
-        
+
         public Con(DbConnection con, DbStatement sth) {
             this.con = con;
             this.sth = sth;
@@ -201,7 +206,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
             con = null;
         }
     }
-    
+
     private class DbLock implements Lock {
 
         private Con con;
@@ -235,8 +240,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
                     MThread.sleep(200);
                 }
             } finally {
-                if (scope != null)
-                    scope.close();
+                if (scope != null) scope.close();
             }
         }
 
@@ -258,13 +262,11 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
                     }
                     if (scope != null)
                         scope = ITracer.get().enter("waitUntilUnlock", "name", getName());
-                    if (MPeriod.isTimeOut(start, timeout))
-                        return false;
+                    if (MPeriod.isTimeOut(start, timeout)) return false;
                     MThread.sleep(200);
                 }
             } finally {
-                if (scope != null)
-                    scope.close();
+                if (scope != null) scope.close();
             }
         }
 
@@ -317,6 +319,5 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
         public String getStartStackTrace() {
             return lockStacktrace;
         }
-        
     }
 }

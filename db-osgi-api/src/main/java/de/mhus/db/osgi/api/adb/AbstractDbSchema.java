@@ -26,13 +26,13 @@ import de.mhus.lib.sql.DbConnection;
 
 public abstract class AbstractDbSchema extends DbSchema {
 
-//    private Log trace =
-//            new SopFileLogger(
-//                    MApi.getCfg(DbManagerService.class).getExtracted("traceLoggerName", "db"),
-//                    getClass().getCanonicalName());
+    //    private Log trace =
+    //            new SopFileLogger(
+    //                    MApi.getCfg(DbManagerService.class).getExtracted("traceLoggerName", "db"),
+    //                    getClass().getCanonicalName());
 
     public AbstractDbSchema() {
-//        trace.i("start");
+        //        trace.i("start");
         lockStrategy = new MemoryLockStrategy();
         ((MemoryLockStrategy) lockStrategy)
                 .setMaxLockAge(
@@ -43,36 +43,34 @@ public abstract class AbstractDbSchema extends DbSchema {
     @Override
     public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw)
             throws AccessDeniedException {
-        if (!AccessUtil.isAdmin())
-            throw new AccessDeniedException();
+        if (!AccessUtil.isAdmin()) throw new AccessDeniedException();
     }
 
     @Override
     public void authorizeUpdateAttributes(
             DbConnection con, Table table, Object object, boolean raw, String... attributeNames)
             throws AccessDeniedException {
-        if (!AccessUtil.isAdmin())
-            throw new AccessDeniedException();
+        if (!AccessUtil.isAdmin()) throw new AccessDeniedException();
     }
 
     @Override
     public void internalCreateObject(
             DbConnection con, String name, Object object, HashMap<String, Object> attributes) {
         super.internalCreateObject(con, name, object, attributes);
-//        trace.i("create", name, attributes, object);
+        //        trace.i("create", name, attributes, object);
     }
 
     @Override
     public void internalSaveObject(
             DbConnection con, String name, Object object, HashMap<String, Object> attributes) {
         super.internalSaveObject(con, name, object, attributes);
-//        trace.i("modify", name, attributes, object);
+        //        trace.i("modify", name, attributes, object);
     }
 
     @Override
     public void internalDeleteObject(
             DbConnection con, String name, Object object, HashMap<String, Object> attributes) {
         super.internalDeleteObject(con, name, object, attributes);
-//        trace.i("delete", name, attributes, object);
+        //        trace.i("delete", name, attributes, object);
     }
 }

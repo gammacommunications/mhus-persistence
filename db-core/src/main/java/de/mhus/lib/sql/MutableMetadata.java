@@ -22,8 +22,7 @@ import java.util.List;
  */
 public class MutableMetadata extends SqlMetadata {
 
-    public MutableMetadata() {
-    }
+    public MutableMetadata() {}
 
     /**
      * This method cleanup the internal index. Manipulate the map before you call a getter, this

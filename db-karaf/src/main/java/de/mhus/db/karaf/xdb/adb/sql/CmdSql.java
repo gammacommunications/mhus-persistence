@@ -85,7 +85,9 @@ public class CmdSql extends AbstractCmd {
                     }
 
                     if (parameters != null)
-                        analyzer.doConfigure(IConfig.readFromProperties(IProperties.explodeToMProperties(parameters)));
+                        analyzer.doConfigure(
+                                IConfig.readFromProperties(
+                                        IProperties.explodeToMProperties(parameters)));
 
                     SqlAnalytics.setAnalyzer(analyzer);
                     System.out.println(analyzer);

@@ -15,12 +15,11 @@ package de.mhus.db.karaf.xdb.adb;
 
 /**
  * Singleton Service Interface
- * 
- * Tooling API for karaf commands. xdb:use is the manager of this api. It
- * provides the current used api and services.
- * 
- * @author mikehummel
  *
+ * <p>Tooling API for karaf commands. xdb:use is the manager of this api. It provides the current
+ * used api and services.
+ *
+ * @author mikehummel
  */
 public interface XdbKarafApi {
 

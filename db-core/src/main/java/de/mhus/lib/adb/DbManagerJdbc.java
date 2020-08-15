@@ -52,7 +52,8 @@ import io.opentracing.Scope;
 @JmxManaged(descrition = "ADB manager information interface")
 public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
-    private static CfgBoolean CFG_DEBUG_PARSER = new CfgBoolean(DbManagerJdbc.class, "debugParser", false);
+    private static CfgBoolean CFG_DEBUG_PARSER =
+            new CfgBoolean(DbManagerJdbc.class, "debugParser", false);
     public static final String DATABASE_VERSION = "db.version";
     public static final String DATABASE_CREATED = "db.created";
     public static final String DATABASE_MANAGER_VERSION = "db.manager.version";
@@ -405,15 +406,22 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        
-        try (Scope scope = ITracer.get().enter("executeQuery", 
-                "class", clazz, 
-                "registryName", registryName, 
-                "query", query, 
-                "attributes", attributes)) {
+
+        try (Scope scope =
+                ITracer.get()
+                        .enter(
+                                "executeQuery",
+                                "class",
+                                clazz,
+                                "registryName",
+                                registryName,
+                                "query",
+                                query,
+                                "attributes",
+                                attributes)) {
             log().t("query", clazz, registryName, query, attributes);
             Map<String, Object> map = null;
-    
+
             DbConnection myCon = null;
             if (con == null) {
                 try {
@@ -450,13 +458,19 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection con, String attributeName, String query, Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        try (Scope scope = ITracer.get().enter("executeQuery", 
-                "attributeName", attributeName,
-                "query", query, 
-                "attributes", attributes)) {
+        try (Scope scope =
+                ITracer.get()
+                        .enter(
+                                "executeQuery",
+                                "attributeName",
+                                attributeName,
+                                "query",
+                                query,
+                                "attributes",
+                                attributes)) {
             log().t("count", attributeName, query, attributes);
             Map<String, Object> map = null;
-    
+
             DbConnection myCon = null;
             if (con == null) {
                 try {
@@ -476,7 +490,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
                 long count = -1;
                 while (res.next()) count = res.getLong(attributeName);
                 return count;
-    
+
             } catch (Throwable t) {
                 throw new MException(con, query, attributes, t);
             } finally {
@@ -496,13 +510,19 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection con, String alias, String query, Map<String, Object> attributes)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        try (Scope scope = ITracer.get().enter("executeQuery", 
-                "alias", alias, 
-                "query", query, 
-                "attributes", attributes)) {
+        try (Scope scope =
+                ITracer.get()
+                        .enter(
+                                "executeQuery",
+                                "alias",
+                                alias,
+                                "query",
+                                query,
+                                "attributes",
+                                attributes)) {
             log().t("query", alias, query, attributes);
             Map<String, Object> map = null;
-    
+
             DbConnection myCon = null;
             if (con == null) {
                 try {
@@ -657,7 +677,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     public boolean existsObject(DbConnection con, String registryName, Object... keys)
             throws MException {
         reloadLock.waitWithException(MAX_LOCK);
-        log().t("existsObject",registryName, keys);
+        log().t("existsObject", registryName, keys);
         //		registryName = registryName.toLowerCase();
 
         DbConnection myCon = null;
@@ -1543,5 +1563,4 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         ret.init(this);
         return ret;
     }
-
 }

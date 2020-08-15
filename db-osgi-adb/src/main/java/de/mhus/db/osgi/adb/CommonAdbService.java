@@ -28,13 +28,10 @@ public class CommonAdbService extends AbstractCommonService {
     }
 
     @Override
-    public void doInitialize() throws MException {
-        
-    }
+    public void doInitialize() throws MException {}
 
     @Override
     protected String getCommonServiceName() {
         return "common_adb";
     }
-
 }

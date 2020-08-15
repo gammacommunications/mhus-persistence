@@ -70,17 +70,17 @@ public class CmdAdbControl extends AbstractCmd {
         }
         if (cmd.equals("consumers")) {
             ConsoleTable table = new ConsoleTable(tblOpt);
-            table.setHeaderValues("Consumer","Managed Types","Instance");
+            table.setHeaderValues("Consumer", "Managed Types", "Instance");
             for (String commonName : CommonAdbService.instances()) {
-                for (CommonDbConsumer consumer : CommonAdbService.instance(commonName).getConsumer()) {
+                for (CommonDbConsumer consumer :
+                        CommonAdbService.instance(commonName).getConsumer()) {
                     LinkedList<Class<? extends Object>> list = new LinkedList<>();
                     consumer.registerObjectTypes(list);
-                    table.addRowValues(consumer.getClass().getCanonicalName(), list,commonName);
+                    table.addRowValues(consumer.getClass().getCanonicalName(), list, commonName);
                 }
             }
             table.print();
-        } else
-        if (cmd.equals("mapping")) {
+        } else if (cmd.equals("mapping")) {
             AdbService service = AdbOsgiUtil.getService(args[0]);
 
             ConsoleTable table = new ConsoleTable(tblOpt);

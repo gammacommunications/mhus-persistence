@@ -33,5 +33,4 @@ public interface AdbService {
     void doInitialize() throws MException;
 
     void doClose();
-
 }

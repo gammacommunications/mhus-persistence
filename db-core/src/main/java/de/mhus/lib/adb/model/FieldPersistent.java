@@ -53,7 +53,7 @@ public class FieldPersistent extends Field {
      * @param isPrimary a boolean.
      * @param readOnly a boolean.
      * @param attribute a {@link de.mhus.lib.core.pojo.PojoAttribute} object.
-     * @param attr2 a  object.
+     * @param attr2 a object.
      * @param dynamicField a {@link de.mhus.lib.adb.DbDynamic.Field} object.
      * @param features an array of {@link java.lang.String} objects.
      * @throws de.mhus.lib.errors.MException if any.

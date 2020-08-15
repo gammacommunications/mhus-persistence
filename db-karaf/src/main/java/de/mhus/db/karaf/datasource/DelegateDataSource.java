@@ -54,5 +54,4 @@ public class DelegateDataSource extends AbstractDataSource {
         this.source = source;
         instanceName = "delegate:" + source;
     }
-
 }

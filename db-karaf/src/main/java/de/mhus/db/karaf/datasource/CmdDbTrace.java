@@ -79,5 +79,4 @@ public class CmdDbTrace extends AbstractCmd {
 
         return null;
     }
-
 }

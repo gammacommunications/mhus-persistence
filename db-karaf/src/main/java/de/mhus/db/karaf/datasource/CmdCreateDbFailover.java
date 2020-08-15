@@ -56,7 +56,7 @@ public class CmdCreateDbFailover extends AbstractCmd {
 
     @Override
     public Object execute2() throws Exception {
-        
+
         if (online) {
 
             FailoverDataSource dataSource = new FailoverDataSource();

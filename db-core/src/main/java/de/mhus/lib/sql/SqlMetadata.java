@@ -23,11 +23,11 @@ public class SqlMetadata implements Iterable<SqlMetaDefinition> {
     protected LinkedList<SqlMetaDefinition> definition = new LinkedList<SqlMetaDefinition>();
     protected HashMap<String, SqlMetaDefinition> index = new HashMap<String, SqlMetaDefinition>();
 
-    //private CaoDriver driver;
+    // private CaoDriver driver;
 
-//    public CaoMetadata(CaoDriver driver) {
-//        this.driver = driver;
-//    }
+    //    public CaoMetadata(CaoDriver driver) {
+    //        this.driver = driver;
+    //    }
 
     @Override
     public Iterator<SqlMetaDefinition> iterator() {
@@ -42,9 +42,9 @@ public class SqlMetadata implements Iterable<SqlMetaDefinition> {
         return definition.get(index);
     }
 
-//    public final CaoDriver getDriver() {
-//        return driver;
-//    }
+    //    public final CaoDriver getDriver() {
+    //        return driver;
+    //    }
 
     public SqlMetaDefinition getDefinition(String name) {
         synchronized (this) {

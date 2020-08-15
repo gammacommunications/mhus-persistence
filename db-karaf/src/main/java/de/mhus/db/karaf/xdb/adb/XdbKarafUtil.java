@@ -53,15 +53,16 @@ public class XdbKarafUtil {
         if (dsName != null) session.put("xdb_use_datasource", dsName);
     }
 
-    public static XdbType<?> getType(String apiName, String serviceName, String typeName) throws NotFoundException {
+    public static XdbType<?> getType(String apiName, String serviceName, String typeName)
+            throws NotFoundException {
         XdbApi api = XdbUtil.getApi(apiName);
         XdbService service = api.getService(serviceName);
         return service.getType(typeName);
     }
-    
-    public static XdbService getService(String apiName, String serviceName) throws NotFoundException {
+
+    public static XdbService getService(String apiName, String serviceName)
+            throws NotFoundException {
         XdbApi api = XdbUtil.getApi(apiName);
         return api.getService(serviceName);
     }
-    
 }

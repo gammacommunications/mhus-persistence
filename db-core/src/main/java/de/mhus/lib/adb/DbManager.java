@@ -422,8 +422,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     public abstract <T extends Object> T inject(T object);
 
     @Override
-    public abstract <T extends Object> DbCollection<T> getAll(Class<T> clazz)
-            throws MException;
+    public abstract <T extends Object> DbCollection<T> getAll(Class<T> clazz) throws MException;
 
     public abstract <T> String toQualification(AQuery<T> qualification);
 
@@ -456,8 +455,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     @Override
     public List<String> getTypeNames() {
         LinkedList<String> out = new LinkedList<>();
-        for (Class<? extends Object> o : getSchema().getObjectTypes())
-            out.add(o.getSimpleName());
+        for (Class<? extends Object> o : getSchema().getObjectTypes()) out.add(o.getSimpleName());
         return out;
     }
 
@@ -520,8 +518,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         @Override
         public <F> F prepareManualValue(String name, Object value) {
             Field field = table.getField(name);
-            if (field == null)
-                throw new MRuntimeException("field not found",name,table);
+            if (field == null) throw new MRuntimeException("field not found", name, table);
             return (F) AdbUtil.createAttribute(field.getType(), value);
         }
 
@@ -651,10 +648,9 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
             return MSystem.toString(this, table == null ? "?" : table.getName());
         }
     }
-    
+
     @Override
     public <I> I adaptTo(Class<? extends I> ifc) {
         return null;
     }
-    
 }

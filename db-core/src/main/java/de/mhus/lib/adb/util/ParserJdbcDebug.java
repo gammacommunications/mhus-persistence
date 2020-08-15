@@ -119,26 +119,22 @@ public class ParserJdbcDebug extends ParserJdbc {
 
     private int level;
 
-    protected void blog(Object object ) {
+    protected void blog(Object object) {
         System.out.print(MString.rep(' ', level));
         System.out.print("--> ");
-        if (object == null)
-            System.out.println("?");
-        else
-            System.out.println(object.getClass().getSimpleName() + ": " + object);
+        if (object == null) System.out.println("?");
+        else System.out.println(object.getClass().getSimpleName() + ": " + object);
         level++;
     }
-    
-    protected void elog(Object object ) {
+
+    protected void elog(Object object) {
         level--;
         System.out.print(MString.rep(' ', level));
         System.out.print("<-- ");
-        if (object == null)
-            System.out.println("?");
-        else
-            System.out.println(object.getClass().getSimpleName() + ": " + object);
+        if (object == null) System.out.println("?");
+        else System.out.println(object.getClass().getSimpleName() + ": " + object);
     }
-    
+
     @Override
     public void visit(Select select) {
         blog(select);
@@ -771,9 +767,9 @@ public class ParserJdbcDebug extends ParserJdbc {
 
     @Override
     public void visit(HexValue hexValue) {
-       blog(hexValue);
-       super.visit(hexValue);
-       elog(hexValue);
+        blog(hexValue);
+        super.visit(hexValue);
+        elog(hexValue);
     }
 
     @Override
@@ -922,5 +918,4 @@ public class ParserJdbcDebug extends ParserJdbc {
         super.visit(array);
         elog(array);
     }
-
 }

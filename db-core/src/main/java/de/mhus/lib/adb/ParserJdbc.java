@@ -127,7 +127,14 @@ import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
-public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, ExpressionVisitor, ItemsListVisitor, SelectItemVisitor, StatementVisitor {
+public class ParserJdbc
+        implements QueryParser,
+                SelectVisitor,
+                FromItemVisitor,
+                ExpressionVisitor,
+                ItemsListVisitor,
+                SelectItemVisitor,
+                StatementVisitor {
 
     private static final String NOT_SUPPORTED_YET = "Not supported yet.";
 
@@ -138,7 +145,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
 
     private LinkedList<String> columns = new LinkedList<>();
     private StringBuilder sql = null;
-    
+
     @Override
     public void visit(Select select) {
         if (select.getWithItemsList() != null) {
@@ -186,14 +193,13 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
 
     @Override
     public void visit(Table tableName) {
-        if (entityName != null)
-            throw new MRuntimeException("only one table is supported");
+        if (entityName != null) throw new MRuntimeException("only one table is supported");
         entityName = tableName.getFullyQualifiedName().toLowerCase();
         if (manager != null) {
             try {
                 entity = manager.getType(entityName).newInstance().getClass();
             } catch (Exception e) {
-                throw new MRuntimeException(entityName,e);
+                throw new MRuntimeException(entityName, e);
             }
         }
     }
@@ -210,7 +216,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
 
     @Override
     public void visit(Addition expression) {
-        
+
         expression.getLeftExpression().accept(this);
         sql.append("+");
         expression.getRightExpression().accept(this);
@@ -232,13 +238,16 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
 
     @Override
     public void visit(Column tableColumn) {
-//        if (tableColumn.getTable() != null && tableColumn.getTable().getName() != null) {
-//            visit(tableColumn.getTable());
-//        }
-        if (entityName == null) 
-            columns.add(tableColumn.toString());
+        //        if (tableColumn.getTable() != null && tableColumn.getTable().getName() != null) {
+        //            visit(tableColumn.getTable());
+        //        }
+        if (entityName == null) columns.add(tableColumn.toString());
         else
-            sql.append("$db.").append(entityName).append(".").append(tableColumn.toString().toLowerCase()).append("$");
+            sql.append("$db.")
+                    .append(entityName)
+                    .append(".")
+                    .append(tableColumn.toString().toLowerCase())
+                    .append("$");
     }
 
     @Override
@@ -304,9 +313,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(FullTextSearch fullTextSearch) {
-        
-    }
+    public void visit(FullTextSearch fullTextSearch) {}
 
     @Override
     public void visit(SignedExpression signedExpression) {
@@ -319,8 +326,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(IsBooleanExpression isBooleanExpression) {
-    }
+    public void visit(IsBooleanExpression isBooleanExpression) {}
 
     @Override
     public void visit(JdbcParameter jdbcParameter) {
@@ -372,8 +378,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(NullValue nullValue) {
-    }
+    public void visit(NullValue nullValue) {}
 
     @Override
     public void visit(OrExpression expression) {
@@ -435,17 +440,17 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
 
     @Override
     public void visit(DateValue dateValue) {
-        sql.append(dateValue); //TODO
+        sql.append(dateValue); // TODO
     }
 
     @Override
     public void visit(TimestampValue timestampValue) {
-        sql.append(timestampValue); //TODO
+        sql.append(timestampValue); // TODO
     }
 
     @Override
     public void visit(TimeValue timeValue) {
-        sql.append(timeValue); //TODO
+        sql.append(timeValue); // TODO
     }
 
     /*
@@ -544,8 +549,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(AnalyticExpression analytic) {
-    }
+    public void visit(AnalyticExpression analytic) {}
 
     @Override
     public void visit(SetOperationList list) {
@@ -555,14 +559,13 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(ExtractExpression eexpr) {
-    }
+    public void visit(ExtractExpression eexpr) {}
 
     @Override
     public void visit(LateralSubSelect lateralSubSelect) {
         lateralSubSelect.getSubSelect().getSelectBody().accept(this);
     }
-    
+
     @Override
     public void visit(MultiExpressionList multiExprList) {
         for (ExpressionList exprList : multiExprList.getExprList()) {
@@ -585,12 +588,10 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(IntervalExpression iexpr) {
-    }
+    public void visit(IntervalExpression iexpr) {}
 
     @Override
-    public void visit(JdbcNamedParameter jdbcNamedParameter) {
-    }
+    public void visit(JdbcNamedParameter jdbcNamedParameter) {}
 
     @Override
     public void visit(OracleHierarchicalExpression oexpr) {
@@ -616,12 +617,10 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(JsonExpression jsonExpr) {
-    }
+    public void visit(JsonExpression jsonExpr) {}
 
     @Override
-    public void visit(JsonOperator jsonExpr) {
-    }
+    public void visit(JsonOperator jsonExpr) {}
 
     @Override
     public void visit(AllColumns allColumns) {
@@ -629,8 +628,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(AllTableColumns allTableColumns) {
-    }
+    public void visit(AllTableColumns allTableColumns) {}
 
     @Override
     public void visit(SelectExpressionItem item) {
@@ -638,21 +636,16 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(UserVariable var) {
-    }
+    public void visit(UserVariable var) {}
 
     @Override
-    public void visit(NumericBind bind) {
-
-    }
+    public void visit(NumericBind bind) {}
 
     @Override
-    public void visit(KeepExpression aexpr) {
-    }
+    public void visit(KeepExpression aexpr) {}
 
     @Override
-    public void visit(MySQLGroupConcat groupConcat) {
-    }
+    public void visit(MySQLGroupConcat groupConcat) {}
 
     @Override
     public void visit(ValueListExpression valueList) {
@@ -788,9 +781,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(HexValue hexValue) {
-
-    }
+    public void visit(HexValue hexValue) {}
 
     @Override
     public void visit(Merge merge) {
@@ -803,12 +794,10 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(OracleHint hint) {
-    }
+    public void visit(OracleHint hint) {}
 
     @Override
-    public void visit(TableFunction valuesList) {
-    }
+    public void visit(TableFunction valuesList) {}
 
     @Override
     public void visit(AlterView alterView) {
@@ -816,18 +805,13 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(TimeKeyExpression timeKeyExpression) {
-    }
+    public void visit(TimeKeyExpression timeKeyExpression) {}
 
     @Override
-    public void visit(DateTimeLiteralExpression literal) {
-
-    }
+    public void visit(DateTimeLiteralExpression literal) {}
 
     @Override
-    public void visit(Commit commit) {
-
-    }
+    public void visit(Commit commit) {}
 
     @Override
     public void visit(Upsert upsert) {
@@ -841,8 +825,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(UseStatement use) {
-    }
+    public void visit(UseStatement use) {}
 
     @Override
     public void visit(ParenthesisFromItem parenthesis) {
@@ -887,8 +870,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(NextValExpression nextVal) {
-    }
+    public void visit(NextValExpression nextVal) {}
 
     @Override
     public void visit(CollateExpression col) {
@@ -896,8 +878,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(ShowStatement aThis) {
-    }
+    public void visit(ShowStatement aThis) {}
 
     @Override
     public void visit(SimilarToExpression expression) {
@@ -906,8 +887,7 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     }
 
     @Override
-    public void visit(DeclareStatement aThis) {
-    }
+    public void visit(DeclareStatement aThis) {}
 
     @Override
     public void visit(ArrayExpression array) {
@@ -933,5 +913,4 @@ public class ParserJdbc implements QueryParser, SelectVisitor, FromItemVisitor, 
     public List<String> getColumnNames() {
         return columns;
     }
-
 }

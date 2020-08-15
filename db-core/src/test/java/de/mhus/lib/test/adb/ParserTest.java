@@ -39,11 +39,10 @@ public class ParserTest extends TestCase {
         System.out.println("Table: " + parser.getEntityName());
         System.out.println("Columns: " + parser.getColumnNames());
         System.out.println("Query: " + parser.getQualification());
-        
+
         assertEquals("book", parser.getEntityName());
         assertEquals("", parser.getQualification());
         assertEquals("[*]", parser.getColumnNames().toString());
-        
     }
 
     @Test
@@ -59,7 +58,9 @@ public class ParserTest extends TestCase {
         System.out.println("Query: " + parser.getQualification());
 
         assertEquals("book", parser.getEntityName());
-        assertEquals("$db.book.name$ = 'test' AND $db.book.created$ < '1.1.2020'", parser.getQualification());
+        assertEquals(
+                "$db.book.name$ = 'test' AND $db.book.created$ < '1.1.2020'",
+                parser.getQualification());
         assertEquals("[*]", parser.getColumnNames().toString());
     }
 
@@ -70,7 +71,7 @@ public class ParserTest extends TestCase {
         ParserJdbcDebug parser = new ParserJdbcDebug();
         parser.init(null);
         QueryParser.parse("select name,created from book where name='test'", parser);
-        
+
         System.out.println("Table: " + parser.getEntityName());
         System.out.println("Columns: " + parser.getColumnNames());
         System.out.println("Query: " + parser.getQualification());
@@ -79,11 +80,11 @@ public class ParserTest extends TestCase {
         assertEquals("$db.book.name$ = 'test'", parser.getQualification());
         assertEquals("[name, created]", parser.getColumnNames().toString());
     }
-    
+
     @Test
     public void testRealQuery() throws Throwable {
         DbManager manager = AdbTest.createBookstoreManager();
-        
+
         // create persons
         Person p = new Person();
         p.setName("Klaus Mustermann");
@@ -96,16 +97,16 @@ public class ParserTest extends TestCase {
         manager.createObject(p);
         UUID p2 = p.getId();
 
-        DbCollection<Person> res = QueryParser.getByQualification(manager, "select * from Person where name='Alex Admin'", null);
+        DbCollection<Person> res =
+                QueryParser.getByQualification(
+                        manager, "select * from Person where name='Alex Admin'", null);
         assertTrue(res.hasNext());
-        
+
         Person current = res.next();
         assertEquals(p2, current.getId());
-        
+
         assertFalse(res.hasNext());
-        
+
         manager.getPool().close();
-       
     }
-    
 }

@@ -26,12 +26,13 @@ import de.mhus.lib.xdb.XdbService;
 public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDbConsumer {
 
     public static CfgLong CFG_TIMEOUT =
-            new CfgLong(CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
+            new CfgLong(
+                    CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
     protected DbManager manager;
 
     @Override
     public final void doInitialize(XdbService dbService) {
-        manager = (DbManager)dbService;
+        manager = (DbManager) dbService;
         doInitialize();
     }
 
@@ -41,7 +42,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
     public boolean canCreate(Object obj) throws MException {
         return true;
     }
-    
+
     @Override
     public boolean canRead(Object obj) throws MException {
         return true;
@@ -79,9 +80,8 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
         }
         throw new MException("unknown type", type);
     }
-    
+
     public DbManager getManager() {
         return manager;
     }
-    
 }

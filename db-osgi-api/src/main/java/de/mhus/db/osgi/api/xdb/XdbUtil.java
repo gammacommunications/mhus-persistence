@@ -35,7 +35,7 @@ import de.mhus.osgi.api.MOsgi.Service;
 
 public class XdbUtil {
 
-    private static final int PAGE_SIZE = 100; //XXX ?
+    private static final int PAGE_SIZE = 100; // XXX ?
 
     public static XdbApi getApi(String apiName) throws NotFoundException {
         XdbApi api = MOsgi.getService(XdbApi.class, "(xdb.type=" + apiName + ")");
@@ -134,7 +134,8 @@ public class XdbUtil {
         return v;
     }
 
-    public static <T> LinkedList<T> collectResults(XdbService manager, AQuery<T> query, int page) throws MException {
+    public static <T> LinkedList<T> collectResults(XdbService manager, AQuery<T> query, int page)
+            throws MException {
         LinkedList<T> list = new LinkedList<T>();
         DbCollection<T> res = manager.getByQualification(query);
         if (!res.skip(page * PAGE_SIZE)) return list;
@@ -145,5 +146,4 @@ public class XdbUtil {
         res.close();
         return list;
     }
-
 }

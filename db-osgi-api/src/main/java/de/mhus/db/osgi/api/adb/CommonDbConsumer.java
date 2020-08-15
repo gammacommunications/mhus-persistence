@@ -44,12 +44,11 @@ public interface CommonDbConsumer {
     void doCleanup();
 
     /**
-     * Is called after creation of the DbManager. Could be called multiple times
-     * if a recreation of the db manager was done.
-     * 
+     * Is called after creation of the DbManager. Could be called multiple times if a recreation of
+     * the db manager was done.
+     *
      * @param manager
      * @throws Exception
      */
     void doPostInitialize(XdbService manager) throws Exception;
-
 }

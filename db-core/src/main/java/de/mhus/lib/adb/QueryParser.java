@@ -18,15 +18,14 @@ public interface QueryParser extends StatementVisitor {
         parse(sql, parser);
         return parser;
     }
-    
+
     public static void parse(String sql, QueryParser parser) throws ParseException {
         try {
-            Select stmt = (Select)CCJSqlParserUtil.parse(sql);
+            Select stmt = (Select) CCJSqlParserUtil.parse(sql);
             stmt.accept(parser);
         } catch (Exception t) {
-            throw new ParseException(sql,t);
+            throw new ParseException(sql, t);
         }
-        
     }
 
     public String getEntityName();
@@ -35,10 +34,10 @@ public interface QueryParser extends StatementVisitor {
 
     public String getQualification();
 
-    public static <T> DbCollection<T> getByQualification(XdbService manager, String sql, Map<String, Object> parameterValues) throws MException {
+    public static <T> DbCollection<T> getByQualification(
+            XdbService manager, String sql, Map<String, Object> parameterValues) throws MException {
         QueryParser parser = parse(manager, sql);
         XdbType<T> type = manager.getType(parser.getEntityName());
         return type.getByQualification(parser.getQualification(), parameterValues);
     }
-
 }

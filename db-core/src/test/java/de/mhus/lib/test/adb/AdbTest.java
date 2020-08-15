@@ -211,7 +211,7 @@ public class AdbTest extends TestCase {
 
         return pool;
     }
-    
+
     public static DbManager createBookstoreManager() throws Throwable {
         DbPool pool = createPool("testModel").getPool("test");
         BookStoreSchema schema = new BookStoreSchema();

@@ -39,8 +39,7 @@ public class AdbOsgiUtil {
         throw new IOException("Type not found in service: " + typeName);
     }
 
-    public static String getTableName(AdbService service, String typeName)
-            throws IOException {
+    public static String getTableName(AdbService service, String typeName) throws IOException {
         typeName = typeName.toLowerCase();
         for (Class<? extends Object> item : service.getManager().getSchema().getObjectTypes())
             if (item.getSimpleName().toLowerCase().equals(typeName)) {
@@ -67,8 +66,7 @@ public class AdbOsgiUtil {
 
     public static AdbService getService(String serviceName)
             throws IOException, InvalidSyntaxException {
-        if (serviceName == null) 
-            throw new NullPointerException("service name is null");
+        if (serviceName == null) throw new NullPointerException("service name is null");
         int cnt = 0;
 
         for (AdbService service : MOsgi.getServices(AdbService.class, null)) {
@@ -140,17 +138,15 @@ public class AdbOsgiUtil {
 
         return out;
     }
-    
+
     public static AdbService getCommonAdbService() {
         try {
             AdbService service = getService("common_adb");
-            if (service == null)
-                MLogUtil.log().i("CommonAdbService not found");
+            if (service == null) MLogUtil.log().i("CommonAdbService not found");
             return service;
         } catch (Throwable t) {
             MLogUtil.log().i(t.toString());
             return null;
         }
     }
-    
 }

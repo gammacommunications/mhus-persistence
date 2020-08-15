@@ -34,8 +34,7 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             } catch (AuthorizationException e) {
                 return false;
             }
-            if (clazz.getAnnotation(ExplicitAccess.class) != null)
-                return true;
+            if (clazz.getAnnotation(ExplicitAccess.class) != null) return true;
         }
         String type = clazz.getCanonicalName();
         String ident = "*";
@@ -45,7 +44,7 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
         }
         return AccessUtil.isPermitted(type + ":create:" + ident);
     }
-    
+
     @Override
     public boolean canRead(Object obj) throws MException {
         Class<?> clazz = obj.getClass();
@@ -55,8 +54,7 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             } catch (AuthorizationException e) {
                 return false;
             }
-            if (clazz.getAnnotation(ExplicitAccess.class) != null)
-                return true;
+            if (clazz.getAnnotation(ExplicitAccess.class) != null) return true;
         }
         String type = clazz.getCanonicalName();
         String ident = "*";
@@ -76,8 +74,7 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             } catch (AuthorizationException e) {
                 return false;
             }
-            if (clazz.getAnnotation(ExplicitAccess.class) != null)
-                return true;
+            if (clazz.getAnnotation(ExplicitAccess.class) != null) return true;
         }
         String type = clazz.getCanonicalName();
         String ident = "*";
@@ -97,8 +94,7 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             } catch (AuthorizationException e) {
                 return false;
             }
-            if (clazz.getAnnotation(ExplicitAccess.class) != null)
-                return true;
+            if (clazz.getAnnotation(ExplicitAccess.class) != null) return true;
         }
         String type = clazz.getCanonicalName();
         String ident = "*";
@@ -108,5 +104,4 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
         }
         return AccessUtil.isPermitted(type + ":delete:" + ident);
     }
-
 }

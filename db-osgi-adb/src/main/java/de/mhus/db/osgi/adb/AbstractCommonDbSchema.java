@@ -28,11 +28,9 @@ import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbResult;
 
 /**
- * Common used DB Schema, created by CommonAdbService for all
- * CommonAdbProvider services.
- * 
- * @author mikehummel
+ * Common used DB Schema, created by CommonAdbService for all CommonAdbProvider services.
  *
+ * @author mikehummel
  */
 public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
 
@@ -87,7 +85,7 @@ public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
             if (object instanceof DbMetadata) {
                 DbMetadata obj = (DbMetadata) object;
                 try {
-                    
+
                     switch (right) {
                         case CREATE:
                             if (!admin.canCreate(obj))

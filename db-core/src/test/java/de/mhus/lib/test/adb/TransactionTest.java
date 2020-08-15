@@ -36,7 +36,7 @@ public class TransactionTest {
     public DbPoolBundle createPool(String name) {
         IConfig cconfig = new MConfig();
         IConfig cdb = cconfig.createObject("test");
-        
+
         cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
         cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
         cdb.setProperty("user", "sa");
@@ -74,7 +74,7 @@ public class TransactionTest {
         try {
             DbTransaction.lockDefault(
                     obj3); // nested not locked should fail, can't lock two times - philosophers
-                           // deadlock
+            // deadlock
             DbTransaction.releaseLock();
             fail("Nested Transaction Not Allowed");
         } catch (NestedTransactionException e) {

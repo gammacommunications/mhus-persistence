@@ -29,14 +29,12 @@ import de.mhus.lib.xdb.XdbType;
 
 /**
  * Singleton Service
- * 
- * Provide a XdbApi and implement the Adb schema.
- * Searches for AdbManagerService and provide it as XdbService to Xdb.
- * 
- * @author mikehummel
  *
+ * <p>Provide a XdbApi and implement the Adb schema. Searches for AdbManagerService and provide it
+ * as XdbService to Xdb.
+ *
+ * @author mikehummel
  */
-
 @Component(property = "xdb.type=adb")
 public class AdbXdbApiImpl implements XdbApi {
 

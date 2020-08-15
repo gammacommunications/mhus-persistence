@@ -286,7 +286,7 @@ public class DialectDefault extends Dialect {
     }
 
     protected void createTable(Statement sth, String tn, IConfig ctable) {
-        log().d("createTable",tn,ctable);
+        log().d("createTable", tn, ctable);
         StringBuilder sql = new StringBuilder();
         sql.append("create table " + tn + " ( ");
         boolean first = true;

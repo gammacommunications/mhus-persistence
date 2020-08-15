@@ -59,8 +59,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 
     public final Class<? extends Object>[] getObjectTypes() {
         initObjectTypes();
-        return (Class<? extends Object>[])
-                objectTypes.toArray(new Class<?>[objectTypes.size()]);
+        return (Class<? extends Object>[]) objectTypes.toArray(new Class<?>[objectTypes.size()]);
     }
 
     void resetObjectTypes() {
@@ -254,8 +253,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      * @param con
      * @param dbManager
      */
-    public void doPreDelete(
-            Table table, Object object, DbConnection con, DbManager dbManager) {
+    public void doPreDelete(Table table, Object object, DbConnection con, DbManager dbManager) {
         if (object instanceof DbObject) {
             ((DbObject) object).doPreDelete(con);
         }

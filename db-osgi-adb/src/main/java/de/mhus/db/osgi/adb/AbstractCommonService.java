@@ -50,10 +50,10 @@ import de.mhus.osgi.api.MOsgi;
 import de.mhus.osgi.api.aaa.ContextCachedItem;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
-//@Component(service = AdbService.class, immediate = true)
+// @Component(service = AdbService.class, immediate = true)
 public abstract class AbstractCommonService extends AbstractAdbService {
 
-    private static HashMap<String,AbstractCommonService> instances = new HashMap<>();
+    private static HashMap<String, AbstractCommonService> instances = new HashMap<>();
 
     private ServiceTracker<CommonDbConsumer, CommonDbConsumer> tracker;
     private TreeMap<String, CommonDbConsumer> schemaList = new TreeMap<>();
@@ -71,17 +71,25 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
     // static service name
     protected final String SERVICE_NAME = getCommonServiceName();
-    
+
     private final CfgString CFG_DATASOURCE =
-            new CfgString(AbstractCommonService.class, SERVICE_NAME+"@dataSourceName", "adb_common").updateAction(s -> {
-                setDataSourceName(s);
-            });
+            new CfgString(
+                            AbstractCommonService.class,
+                            SERVICE_NAME + "@dataSourceName",
+                            "adb_common")
+                    .updateAction(
+                            s -> {
+                                setDataSourceName(s);
+                            });
     private final CfgBoolean CFG_USE_PSEUDO =
-            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME+"@usePseudoPool", false);
+            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@usePseudoPool", false);
     private final CfgBoolean CFG_ENABLED =
-            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME+"@enabled", true);
+            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@enabled", true);
     private final CfgInt CFG_INIT_RETRY_SEC =
-            new CfgInt(AbstractCommonService.class, SERVICE_NAME+"@initRetrySec", 1); // XXX should be 10 to 30 by default and listen for events
+            new CfgInt(
+                    AbstractCommonService.class,
+                    SERVICE_NAME + "@initRetrySec",
+                    1); // XXX should be 10 to 30 by default and listen for events
 
     public static AbstractCommonService instance(String name) {
         return instances.get(name);
@@ -119,14 +127,19 @@ public abstract class AbstractCommonService extends AbstractAdbService {
             }
             if (status == STATUS.STARTED) return;
             try {
-                DataSource ds = DataSourceUtil.getDataSource(getDataSourceName(), ctx == null ? MOsgi.getBundleContext() : ctx.getBundleContext());
+                DataSource ds =
+                        DataSourceUtil.getDataSource(
+                                getDataSourceName(),
+                                ctx == null ? MOsgi.getBundleContext() : ctx.getBundleContext());
                 if (ds != null) {
                     if (getManager() != null) {
                         log().i("Start tracker");
                         try {
                             tracker =
                                     new ServiceTracker<>(
-                                            context, CommonDbConsumer.class, new MyTrackerCustomizer());
+                                            context,
+                                            CommonDbConsumer.class,
+                                            new MyTrackerCustomizer());
                             tracker.open();
                         } finally {
                             status = STATUS.STARTED;
@@ -135,24 +148,27 @@ public abstract class AbstractCommonService extends AbstractAdbService {
                     }
                 }
             } catch (java.lang.IllegalStateException e) {
-                log().e("Exit CommonAdbService start loop",e.toString());
+                log().e("Exit CommonAdbService start loop", e.toString());
                 return;
             }
-            
+
             // write once as info
-            log().log(once ? LEVEL.INFO : LEVEL.TRACE,"Waiting for datasource",getDataSourceName());
+            log().log(
+                            once ? LEVEL.INFO : LEVEL.TRACE,
+                            "Waiting for datasource",
+                            getDataSourceName());
             once = false;
-            MThread.sleep(CFG_INIT_RETRY_SEC.value()*1000);
+            MThread.sleep(CFG_INIT_RETRY_SEC.value() * 1000);
         }
     }
 
     @Override
     protected DataSource getDataSource() {
-        DataSource ds = DataSourceUtil.getDataSource(dataSourceName,context);
+        DataSource ds = DataSourceUtil.getDataSource(dataSourceName, context);
         if (ds == null) log().t("DataSource is unknown", dataSourceName);
         return ds;
     }
-    
+
     @Deactivate
     public void doDeactivate(ComponentContext ctx) {
         try {
@@ -197,9 +213,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         @Override
         public CommonDbConsumer addingService(ServiceReference<CommonDbConsumer> reference) {
 
-            if (!AbstractCommonService.this.acceptService(reference))
-                return null;
-            
+            if (!AbstractCommonService.this.acceptService(reference)) return null;
+
             CommonDbConsumer service = context.getService(reference);
             String name = service.getClass().getCanonicalName();
             service.doInitialize(AbstractCommonService.this.getManager());
@@ -219,9 +234,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         public void modifiedService(
                 ServiceReference<CommonDbConsumer> reference, CommonDbConsumer service) {
 
-            if (!AbstractCommonService.this.acceptService(reference))
-                return;
-            
+            if (!AbstractCommonService.this.acceptService(reference)) return;
+
             synchronized (schemaList) {
                 updateManager();
             }
@@ -231,9 +245,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         public void removedService(
                 ServiceReference<CommonDbConsumer> reference, CommonDbConsumer service) {
 
-            if (!AbstractCommonService.this.acceptService(reference))
-                return;
-            
+            if (!AbstractCommonService.this.acceptService(reference)) return;
+
             String name = service.getClass().getCanonicalName();
             service.doDestroy();
             synchronized (schemaList) {
@@ -292,7 +305,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     public final String getServiceName() {
         return SERVICE_NAME;
     };
-    
+
     @Override
     protected void doPostOpen() throws MException {
         synchronized (schemaList) {
@@ -307,77 +320,81 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     public STATUS getStatus() {
         return status;
     }
-    
+
     // ----
     // Access
-    
+
     public CommonDbConsumer getConsumer(String type) throws MException {
         if (type == null) throw new MException("type is null");
-        CommonDbConsumer ret =  schemaList.get(type);
+        CommonDbConsumer ret = schemaList.get(type);
         if (ret == null) throw new MException("Access Controller not found", type);
         return ret;
     }
-    
+
     protected boolean canRead(Object obj) throws MException {
         if (obj == null) return false;
 
-//XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
-//        if (item != null) return item;
+        // XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
+        //        if (item != null) return item;
 
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canRead(obj);
-//        ((AaaContextImpl) c)
-//                .setCached("ace_read|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+        //        ((AaaContextImpl) c)
+        //                .setCached("ace_read|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5,
+        // ret);
         return ret.bool;
     }
 
     protected boolean canUpdate(Object obj) throws MException {
         if (obj == null) return false;
 
-//        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
-//        if (item != null) return item;
+        //        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
+        //        if (item != null) return item;
 
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canUpdate(obj);
-//        ((AaaContextImpl) c)
-//               .setCached("ace_update|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+        //        ((AaaContextImpl) c)
+        //               .setCached("ace_update|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
+        // 5, ret);
         return ret.bool;
     }
 
     protected boolean canDelete(Object obj) throws MException {
         if (obj == null) return false;
 
-//        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
-//        if (item != null) return item;
+        //        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
+        //        if (item != null) return item;
 
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canDelete(obj);
-//        ((AaaContextImpl) c)
-//                .setCached("ace_delete|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+        //        ((AaaContextImpl) c)
+        //                .setCached("ace_delete|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
+        // 5, ret);
         return ret.bool;
     }
 
     protected boolean canCreate(Object obj) throws MException {
         if (obj == null) return false;
-//        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
-//        if (item != null) return item;
+        //        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
+        //        if (item != null) return item;
 
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canCreate(obj);
-//        ((AaaContextImpl) c)
-//                .setCached("ace_create|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+        //        ((AaaContextImpl) c)
+        //                .setCached("ace_create|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
+        // 5, ret);
         return ret.bool;
     }
 
@@ -458,5 +475,4 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     public <T extends Object> T getObject(Class<T> type, UUID id) throws MException {
         return getObject(type.getCanonicalName(), id);
     }
-
 }

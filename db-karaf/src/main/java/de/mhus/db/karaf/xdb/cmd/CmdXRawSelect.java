@@ -76,7 +76,7 @@ public class CmdXRawSelect extends AbstractCmd {
             description = "Additional filters after loading or results",
             required = false)
     String filter;
-    
+
     @Option(
             name = "-m",
             aliases = "--max",
@@ -131,8 +131,7 @@ public class CmdXRawSelect extends AbstractCmd {
 
         Object output = null;
 
-        if (MString.isSet(filter))
-            condition = new Condition(filter);
+        if (MString.isSet(filter)) condition = new Condition(filter);
 
         apiName = XdbKarafUtil.getApiName(session, apiName);
         serviceName = XdbKarafUtil.getServiceName(session, serviceName);
@@ -194,12 +193,11 @@ public class CmdXRawSelect extends AbstractCmd {
         if (page == null) {
             for (Object object : type.getByQualification(qualification, queryParam)) {
 
-                if (skipResult(type,object))
-                    continue;
+                if (skipResult(type, object)) continue;
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = getValueValue(type,object, name);
+                    Object value = getValueValue(type, object, name);
                     row.add(value);
                 }
                 output = object;
@@ -209,12 +207,11 @@ public class CmdXRawSelect extends AbstractCmd {
             DbCollection<?> res = type.getByQualification(qualification, null);
             for (Object object : res) {
 
-                if (skipResult(type,object))
-                    continue;
+                if (skipResult(type, object)) continue;
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = getValueValue(type,object, name);
+                    Object value = getValueValue(type, object, name);
                     row.add(value);
                 }
                 output = object;
@@ -228,12 +225,11 @@ public class CmdXRawSelect extends AbstractCmd {
             int lines = MCast.toint(page.substring(1), 100);
             for (Object object : type.getByQualification(qualification, null)) {
 
-                if (skipResult(type,object))
-                    continue;
+                if (skipResult(type, object)) continue;
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = getValueValue(type,object, name);
+                    Object value = getValueValue(type, object, name);
                     row.add(value);
                 }
                 output = object;
@@ -261,12 +257,11 @@ public class CmdXRawSelect extends AbstractCmd {
             while (iter.hasNext()) {
                 Object object = iter.next();
 
-                if (skipResult(type, object))
-                    continue;
+                if (skipResult(type, object)) continue;
 
                 ConsoleTable.Row row = out.addRow();
                 for (String name : fieldNames) {
-                    Object value = getValueValue(type,object, name);
+                    Object value = getValueValue(type, object, name);
                     row.add(value);
                 }
                 output = object;
@@ -285,15 +280,13 @@ public class CmdXRawSelect extends AbstractCmd {
     }
 
     private boolean skipResult(XdbType<?> type, Object object) throws MException {
-        if (condition == null)
-            return false;
-        
+        if (condition == null) return false;
+
         return condition.matches(new ConditionMap(type, object));
-        
     }
 
     private class ConditionMap extends HashMap<String, Object> {
-        
+
         private static final long serialVersionUID = 1L;
         private Object object;
         private XdbType<?> type;
@@ -302,7 +295,7 @@ public class CmdXRawSelect extends AbstractCmd {
             this.type = type;
             this.object = object;
         }
-        
+
         @Override
         public Object get(Object key) {
             try {
@@ -311,9 +304,8 @@ public class CmdXRawSelect extends AbstractCmd {
                 return null;
             }
         }
-        
     }
-    
+
     @SuppressWarnings("rawtypes")
     private Object getValueValue(XdbType<?> type, Object object, String name) throws MException {
         int pos = name.indexOf('.');
@@ -321,35 +313,27 @@ public class CmdXRawSelect extends AbstractCmd {
         if (pos < 0) {
             value = type.get(object, name);
         } else {
-            String key = name.substring(pos+1);
+            String key = name.substring(pos + 1);
             name = name.substring(0, pos);
             value = type.get(object, name);
             if (value == null) {
                 // nothing
-            } else
-            if (value instanceof List) {
+            } else if (value instanceof List) {
                 int idx = M.to(key, 0);
-                List c = (List)value;
-                if (idx < c.size())
-                    value = c.get(idx);
-                else
-                    value = null;
-            } else
-            if (value.getClass().isArray()) {
+                List c = (List) value;
+                if (idx < c.size()) value = c.get(idx);
+                else value = null;
+            } else if (value.getClass().isArray()) {
                 int idx = M.to(key, 0);
-                Object[] a = (Object[])value;
-                if (idx < a.length)
-                    value = a[idx];
-                else
-                    a = null;
-            } else
-            if (value instanceof Map) {
-                Map m = (Map)value;
+                Object[] a = (Object[]) value;
+                if (idx < a.length) value = a[idx];
+                else a = null;
+            } else if (value instanceof Map) {
+                Map m = (Map) value;
                 value = m.get(key);
             }
         }
         if (value == null) return "[null]";
         return value;
     }
-
 }

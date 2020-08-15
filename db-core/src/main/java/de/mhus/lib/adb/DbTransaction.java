@@ -38,7 +38,8 @@ public class DbTransaction {
 
     /**
      * lock accept only nested locks with already locked objects.
-     * @param objects 
+     *
+     * @param objects
      * @return A lock object
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
@@ -92,8 +93,7 @@ public class DbTransaction {
      * @return The Lock
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
-    public static DbLock lock(DbManager manager, Object... objects)
-            throws TimeoutRuntimeException {
+    public static DbLock lock(DbManager manager, Object... objects) throws TimeoutRuntimeException {
         return lock(manager, DEFAULT_TIMEOUT, objects);
     }
 

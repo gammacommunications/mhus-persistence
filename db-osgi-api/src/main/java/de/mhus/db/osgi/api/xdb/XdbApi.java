@@ -22,9 +22,8 @@ import de.mhus.lib.xdb.XdbType;
 
 /**
  * Basic interface to handle multiple types of databases with the same framework.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
  */
 public interface XdbApi extends Adaptable {
 

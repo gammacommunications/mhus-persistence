@@ -17,11 +17,9 @@ import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.lib.core.MApi;
 
 /**
- * Common used DB Schema, created by CommonAdbService for all
- * CommonAdbProvider services.
- * 
- * @author mikehummel
+ * Common used DB Schema, created by CommonAdbService for all CommonAdbProvider services.
  *
+ * @author mikehummel
  */
 public class CommonAdbDbSchema extends AbstractCommonDbSchema {
 
@@ -33,5 +31,4 @@ public class CommonAdbDbSchema extends AbstractCommonDbSchema {
     protected void init() {
         tablePrefix = MApi.getCfg(AdbService.class).getExtracted("tablePrefix", "adb_");
     }
-
 }
