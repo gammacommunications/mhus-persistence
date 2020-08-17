@@ -52,6 +52,18 @@
 		</plugins>
 	</build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.mhus.lib</groupId>
+                <artifactId>mhus-karaf</artifactId>
+                <version>${mhus-parent.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
