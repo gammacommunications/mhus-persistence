@@ -54,7 +54,7 @@ public class MemoryLockStrategy extends LockStrategy {
 
             if (System.currentTimeMillis() - start > timeout)
                 throw new TimeoutRuntimeException(key);
-            MThread.sleep(sleepTime);
+            MThread.sleepForSure(sleepTime);
         }
     }
 
