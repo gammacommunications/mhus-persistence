@@ -27,8 +27,8 @@ public interface ICompiler {
 
     ParsingPart compileFunction(FunctionPart function);
 
-    default String toSqlDateValue(Object string) {
-        return "'" + MCast.toString(string) + "'";
+    default String toSqlDateValue(Object value) {
+        return "'" + MCast.toString(value) + "'";
     }
 
     default String valueToString(Object value) {

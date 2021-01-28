@@ -17,6 +17,8 @@ package de.mhus.lib.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -357,6 +359,10 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
         if (value == null) return "null";
         if (value instanceof Calendar) return toSqlDate(((Calendar) value).getTime());
         if (value instanceof Date) return toSqlDate((Date) value);
+        if (value instanceof LocalDateTime) 
+            return toSqlDate(  MDate.toDate( (LocalDateTime) value, null));
+        if (value instanceof LocalDate)
+            return toSqlDate(  MDate.toDate( (LocalDate) value, null));
         if (value instanceof Number) {
             Date date = new Date(((Number) value).longValue());
             return toSqlDate(date);
