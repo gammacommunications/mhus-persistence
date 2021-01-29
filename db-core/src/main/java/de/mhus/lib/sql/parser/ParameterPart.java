@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -99,10 +98,9 @@ public class ParameterPart extends StringParsingPart {
                 type = MConstants.TYPE_RAW; // direct toString() operation (via compiler request)
             else if (value instanceof Date
                     || value instanceof Calendar
-                    || value instanceof java.sql.Date 
+                    || value instanceof java.sql.Date
                     || value instanceof LocalDate
-                    || value instanceof LocalDateTime
-                    ) type = MConstants.TYPE_DATE;
+                    || value instanceof LocalDateTime) type = MConstants.TYPE_DATE;
             else if (value instanceof Boolean) type = MConstants.TYPE_BOOL;
             else if (value instanceof Enum) type = MConstants.TYPE_INT;
         }
@@ -155,10 +153,9 @@ public class ParameterPart extends StringParsingPart {
         MString.appendRepeating(level, ' ', out);
         out.append(getClass().getCanonicalName()).append(attribute).append("\n");
     }
-    
+
     @Override
     public String toString() {
-        return MSystem.toString(this,attribute);
+        return MSystem.toString(this, attribute);
     }
-
 }
