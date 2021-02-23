@@ -41,7 +41,7 @@ public interface CommonDbConsumer {
 
     Object getObject(String type, String id) throws MException;
 
-    void collectReferences(Object object, ReferenceCollector collector);
+    void collectReferences(Object object, ReferenceCollector collector, String reason);
 
     void doCleanup();
 

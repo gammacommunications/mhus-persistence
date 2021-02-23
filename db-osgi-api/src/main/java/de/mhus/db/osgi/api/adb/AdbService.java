@@ -20,6 +20,8 @@ import de.mhus.lib.errors.MException;
 
 public interface AdbService {
 
+    String REASON_DELETE = "delete";
+
     void updateManager(boolean clean) throws MException;
 
     DbManager getManager();
@@ -35,4 +37,5 @@ public interface AdbService {
     void doInitialize() throws MException;
 
     void doClose();
+
 }

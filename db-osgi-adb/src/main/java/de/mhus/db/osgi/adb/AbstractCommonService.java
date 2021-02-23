@@ -31,7 +31,9 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
+import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.db.osgi.api.adb.CommonDbConsumer;
+import de.mhus.db.osgi.api.adb.CommonService;
 import de.mhus.db.osgi.api.adb.Reference;
 import de.mhus.db.osgi.api.adb.Reference.TYPE;
 import de.mhus.db.osgi.api.adb.ReferenceCollector;
@@ -53,9 +55,9 @@ import de.mhus.osgi.api.aaa.ContextCachedItem;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 // @Component(service = AdbService.class, immediate = true)
-public abstract class AbstractCommonService extends AbstractAdbService {
+public abstract class AbstractCommonService extends AbstractAdbService implements CommonService {
 
-    private static HashMap<String, AbstractCommonService> instances = new HashMap<>();
+    private static HashMap<String, AbstractCommonService> instances = new HashMap<>(); //TODO should use a service for it
 
     private ServiceTracker<CommonDbConsumer, CommonDbConsumer> tracker;
     private TreeMap<String, CommonDbConsumer> schemaList = new TreeMap<>();
@@ -273,7 +275,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         return name.equals(refName);
     }
 
-    protected abstract String getCommonServiceName();
+    @Override
+    public abstract String getCommonServiceName();
 
     protected void servicePostInitialize(CommonDbConsumer service, String name) {
         MThread.asynchron(
@@ -326,6 +329,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     // ----
     // Access
 
+    @Override
     public CommonDbConsumer getConsumer(String type) throws MException {
         if (type == null) throw new MException("type is null");
         CommonDbConsumer ret = schemaList.get(type);
@@ -333,7 +337,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         return ret;
     }
 
-    protected boolean canRead(Object obj) throws MException {
+    @Override
+    public boolean canRead(Object obj) throws MException {
         if (obj == null) return false;
 
         // XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
@@ -350,7 +355,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canUpdate(Object obj) throws MException {
+    @Override
+    public boolean canUpdate(Object obj) throws MException {
         if (obj == null) return false;
 
         //        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
@@ -367,7 +373,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canDelete(Object obj) throws MException {
+    @Override
+    public boolean canDelete(Object obj) throws MException {
         if (obj == null) return false;
 
         //        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
@@ -384,7 +391,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         return ret.bool;
     }
 
-    protected boolean canCreate(Object obj) throws MException {
+    @Override
+    public boolean canCreate(Object obj) throws MException {
         if (obj == null) return false;
         //        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
         //        if (item != null) return item;
@@ -401,6 +409,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T extends Object> T getObject(String type, UUID id) throws MException {
         CommonDbConsumer controller = getConsumer(type);
         if (controller == null) return null;
@@ -408,13 +417,15 @@ public abstract class AbstractCommonService extends AbstractAdbService {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T extends Object> T getObject(String type, String id) throws MException {
         CommonDbConsumer controller = getConsumer(type);
         if (controller == null) return null;
         return (T) controller.getObject(type, id);
     }
 
-    protected void onDelete(Object object) {
+    @Override
+    public void onDelete(Object object) {
 
         if (object == null) return;
 
@@ -426,7 +437,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
                     public void foundReference(Reference<?> ref) {
                         if (ref.getType() == TYPE.CHILD) {
                             if (ref.getObject() == null) return;
-                            // be sure not cause an infinity loop, a object should only be deleted
+                            // be sure not to cause an infinity loop, a object should only be deleted
                             // once ...
                             if (ref.getObject() instanceof UuidIdentificable) {
                                 if (list.contains(((UuidIdentificable) ref.getObject()).getId()))
@@ -447,7 +458,7 @@ public abstract class AbstractCommonService extends AbstractAdbService {
                     }
                 };
 
-        collectRefereces(object, collector);
+        collectRefereces(object, collector, AdbService.REASON_DELETE);
     }
 
     protected void doDelete(Reference<?> ref) throws MException {
@@ -457,7 +468,8 @@ public abstract class AbstractCommonService extends AbstractAdbService {
         getManager().delete(ref.getObject());
     }
 
-    public void collectRefereces(Object object, ReferenceCollector collector) {
+    @Override
+    public void collectRefereces(Object object, ReferenceCollector collector, String reason) {
 
         if (object == null) return;
 
@@ -468,12 +480,13 @@ public abstract class AbstractCommonService extends AbstractAdbService {
 
         for (CommonDbConsumer service : distinct)
             try {
-                service.collectReferences(object, collector);
+                service.collectReferences(object, collector, reason);
             } catch (Throwable t) {
                 log().w(service.getClass(), object.getClass(), t);
             }
     }
 
+    @Override
     public <T extends Object> T getObject(Class<T> type, UUID id) throws MException {
         return getObject(type.getCanonicalName(), id);
     }
