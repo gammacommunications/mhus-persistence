@@ -33,7 +33,7 @@ public class CommonAdbService extends AbstractCommonService {
     public void doInitialize() throws MException {}
 
     @Override
-    protected String getCommonServiceName() {
+    public String getCommonServiceName() {
         return "common_adb";
     }
 }

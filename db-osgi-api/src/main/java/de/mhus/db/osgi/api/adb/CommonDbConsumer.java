@@ -23,6 +23,8 @@ import de.mhus.lib.xdb.XdbService;
 
 public interface CommonDbConsumer {
 
+    String REASON_DELETE = "delete";
+
     void registerObjectTypes(List<Class<? extends Object>> list);
 
     void doInitialize(XdbService dbService);
@@ -53,4 +55,9 @@ public interface CommonDbConsumer {
      * @throws Exception
      */
     void doPostInitialize(XdbService manager) throws Exception;
+    
+    public default boolean isReasonDelete(String reason) {
+        return REASON_DELETE.equals(reason);
+    }
+    
 }

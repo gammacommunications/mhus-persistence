@@ -31,7 +31,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import de.mhus.db.osgi.api.adb.AdbService;
 import de.mhus.db.osgi.api.adb.CommonDbConsumer;
 import de.mhus.db.osgi.api.adb.CommonService;
 import de.mhus.db.osgi.api.adb.Reference;
@@ -458,7 +457,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     }
                 };
 
-        collectRefereces(object, collector, AdbService.REASON_DELETE);
+        collectRefereces(object, collector, CommonDbConsumer.REASON_DELETE);
     }
 
     protected void doDelete(Reference<?> ref) throws MException {
