@@ -21,7 +21,7 @@ import org.apache.shiro.authz.AuthorizationException;
 
 import de.mhus.lib.annotations.generic.ExplicitAccess;
 import de.mhus.lib.basics.UuidIdentificable;
-import de.mhus.lib.core.shiro.AccessUtil;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.errors.MException;
 
 public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer {
@@ -30,9 +30,9 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
     public boolean canCreate(Object obj) throws MException {
         // TODO need to check for each action
         Class<?> clazz = obj.getClass();
-        if (AccessUtil.isAnnotated(clazz)) {
+        if (Aaa.isAnnotated(clazz)) {
             try {
-                AccessUtil.checkPermission(clazz);
+                Aaa.checkPermission(clazz);
             } catch (AuthorizationException e) {
                 return false;
             }
@@ -44,15 +44,15 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             UUID uuid = ((UuidIdentificable) obj).getId();
             if (uuid != null) ident = uuid.toString();
         }
-        return AccessUtil.isPermitted(type + ":create:" + ident);
+        return Aaa.isPermitted(type + ":create:" + ident);
     }
 
     @Override
     public boolean canRead(Object obj) throws MException {
         Class<?> clazz = obj.getClass();
-        if (AccessUtil.isAnnotated(clazz)) {
+        if (Aaa.isAnnotated(clazz)) {
             try {
-                AccessUtil.checkPermission(clazz);
+                Aaa.checkPermission(clazz);
             } catch (AuthorizationException e) {
                 return false;
             }
@@ -64,15 +64,15 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             UUID uuid = ((UuidIdentificable) obj).getId();
             if (uuid != null) ident = uuid.toString();
         }
-        return AccessUtil.isPermitted(type + ":read:" + ident);
+        return Aaa.isPermitted(type + ":read:" + ident);
     }
 
     @Override
     public boolean canUpdate(Object obj) throws MException {
         Class<?> clazz = obj.getClass();
-        if (AccessUtil.isAnnotated(clazz)) {
+        if (Aaa.isAnnotated(clazz)) {
             try {
-                AccessUtil.checkPermission(clazz);
+                Aaa.checkPermission(clazz);
             } catch (AuthorizationException e) {
                 return false;
             }
@@ -84,15 +84,15 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             UUID uuid = ((UuidIdentificable) obj).getId();
             if (uuid != null) ident = uuid.toString();
         }
-        return AccessUtil.isPermitted(type + ":update:" + ident);
+        return Aaa.isPermitted(type + ":update:" + ident);
     }
 
     @Override
     public boolean canDelete(Object obj) throws MException {
         Class<?> clazz = obj.getClass();
-        if (AccessUtil.isAnnotated(clazz)) {
+        if (Aaa.isAnnotated(clazz)) {
             try {
-                AccessUtil.checkPermission(clazz);
+                Aaa.checkPermission(clazz);
             } catch (AuthorizationException e) {
                 return false;
             }
@@ -104,6 +104,6 @@ public abstract class AccessCommonAdbConsumer extends AbstractCommonAdbConsumer 
             UUID uuid = ((UuidIdentificable) obj).getId();
             if (uuid != null) ident = uuid.toString();
         }
-        return AccessUtil.isPermitted(type + ":delete:" + ident);
+        return Aaa.isPermitted(type + ":delete:" + ident);
     }
 }

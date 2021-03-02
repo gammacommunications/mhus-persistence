@@ -22,7 +22,7 @@ import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.MemoryLockStrategy;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.shiro.AccessUtil;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.sql.DbConnection;
 
@@ -45,14 +45,14 @@ public abstract class AbstractDbSchema extends DbSchema {
     @Override
     public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw)
             throws AccessDeniedException {
-        if (!AccessUtil.isAdmin()) throw new AccessDeniedException();
+        if (!Aaa.isAdmin()) throw new AccessDeniedException();
     }
 
     @Override
     public void authorizeUpdateAttributes(
             DbConnection con, Table table, Object object, boolean raw, String... attributeNames)
             throws AccessDeniedException {
-        if (!AccessUtil.isAdmin()) throw new AccessDeniedException();
+        if (!Aaa.isAdmin()) throw new AccessDeniedException();
     }
 
     @Override
