@@ -45,9 +45,9 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.aaa.Aaa;
-import de.mhus.lib.core.cache.LocalCache;
-import de.mhus.lib.core.cache.LocalCacheConfig;
-import de.mhus.lib.core.cache.LocalCacheService;
+import de.mhus.lib.core.cache.ICache;
+import de.mhus.lib.core.cache.CacheConfig;
+import de.mhus.lib.core.cache.ICacheService;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -117,7 +117,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     SERVICE_NAME + "@accessCacheSize",
                     1000000); 
 
-    private LocalCache<String, Boolean> accessCache;
+    private ICache<String, Boolean> accessCache;
 
 
     public static AbstractCommonService instance(String name) {
@@ -464,14 +464,14 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
         if (accessCache != null) return;
         if (!CFG_USE_ACCESS_CACHE_API.value()) return;
         try {
-            LocalCacheService cacheService = M.l(LocalCacheService.class);
+            ICacheService cacheService = M.l(ICacheService.class);
             accessCache =
                     cacheService.createCache(
                             this,
                             "accessCache@" + getServiceName(),
                             String.class,
                             Boolean.class,
-                            new LocalCacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
+                            new CacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
                             );
         } catch (Throwable e) {
             log().d(getServiceName(),e.toString());
