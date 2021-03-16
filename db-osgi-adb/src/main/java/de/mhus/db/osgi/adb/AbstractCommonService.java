@@ -15,9 +15,11 @@
  */
 package de.mhus.db.osgi.adb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -60,6 +62,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
     private ServiceTracker<CommonDbConsumer, CommonDbConsumer> tracker;
     private TreeMap<String, CommonDbConsumer> schemaList = new TreeMap<>();
+    private TreeMap<String, CommonDbConsumer> objectTypes = new TreeMap<>();
 
     private BundleContext context;
 
@@ -181,6 +184,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             tracker = null;
             context = null;
             schemaList.clear();
+            objectTypes.clear();
         } finally {
             instances.remove(getCommonServiceName());
         }
@@ -224,6 +228,9 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
             synchronized (schemaList) {
                 schemaList.put(name, service);
+                List<Class<? extends Object>> list = new ArrayList<>();
+                service.registerObjectTypes(list);
+                list.forEach(v -> objectTypes.put(v.getCanonicalName(), service) );
                 updateManager();
             }
 
@@ -254,6 +261,11 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             service.doDestroy();
             synchronized (schemaList) {
                 schemaList.remove(name);
+                List<Class<? extends Object>> list = new ArrayList<>();
+                service.registerObjectTypes(list);
+                HashSet<String> set = new HashSet<>();
+                list.forEach(v -> set.add(v.getCanonicalName()));
+                objectTypes.keySet().removeIf(k -> set.contains(k) );
                 updateManager();
             }
         }
@@ -331,8 +343,11 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
     @Override
     public CommonDbConsumer getConsumer(String type) throws MException {
         if (type == null) throw new MException("type is null");
-        CommonDbConsumer ret = schemaList.get(type);
-        if (ret == null) throw new MException("Access Controller not found", type);
+        CommonDbConsumer ret = objectTypes.get(type);
+        if (ret == null) {
+            log().t("Access Controller not found",type,objectTypes);
+            throw new MException("Access Controller not found", type);
+        }
         return ret;
     }
 
