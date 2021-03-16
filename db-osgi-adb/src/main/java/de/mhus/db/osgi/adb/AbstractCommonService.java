@@ -49,6 +49,8 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.cache.LocalCache;
+import de.mhus.lib.core.cache.LocalCacheService;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -60,8 +62,6 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.PseudoDbPool;
 import de.mhus.osgi.api.MOsgi;
-import de.mhus.osgi.api.cache.LocalCache;
-import de.mhus.osgi.api.cache.LocalCacheService;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 // @Component(service = AdbService.class, immediate = true)
@@ -470,7 +470,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             LocalCacheService cacheService = M.l(LocalCacheService.class);
             accessCache =
                     cacheService.createCache(
-                            FrameworkUtil.getBundle(getClass()).getBundleContext(),
+                            this,
                             "accessCache@" + getServiceName(),
                             String.class,
                             Boolean.class,
