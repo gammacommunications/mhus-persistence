@@ -15,7 +15,6 @@
  */
 package de.mhus.db.osgi.adb;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,10 +25,7 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.ehcache.config.builders.ExpiryPolicyBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -50,6 +46,7 @@ import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.cache.LocalCache;
+import de.mhus.lib.core.cache.LocalCacheConfig;
 import de.mhus.lib.core.cache.LocalCacheService;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
@@ -114,8 +111,8 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     SERVICE_NAME + "@accessCacheTTL",
                     MPeriod.MINUTE_IN_MILLISECOUNDS * 15); 
 
-    private final CfgLong CFG_ACCESS_CACHE_SIZE =
-            new CfgLong(
+    private final CfgInt CFG_ACCESS_CACHE_SIZE =
+            new CfgInt(
                     AbstractCommonService.class,
                     SERVICE_NAME + "@accessCacheSize",
                     1000000); 
@@ -474,8 +471,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                             "accessCache@" + getServiceName(),
                             String.class,
                             Boolean.class,
-                            ResourcePoolsBuilder.heap(CFG_ACCESS_CACHE_SIZE.value()),
-                            ccb -> ccb.withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration( Duration.ofMillis( CFG_ACCESS_CACHE_TTL.value() )))
+                            new LocalCacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
                             );
         } catch (Throwable e) {
             log().d(getServiceName(),e.toString());
