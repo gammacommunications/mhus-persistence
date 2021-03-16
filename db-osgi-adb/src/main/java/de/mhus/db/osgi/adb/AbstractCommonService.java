@@ -15,6 +15,7 @@
  */
 package de.mhus.db.osgi.adb;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +26,10 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -41,9 +45,13 @@ import de.mhus.db.osgi.api.adb.ReferenceCollector;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.basics.UuidIdentificable;
+import de.mhus.lib.core.M;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.errors.MException;
@@ -52,7 +60,8 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.PseudoDbPool;
 import de.mhus.osgi.api.MOsgi;
-import de.mhus.osgi.api.aaa.ContextCachedItem;
+import de.mhus.osgi.api.cache.LocalCache;
+import de.mhus.osgi.api.cache.LocalCacheService;
 import de.mhus.osgi.api.util.DataSourceUtil;
 
 // @Component(service = AdbService.class, immediate = true)
@@ -88,7 +97,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                                 setDataSourceName(s);
                             });
     private final CfgBoolean CFG_USE_PSEUDO =
-            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@usePseudoPool", false);
+            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@pseudoPoolEnabled", false);
     private final CfgBoolean CFG_ENABLED =
             new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@enabled", true);
     private final CfgInt CFG_INIT_RETRY_SEC =
@@ -96,6 +105,23 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     AbstractCommonService.class,
                     SERVICE_NAME + "@initRetrySec",
                     1); // XXX should be 10 to 30 by default and listen for events
+
+    private CfgBoolean CFG_USE_ACCESS_CACHE_API = new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@accessCacheEnabled", true);
+
+    private final CfgLong CFG_ACCESS_CACHE_TTL =
+            new CfgLong(
+                    AbstractCommonService.class,
+                    SERVICE_NAME + "@accessCacheTTL",
+                    MPeriod.MINUTE_IN_MILLISECOUNDS * 15); 
+
+    private final CfgLong CFG_ACCESS_CACHE_SIZE =
+            new CfgLong(
+                    AbstractCommonService.class,
+                    SERVICE_NAME + "@accessCacheSize",
+                    1000000); 
+
+    private LocalCache<String, Boolean> accessCache;
+
 
     public static AbstractCommonService instance(String name) {
         return instances.get(name);
@@ -355,71 +381,105 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
     public boolean canRead(Object obj) throws MException {
         if (obj == null) return false;
 
-        // XXX        Boolean item = ((AaaContextImpl) c).getCached("ace_read|" + obj.getId());
-        //        if (item != null) return item;
-
+        String clazz = obj.getClass().getCanonicalName();
+        if (obj instanceof UuidIdentificable) {
+            Boolean cached = getCachedAccess("read", clazz, ((UuidIdentificable)obj).getId());
+            if (cached != null) return cached;
+        }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
-        ContextCachedItem ret = new ContextCachedItem();
-        ret.bool = controller.canRead(obj);
-        //        ((AaaContextImpl) c)
-        //                .setCached("ace_read|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5,
-        // ret);
-        return ret.bool;
+        boolean bool = controller.canRead(obj);
+        if (obj instanceof UuidIdentificable)
+            doCacheAccess("read", clazz, ((UuidIdentificable)obj).getId(), bool);
+        return bool;
     }
 
     @Override
     public boolean canUpdate(Object obj) throws MException {
         if (obj == null) return false;
 
-        //        Boolean item = ((AaaContextImpl) c).getCached("ace_update|" + obj.getId());
-        //        if (item != null) return item;
-
+        String clazz = obj.getClass().getCanonicalName();
+        if (obj instanceof UuidIdentificable) {
+            Boolean cached = getCachedAccess("update", clazz, ((UuidIdentificable)obj).getId());
+            if (cached != null) return cached;
+        }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
-        ContextCachedItem ret = new ContextCachedItem();
-        ret.bool = controller.canUpdate(obj);
-        //        ((AaaContextImpl) c)
-        //               .setCached("ace_update|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
-        // 5, ret);
-        return ret.bool;
+        boolean bool = controller.canUpdate(obj);
+        if (obj instanceof UuidIdentificable)
+            doCacheAccess("update", clazz, ((UuidIdentificable)obj).getId(), bool);
+        return bool;
     }
 
     @Override
     public boolean canDelete(Object obj) throws MException {
         if (obj == null) return false;
 
-        //        Boolean item = ((AaaContextImpl) c).getCached("ace_delete" + "|" + obj.getId());
-        //        if (item != null) return item;
-
+        String clazz = obj.getClass().getCanonicalName();
+        if (obj instanceof UuidIdentificable) {
+            Boolean cached = getCachedAccess("delete", clazz, ((UuidIdentificable)obj).getId());
+            if (cached != null) return cached;
+        }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
         if (controller == null) return false;
 
-        ContextCachedItem ret = new ContextCachedItem();
-        ret.bool = controller.canDelete(obj);
-        //        ((AaaContextImpl) c)
-        //                .setCached("ace_delete|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
-        // 5, ret);
-        return ret.bool;
+        boolean bool = controller.canDelete(obj);
+        if (obj instanceof UuidIdentificable)
+            doCacheAccess("delete", clazz, ((UuidIdentificable)obj).getId(), bool);
+        return bool;
     }
 
     @Override
     public boolean canCreate(Object obj) throws MException {
         if (obj == null) return false;
-        //        Boolean item = ((AaaContextImpl) c).getCached("ace_create" + "|" + obj.getId());
-        //        if (item != null) return item;
 
-        CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
+        String clazz = obj.getClass().getCanonicalName();
+        if (obj instanceof UuidIdentificable) {
+            Boolean cached = getCachedAccess("create", clazz, null);
+            if (cached != null) return cached;
+        }
+        CommonDbConsumer controller = getConsumer(clazz);
         if (controller == null) return false;
 
-        ContextCachedItem ret = new ContextCachedItem();
-        ret.bool = controller.canCreate(obj);
-        //        ((AaaContextImpl) c)
-        //                .setCached("ace_create|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS *
-        // 5, ret);
-        return ret.bool;
+        boolean bool = controller.canCreate(obj);
+        if (obj instanceof UuidIdentificable)
+            doCacheAccess("create", clazz, null, bool);
+        return bool;
+    }
+
+    protected void doCacheAccess(String action, String clazz, UUID id, boolean value) {
+        initAccessCache();
+        if (accessCache == null) return;
+        String account = Aaa.getPrincipal();
+        accessCache.put(account + ":" + action + "@" + id + ":" + clazz, value);
+    }
+
+    protected Boolean getCachedAccess(String action, String clazz, UUID id) {
+        initAccessCache();
+        if (accessCache == null) return null;
+        String account = Aaa.getPrincipal();
+        return accessCache.get(account + ":" + action + "@" + id + ":" + clazz);
+    }
+
+    protected synchronized void initAccessCache() {
+        if (accessCache != null) return;
+        if (!CFG_USE_ACCESS_CACHE_API.value()) return;
+        try {
+            LocalCacheService cacheService = M.l(LocalCacheService.class);
+            accessCache =
+                    cacheService.createCache(
+                            FrameworkUtil.getBundle(getClass()).getBundleContext(),
+                            "accessCache@" + getServiceName(),
+                            String.class,
+                            Boolean.class,
+                            ResourcePoolsBuilder.heap(CFG_ACCESS_CACHE_SIZE.value()),
+                            ccb -> ccb.withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration( Duration.ofMillis( CFG_ACCESS_CACHE_TTL.value() )))
+                            );
+        } catch (Throwable e) {
+            log().d(getServiceName(),e.toString());
+        }
     }
 
     @SuppressWarnings("unchecked")
