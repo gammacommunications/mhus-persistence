@@ -156,6 +156,6 @@ public class ParameterPart extends StringParsingPart {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, attribute);
+        return MSystem.toString(this, new Object[] { attribute });
     }
 }
