@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.ParseException;
@@ -89,37 +89,37 @@ public class ParameterPart extends StringParsingPart {
             type = attribute[1];
         } else {
             if (value instanceof Integer || value instanceof Short || value instanceof Byte)
-                type = MConstants.TYPE_INT;
+                type = M.TYPE_INT;
             else if (value instanceof Long || value instanceof Character)
-                type = MConstants.TYPE_LONG;
+                type = M.TYPE_LONG;
             else if (value instanceof Double || value instanceof Float)
-                type = MConstants.TYPE_DOUBLE;
+                type = M.TYPE_DOUBLE;
             else if (value instanceof Number || value instanceof Raw)
-                type = MConstants.TYPE_RAW; // direct toString() operation (via compiler request)
+                type = M.TYPE_RAW; // direct toString() operation (via compiler request)
             else if (value instanceof Date
                     || value instanceof Calendar
                     || value instanceof java.sql.Date
                     || value instanceof LocalDate
-                    || value instanceof LocalDateTime) type = MConstants.TYPE_DATE;
-            else if (value instanceof Boolean) type = MConstants.TYPE_BOOL;
-            else if (value instanceof Enum) type = MConstants.TYPE_INT;
+                    || value instanceof LocalDateTime) type = M.TYPE_DATE;
+            else if (value instanceof Boolean) type = M.TYPE_BOOL;
+            else if (value instanceof Enum) type = M.TYPE_INT;
         }
-        if (type == null) type = MConstants.TYPE_TEXT;
+        if (type == null) type = M.TYPE_TEXT;
 
         log().t(type, value);
 
-        if (MConstants.TYPE_TEXT.equals(type) || MConstants.TYPE_STRING.equals(type))
+        if (M.TYPE_TEXT.equals(type) || M.TYPE_STRING.equals(type))
             out.append("'").append(compiler.escape(String.valueOf(value))).append("'");
-        else if (MConstants.TYPE_INT.equals(type)) {
+        else if (M.TYPE_INT.equals(type)) {
             if (value instanceof Enum)
                 out.append(compiler.valueToNumber(((Enum<?>) value).ordinal()));
             else out.append(compiler.valueToNumber(value));
-        } else if (MConstants.TYPE_LONG.equals(type)) out.append(compiler.valueToNumber(value));
-        else if (MConstants.TYPE_FLOAT.equals(type) || MConstants.TYPE_DOUBLE.equals(type))
+        } else if (M.TYPE_LONG.equals(type)) out.append(compiler.valueToNumber(value));
+        else if (M.TYPE_FLOAT.equals(type) || M.TYPE_DOUBLE.equals(type))
             out.append(compiler.valueToFloating(value));
-        else if (MConstants.TYPE_DATE.equals(type)) out.append(compiler.toSqlDateValue(value));
-        else if (MConstants.TYPE_RAW.equals(type)) out.append(compiler.valueToString(value));
-        else if (MConstants.TYPE_BOOL.equals(type))
+        else if (M.TYPE_DATE.equals(type)) out.append(compiler.toSqlDateValue(value));
+        else if (M.TYPE_RAW.equals(type)) out.append(compiler.valueToString(value));
+        else if (M.TYPE_BOOL.equals(type))
             out.append(compiler.toBoolValue(MCast.toboolean(value.toString(), false)));
         else log().w("Unknown attribute type:", type);
     }

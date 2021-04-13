@@ -20,7 +20,7 @@ import java.util.Date;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
-import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -112,23 +112,23 @@ public class ADynValue extends AAttribute {
                     Field field = table.getField(this.field);
                     if (field != null) {
                         Class<?> fType = field.getType();
-                        if (Date.class.isAssignableFrom(fType)) t = MConstants.TYPE_DATE;
-                        else if (String.class.isAssignableFrom(fType)) t = MConstants.TYPE_TEXT;
+                        if (Date.class.isAssignableFrom(fType)) t = M.TYPE_DATE;
+                        else if (String.class.isAssignableFrom(fType)) t = M.TYPE_TEXT;
                         else if (int.class == fType
                                 || short.class == fType
                                 || byte.class == fType
                                 || Integer.class.isAssignableFrom(fType)
                                 || Short.class.isAssignableFrom(fType)
-                                || Byte.class.isAssignableFrom(fType)) t = MConstants.TYPE_INT;
+                                || Byte.class.isAssignableFrom(fType)) t = M.TYPE_INT;
                         else if (long.class == fType
                                 || char.class == fType
                                 || Long.class.isAssignableFrom(fType)
                                 || Character.class.isAssignableFrom(fType))
-                            t = MConstants.TYPE_LONG;
+                            t = M.TYPE_LONG;
                         else if (double.class == fType || Double.class.isAssignableFrom(fType))
-                            t = MConstants.TYPE_DOUBLE;
+                            t = M.TYPE_DOUBLE;
                         else if (float.class == fType || Float.class.isAssignableFrom(fType))
-                            t = MConstants.TYPE_FLOAT;
+                            t = M.TYPE_FLOAT;
                     }
                 }
             }
