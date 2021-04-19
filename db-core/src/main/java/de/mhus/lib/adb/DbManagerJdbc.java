@@ -66,6 +66,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
     private DbSchema schema;
     private DbPool pool;
+    private DbPool poolRo;
     private HashMap<String, Table> cIndex = new HashMap<String, Table>();
     private HashMap<String, Object> nameMapping;
     private Map<String, Object> nameMappingRO;
@@ -76,8 +77,8 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     private Lock reloadLock = new ThreadLock("reload");
     private String dataSourceName;
 
-    public DbManagerJdbc(String dataSourceName, DbPool pool, DbSchema schema) throws Exception {
-        this(dataSourceName, pool, schema, false);
+    public DbManagerJdbc(String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema) throws Exception {
+        this(dataSourceName, pool, poolRo, schema, false);
     }
 
     /**
@@ -89,10 +90,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
      * @param cleanup
      * @throws MException
      */
-    public DbManagerJdbc(String dataSourceName, DbPool pool, DbSchema schema, boolean cleanup)
+    public DbManagerJdbc(String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema, boolean cleanup)
             throws MException {
         this.dataSourceName = dataSourceName;
         this.pool = pool;
+        this.poolRo = poolRo == null ? pool : poolRo;
         this.schema = schema;
         this.activator = pool.getProvider().getActivator();
         initDatabase(cleanup);
@@ -427,7 +429,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection myCon = null;
             if (con == null) {
                 try {
-                    myCon = schema.getConnection(pool);
+                    myCon = schema.getConnection(poolRo);
                 } catch (Throwable t) {
                     throw new MException(con, query, attributes, t);
                 }
@@ -476,7 +478,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection myCon = null;
             if (con == null) {
                 try {
-                    myCon = schema.getConnection(pool);
+                    myCon = schema.getConnection(poolRo);
                 } catch (Throwable t) {
                     throw new MException(con, query, attributes, t);
                 }
@@ -528,7 +530,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             DbConnection myCon = null;
             if (con == null) {
                 try {
-                    myCon = schema.getConnection(pool);
+                    myCon = schema.getConnection(poolRo);
                 } catch (Throwable t) {
                     throw new MException(con, query, attributes, t);
                 }
@@ -611,7 +613,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         DbConnection myCon = null;
         if (con == null) {
             try {
-                myCon = schema.getConnection(pool);
+                myCon = schema.getConnection(poolRo);
                 con = myCon;
             } catch (Throwable t) {
                 throw new MException(t);
@@ -685,7 +687,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         DbConnection myCon = null;
         if (con == null) {
             try {
-                myCon = schema.getConnection(pool);
+                myCon = schema.getConnection(poolRo);
                 con = myCon;
             } catch (Throwable t) {
                 throw new MException(t);
@@ -856,7 +858,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         DbConnection myCon = null;
         if (con == null) {
             try {
-                myCon = schema.getConnection(pool);
+                myCon = schema.getConnection(poolRo);
                 con = myCon;
             } catch (Throwable t) {
                 throw new MException(t);
@@ -1484,6 +1486,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         return pool;
     }
 
+    @Override
+    public DbPool getPoolRo() {
+        return poolRo;
+    }
+    
     @Override
     public MActivator getActivator() {
         return activator;

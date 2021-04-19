@@ -51,7 +51,7 @@ public class TransactionTest {
     public DbManager createManager() throws Exception {
         DbPool pool = createPool("transactionModel").getPool("test");
         DbSchema schema = new TransactionSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
         return manager;
     }
 

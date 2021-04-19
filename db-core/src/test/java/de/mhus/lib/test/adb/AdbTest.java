@@ -217,7 +217,7 @@ public class AdbTest extends TestCase {
     public static DbManager createBookstoreManager() throws Throwable {
         DbPool pool = createPool("testModel").getPool("test");
         BookStoreSchema schema = new BookStoreSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
         return manager;
     }
 
@@ -516,7 +516,7 @@ public class AdbTest extends TestCase {
         MStopWatch timer = new MStopWatch();
         timer.start();
 
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
 
         Store store1 = manager.inject(new Store());
         store1.save();
@@ -616,10 +616,10 @@ public class AdbTest extends TestCase {
 
         //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
         BookStoreSchema schema1 = new BookStoreSchema();
-        DbManager manager1 = new DbManagerJdbc("", pool, schema1);
+        DbManager manager1 = new DbManagerJdbc("", pool, null, schema1);
 
         BookStoreSchema schema2 = new BookStoreSchema();
-        DbManager manager2 = new DbManagerJdbc("", pool, schema2);
+        DbManager manager2 = new DbManagerJdbc("", pool, null, schema2);
 
         manager1.reconnect();
         manager2.reconnect();
@@ -632,7 +632,7 @@ public class AdbTest extends TestCase {
         DbPool pool = createPool("testDataTypes").getPool("test");
 
         BookStoreSchema schema = new BookStoreSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
 
         Store store = manager.inject(new Store());
 
@@ -668,7 +668,7 @@ public class AdbTest extends TestCase {
         DbPool pool = createPool("testDataTypes").getPool("test");
 
         BookStoreSchema schema = new BookStoreSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
 
         for (int i = 1; i < 10; i++) {
             Store store = manager.inject(new Store());
@@ -720,7 +720,7 @@ public class AdbTest extends TestCase {
         DbPool pool = createPool("testTextType").getPool("test");
 
         BookStoreSchema schema = new BookStoreSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
 
         //	      // print all
         //        {
@@ -767,7 +767,7 @@ public class AdbTest extends TestCase {
         DbPool pool = createPool("testNumberType").getPool("test");
 
         BookStoreSchema schema = new BookStoreSchema();
-        DbManager manager = new DbManagerJdbc("", pool, schema);
+        DbManager manager = new DbManagerJdbc("", pool, null, schema);
 
         for (int i = 1; i < 10; i++) {
             Store store = manager.inject(new Store());
@@ -814,7 +814,7 @@ public class AdbTest extends TestCase {
         DbPool pool = createPool("testDataTypesAlter").getPool("test");
 
         BookStoreSchema schema1 = new BookStoreSchema();
-        DbManager manager1 = new DbManagerJdbc("", pool, schema1);
+        DbManager manager1 = new DbManagerJdbc("", pool, null, schema1);
 
         Store store1 = manager1.inject(new Store());
         store1.setIntValue(Integer.MAX_VALUE);
@@ -834,7 +834,7 @@ public class AdbTest extends TestCase {
 
         BookStoreSchema schema2 = new BookStoreSchema();
         schema2.switchStore = true;
-        DbManager manager2 = new DbManagerJdbc("", pool, schema2);
+        DbManager manager2 = new DbManagerJdbc("", pool, null, schema2);
         de.mhus.lib.test.adb.model2.Store store2 =
                 manager2.getObject(de.mhus.lib.test.adb.model2.Store.class, id);
 
@@ -853,7 +853,7 @@ public class AdbTest extends TestCase {
         // and back again
 
         BookStoreSchema schema3 = new BookStoreSchema();
-        DbManager manager3 = new DbManagerJdbc("", pool, schema3);
+        DbManager manager3 = new DbManagerJdbc("", pool, null, schema3);
 
         Store store3 = manager3.getObject(Store.class, id);
 

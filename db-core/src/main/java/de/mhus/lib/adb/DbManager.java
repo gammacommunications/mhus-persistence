@@ -401,6 +401,8 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 
     public abstract DbPool getPool();
 
+    public abstract DbPool getPoolRo();
+    
     public abstract MActivator getActivator();
 
     @JmxManaged(descrition = "Current mapping of the table and column names")

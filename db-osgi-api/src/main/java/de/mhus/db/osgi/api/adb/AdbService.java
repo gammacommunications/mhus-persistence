@@ -28,8 +28,12 @@ public interface AdbService {
 
     String getDataSourceName();
 
+    String getDataSourceRoName();
+    
     void setDataSourceName(String dataSourceName);
 
+    void setDataSourceRoName(String dataSourceName);
+    
     String getServiceName();
 
     void doInitialize() throws MException;

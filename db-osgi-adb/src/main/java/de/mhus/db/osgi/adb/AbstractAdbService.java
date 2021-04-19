@@ -23,6 +23,7 @@ import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.IConfig;
@@ -37,6 +38,7 @@ import de.mhus.osgi.api.util.DataSourceUtil;
 public abstract class AbstractAdbService extends MLog implements AdbService {
 
     protected String dataSourceName;
+    protected String dataSourceRoName;
     private DbManager manager;
 
     //	protected abstract void doInitialize() throws Exception;
@@ -70,8 +72,9 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     protected DbManager doCreateDbManager(boolean clean) throws MException {
 
         DbPool pool = doCreateDataPool();
+        DbPool poolRo = doCreateRoDataPool();
         DbSchema schema = doCreateSchema();
-        return new DbManagerJdbc(dataSourceName, pool, schema, clean); // TODO configurable
+        return new DbManagerJdbc(dataSourceName, pool, poolRo, schema, clean); // TODO configurable
     }
 
     protected abstract DbSchema doCreateSchema();
@@ -82,6 +85,16 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
                         getDataSource(), doCreateDialect(), doCreateConfig(), doCreateActivator()));
     }
 
+    protected DbPool doCreateRoDataPool() {
+    	if (MString.equals(dataSourceName, dataSourceRoName))
+    		return null;
+    	DataSource ds = getDataSourceRo();
+    	if (ds == null) return null;
+        return new DefaultDbPool(
+                new DataSourceProvider(
+                        ds, doCreateDialect(), doCreateConfig(), doCreateActivator()));
+    }
+    
     protected MActivator doCreateActivator() {
         try {
             return new DefaultActivator(null, getClass().getClassLoader());
@@ -105,6 +118,20 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
         return ds;
     }
 
+    protected DataSource getDataSourceRo() {
+    	if (MString.equals(dataSourceName, dataSourceRoName))
+    		return getDataSource();
+    	
+        DataSource ds = DataSourceUtil.getDataSource(dataSourceRoName);
+        if (ds == null) {
+        	log().w("DataSourceRo is unknown", dataSourceRoName);
+            ds = DataSourceUtil.getDataSource(dataSourceName); // try RW datasource
+            if (ds != null)
+            	log().w("DataSourceRo fallback to RW");
+        }
+        return ds;
+    }
+    
     @Override
     public void updateManager(boolean clean) throws MException {
         doClose();
@@ -137,6 +164,11 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     }
 
     @Override
+    public String getDataSourceRoName() {
+        return dataSourceRoName;
+    }
+    
+    @Override
     public void setDataSourceName(String dataSourceName) {
         if (MSystem.equals(this.dataSourceName, dataSourceName)) return;
         this.dataSourceName = dataSourceName;
@@ -146,6 +178,16 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
         }
     }
 
+    @Override
+    public void setDataSourceRoName(String dataSourceName) {
+        if (MSystem.equals(this.dataSourceRoName, dataSourceName)) return;
+        this.dataSourceRoName = dataSourceName;
+        try {
+            updateManager(false);
+        } catch (Exception e) {
+        }
+    }
+    
     @Override
     public String getServiceName() {
         return getClass().getSimpleName();

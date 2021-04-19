@@ -98,6 +98,10 @@ public class CmdAdbControl extends AbstractCmd {
             AdbService service = AdbOsgiUtil.getService(args[0]);
             if (args.length > 1) service.setDataSourceName(args[1]);
             System.out.println("Datasource: " + service.getDataSourceName());
+        } else if (cmd.equals("datasourcero")) {
+            AdbService service = AdbOsgiUtil.getService(args[0]);
+            if (args.length > 1) service.setDataSourceRoName(args[1]);
+            System.out.println("DatasourceRo: " + service.getDataSourceRoName());
         } else if (cmd.equals("jmx-list")) {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             ConsoleTable out = new ConsoleTable(tblOpt);

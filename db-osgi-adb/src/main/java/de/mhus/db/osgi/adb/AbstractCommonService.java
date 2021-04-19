@@ -93,6 +93,15 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                             s -> {
                                 setDataSourceName(s);
                             });
+    private final CfgString CFG_DATASOURCE_RO =
+            new CfgString(
+                            AbstractCommonService.class,
+                            SERVICE_NAME + "@dataSourceRoName",
+                            "adb_common")
+                    .updateAction(
+                            s -> {
+                                setDataSourceRoName(s);
+                            });
     private final CfgBoolean CFG_USE_PSEUDO =
             new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@pseudoPoolEnabled", false);
     private final CfgBoolean CFG_ENABLED =
@@ -132,6 +141,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
     public void doActivate(ComponentContext ctx) {
 
         dataSourceName = CFG_DATASOURCE.value();
+        dataSourceRoName = CFG_DATASOURCE_RO.value();
         status = STATUS.ACTIVATED;
         //		new de.mhus.lib.adb.util.Property();
         context = ctx.getBundleContext();
