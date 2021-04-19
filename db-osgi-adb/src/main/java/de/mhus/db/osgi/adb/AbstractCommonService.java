@@ -43,6 +43,7 @@ import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.cache.ICache;
@@ -245,6 +246,18 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                             doCreateDialect(),
                             doCreateConfig(),
                             doCreateActivator()));
+    }
+
+    @Override
+    protected DbPool doCreateRoDataPool() {
+    	if (MString.equals(dataSourceName, dataSourceRoName) || CFG_USE_PSEUDO.value())
+    		return null;
+        return new DefaultDbPool(
+                new DataSourceProvider(
+                        getDataSourceRo(),
+                        doCreateDialect(),
+                        doCreateConfig(),
+                        doCreateActivator()));
     }
 
     private class MyTrackerCustomizer
