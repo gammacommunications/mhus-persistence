@@ -21,7 +21,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -40,7 +40,7 @@ public class DialectHsqldb extends DialectDefault {
 
     /** {@inheritDoc} */
     @Override
-    protected String getFieldConfig(IConfig f) {
+    protected String getFieldConfig(INode f) {
         String type = getDbType(f);
         String ret = normalizeColumnName(f.getString("name", null)) + " " + type;
 
@@ -61,7 +61,7 @@ public class DialectHsqldb extends DialectDefault {
      * @param f a {@link de.mhus.lib.core.directory.ResourceNode} object.
      * @return a {@link java.lang.String} object.
      */
-    protected String getFieldConfigWithoutExtras(IConfig f) {
+    protected String getFieldConfigWithoutExtras(INode f) {
         try {
             String type = getDbType(f);
             String ret = normalizeColumnName(f.getString("name")) + " " + type;
@@ -128,7 +128,7 @@ public class DialectHsqldb extends DialectDefault {
 
     /** {@inheritDoc} */
     @Override
-    protected void alterColumn(Statement sth, String tn, IConfig cfield) {
+    protected void alterColumn(Statement sth, String tn, INode cfield) {
         String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + getFieldConfigWithoutExtras(cfield);
         log().d("alter table", sql);
         try {

@@ -34,8 +34,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.node.INode;
 
 /**
  * This class connects to a database and dumps all the tables and contents out to stdout in the form
@@ -74,7 +74,7 @@ public class MySqlDatabaseExport {
      * @param writer
      * @return x
      */
-    public static boolean dumpDB(IConfig props, PrintWriter writer) {
+    public static boolean dumpDB(INode props, PrintWriter writer) {
         Properties prop = new Properties();
         for (String key : props.getPropertyKeys()) prop.setProperty(key, props.getExtracted(key));
         return dumpDB(prop, writer);

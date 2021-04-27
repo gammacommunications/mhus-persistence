@@ -27,7 +27,7 @@ import de.mhus.lib.adb.query.APrint;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MSql;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 /**
  * This class can compare a configuration with a database table structure and can modify the
@@ -67,7 +67,7 @@ public class DialectPostgresql extends DialectDefault {
     }
 
     @Override
-    protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {}
+    protected void createTableLastCheck(INode ctable, String tn, StringBuilder sql) {}
 
     @Override
     public String escape(String text) {
@@ -136,7 +136,7 @@ public class DialectPostgresql extends DialectDefault {
     }
 
     @Override
-    protected void alterColumn(Statement sth, String tn, IConfig cfield) {
+    protected void alterColumn(Statement sth, String tn, INode cfield) {
 
         String type = getDbType(cfield);
 

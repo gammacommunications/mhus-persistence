@@ -18,10 +18,10 @@ package de.mhus.lib.sql.analytics;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.node.INode;
 
 public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator {
 
@@ -53,12 +53,12 @@ public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator
     public void stop() {}
 
     @Override
-    public void doConfigure(IConfig config) {
+    public void doConfigure(INode config) {
         traceMaxRuntime = config.getLong("traceMaxRuntime", traceMaxRuntime);
     }
 
     @Override
-    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, INode config) {
         if (config != null) doConfigure(config);
         SqlAnalytics.setAnalyzer(this);
     }

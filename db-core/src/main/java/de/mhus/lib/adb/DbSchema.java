@@ -34,7 +34,7 @@ import de.mhus.lib.adb.model.TableDynamic;
 import de.mhus.lib.adb.transaction.LockStrategy;
 import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoModelFactory;
@@ -86,7 +86,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
      *
      * @param config
      */
-    public void doInit(IConfig config) {}
+    public void doInit(INode config) {}
 
     /**
      * Masquerade the table names if needed. By default a tablePrefix is set for the table.
@@ -397,7 +397,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
             boolean readOnly,
             boolean virtual,
             PojoAttribute<?> attribute,
-            IConfig attr,
+            INode attr,
             DbDynamic.Field dynamicField,
             String[] features)
             throws MException {

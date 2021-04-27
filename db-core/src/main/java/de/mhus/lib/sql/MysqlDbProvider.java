@@ -17,7 +17,7 @@ package de.mhus.lib.sql;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.MNode;
 
 public class MysqlDbProvider extends JdbcProvider {
 
@@ -29,7 +29,7 @@ public class MysqlDbProvider extends JdbcProvider {
     }
 
     public MysqlDbProvider(String url, String user, String pass) {
-        config = new MConfig();
+        config = new MNode();
         config.setProperty("driver", "com.mysql.jdbc.Driver");
         config.setProperty("url", url);
         config.setProperty("user", user);

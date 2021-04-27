@@ -20,7 +20,7 @@ import java.util.List;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 /**
  * The pool handles a bundle of connections. The connections should have the same credentials (url,
@@ -50,7 +50,7 @@ public class DefaultDbPool extends DbPool {
      * @param activator Activator or null. null will use the central MApi Activator.
      * @throws java.lang.Exception if any.
      */
-    public DefaultDbPool(IConfig config, MActivator activator) throws Exception {
+    public DefaultDbPool(INode config, MActivator activator) throws Exception {
         super(config, activator);
     }
 

@@ -27,7 +27,7 @@ import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSql;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.parser.ParsingPart;
 import de.mhus.lib.core.util.MObject;
@@ -114,7 +114,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @throws Exception
      */
     public void createStructure(
-            IConfig data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
+            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
             throws Exception {
         createTables(data, db, caoMeta, cleanup);
         createIndexes(data, db, caoMeta, cleanup);
@@ -134,7 +134,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @throws Exception
      */
     public abstract void createTables(
-            IConfig data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
+            INode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
             throws Exception;
 
     /**
@@ -149,7 +149,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @throws Exception
      */
     public abstract void createIndexes(
-            IConfig data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
+            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
             throws Exception;
 
     /**
@@ -161,9 +161,9 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @param db
      * @throws Exception
      */
-    public abstract void createData(IConfig data, DbConnection db) throws Exception;
+    public abstract void createData(INode data, DbConnection db) throws Exception;
 
-    protected String getFieldConfig(IConfig f) {
+    protected String getFieldConfig(INode f) {
         String type = getDbType(f);
 
         String ret = normalizeColumnName(f.getString("name", null)) + " " + type;
@@ -200,7 +200,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @param f
      * @return x
      */
-    protected SqlMetaDefinition.TYPE getCaoType(IConfig f) {
+    protected SqlMetaDefinition.TYPE getCaoType(INode f) {
         String type = f.getString("type", DbType.TYPE.STRING.name()).toUpperCase();
         SqlMetaDefinition.TYPE t = SqlMetaDefinition.TYPE.STRING;
         if (f.getString(K_CATEGORIES, "").indexOf(C_ENUMERATION) > -1) {
@@ -247,7 +247,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @param f
      * @return x
      */
-    public String getDbType(IConfig f) {
+    public String getDbType(INode f) {
         return getDbType(f.getString("type", "string"), f.getString("size", "100"));
     }
 

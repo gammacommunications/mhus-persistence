@@ -22,7 +22,7 @@ import java.util.Map;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
@@ -34,7 +34,7 @@ import de.mhus.lib.errors.MException;
  */
 public class DbPoolBundle extends MObject {
 
-    private IConfig config;
+    private INode config;
     private MActivator activator;
     private Map<String, DbPool> bundle = new HashMap<String, DbPool>();
 
@@ -51,7 +51,7 @@ public class DbPoolBundle extends MObject {
      * @param config Config element or null. null will use the central MApi configuration.
      * @param activator Activator or null. null will use the central MApi activator.
      */
-    public DbPoolBundle(IConfig config, MActivator activator) {
+    public DbPoolBundle(INode config, MActivator activator) {
 
         if (config == null) config = MApi.get().getCfgManager().getCfg(DbPoolBundle.class, null);
         if (activator == null) activator = M.l(MActivator.class);
@@ -74,7 +74,7 @@ public class DbPoolBundle extends MObject {
         synchronized (bundle) {
             DbPool pool = bundle.get(name);
             if (pool == null) {
-                IConfig poolCon = config.getObject(name);
+                INode poolCon = config.getObject(name);
                 if (poolCon != null) {
                     pool = new DefaultDbPool(poolCon, activator);
                     bundle.put(name, pool);
@@ -93,7 +93,7 @@ public class DbPoolBundle extends MObject {
      */
     public String[] getNames() {
         LinkedList<String> out = new LinkedList<String>();
-        for (IConfig c : config.getObjects()) {
+        for (INode c : config.getObjects()) {
             out.add(c.getName());
         }
         return out.toArray(new String[out.size()]);
@@ -105,7 +105,7 @@ public class DbPoolBundle extends MObject {
      * @param name a {@link java.lang.String} object.
      * @return a object.
      */
-    public IConfig getConfig(String name) {
+    public INode getConfig(String name) {
         return config.getObjectOrNull(name);
     }
 
@@ -114,7 +114,7 @@ public class DbPoolBundle extends MObject {
      *
      * @return a object.
      */
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 

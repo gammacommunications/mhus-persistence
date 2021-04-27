@@ -25,8 +25,8 @@ import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.DbTransaction;
 import de.mhus.lib.adb.transaction.NestedTransactionException;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.util.Value;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
@@ -36,8 +36,8 @@ import de.mhus.lib.test.adb.model.TransactionSchema;
 public class TransactionTest {
 
     public DbPoolBundle createPool(String name) {
-        IConfig cconfig = new MConfig();
-        IConfig cdb = cconfig.createObject("test");
+        INode cconfig = new MNode();
+        INode cdb = cconfig.createObject("test");
 
         cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
         cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);

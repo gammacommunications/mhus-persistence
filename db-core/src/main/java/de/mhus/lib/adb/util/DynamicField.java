@@ -16,8 +16,8 @@
 package de.mhus.lib.adb.util;
 
 import de.mhus.lib.adb.DbDynamic;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -37,7 +37,7 @@ public class DynamicField implements DbDynamic.Field {
     private String name;
     private boolean isPrimaryKey;
     private Class<?> ret;
-    private IConfig attributes;
+    private INode attributes;
     private boolean persistent = true;
     private boolean readOnly;
 
@@ -54,7 +54,7 @@ public class DynamicField implements DbDynamic.Field {
     public DynamicField(String name, Class<?> ret, String... attributes) {
         setName(name);
         setRet(ret);
-        IConfig x = new MConfig();
+        INode x = new MNode();
         for (int i = 0; i < attributes.length; i += 2) {
             try {
                 x.setString(attributes[i], attributes[i + 1]);
@@ -109,12 +109,12 @@ public class DynamicField implements DbDynamic.Field {
      *
      * @param attributes a object.
      */
-    public void setAttributes(IConfig attributes) {
+    public void setAttributes(INode attributes) {
         this.attributes = attributes;
     }
     /** {@inheritDoc} */
     @Override
-    public IConfig getAttributes() {
+    public INode getAttributes() {
         return attributes;
     }
 

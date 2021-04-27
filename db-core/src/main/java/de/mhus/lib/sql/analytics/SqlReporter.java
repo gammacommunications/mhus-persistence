@@ -17,7 +17,7 @@ package de.mhus.lib.sql.analytics;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class SqlReporter extends MLog implements SqlAnalyzer {
 
@@ -34,5 +34,5 @@ public class SqlReporter extends MLog implements SqlAnalyzer {
     public void stop() {}
 
     @Override
-    public void doConfigure(IConfig config) {}
+    public void doConfigure(INode config) {}
 }

@@ -29,8 +29,8 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.io.MObjectInputStream;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.core.util.Raw;
@@ -67,7 +67,7 @@ public class FieldPersistent extends Field {
             boolean isPrimary,
             boolean readOnly,
             PojoAttribute<?> attribute,
-            IConfig attr2,
+            INode attr2,
             DbDynamic.Field dynamicField,
             String[] features)
             throws MException {

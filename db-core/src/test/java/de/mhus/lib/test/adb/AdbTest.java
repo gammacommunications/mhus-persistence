@@ -41,9 +41,9 @@ import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -186,8 +186,8 @@ public class AdbTest extends TestCase {
             System.out.println("<<<");
         }
 
-        IConfig cconfig = new MConfig();
-        IConfig cdb = cconfig.createObject("test");
+        INode cconfig = new MNode();
+        INode cdb = cconfig.createObject("test");
 
         cdb.setProperty("driver", jdbcDriver);
         cdb.setProperty("url", jdbcUrl);

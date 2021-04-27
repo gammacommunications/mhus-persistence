@@ -23,7 +23,7 @@ import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 
@@ -66,7 +66,7 @@ public class TableAnnotations extends Table {
 
                 } else {
                     log().t("field", mName);
-                    IConfig attr = IConfig.readConfigFromString(toAttributes(p, pk));
+                    INode attr = INode.readNodeFromString(toAttributes(p, pk));
                     boolean v = (p != null && p.virtual());
 
                     // check for doubled

@@ -22,7 +22,7 @@ import de.mhus.lib.adb.DbDynamic;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
@@ -44,7 +44,7 @@ public abstract class Field extends MObject {
     protected String retDbType;
     protected String methodName;
     protected boolean autoId;
-    protected IConfig attr;
+    protected INode attr;
     protected DbDynamic.Field dynamicField;
     protected PojoAttribute<Object> attribute;
     private LinkedList<AttributeFeature> features = new LinkedList<>();
@@ -155,7 +155,7 @@ public abstract class Field extends MObject {
         return val;
     }
 
-    public IConfig getAttributes() {
+    public INode getAttributes() {
         return attr;
     }
 

@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.adb;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -59,7 +59,7 @@ public interface DbDynamic {
 
         Class<?> getReturnType();
 
-        IConfig getAttributes();
+        INode getAttributes();
 
         String[] getIndexes() throws MException;
 

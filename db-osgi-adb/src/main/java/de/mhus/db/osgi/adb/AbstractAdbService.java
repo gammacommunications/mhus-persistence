@@ -26,7 +26,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DataSourceProvider;
 import de.mhus.lib.sql.DbPool;
@@ -104,7 +104,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
         return null;
     }
 
-    protected IConfig doCreateConfig() {
+    protected INode doCreateConfig() {
         return null;
     }
 

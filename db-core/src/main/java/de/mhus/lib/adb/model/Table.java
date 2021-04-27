@@ -35,9 +35,9 @@ import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.core.util.Raw;
@@ -75,7 +75,7 @@ public abstract class Table extends MObject {
     private DbPrepared sqlUpdateForce;
     private DbPrepared sqlDelete;
     private LinkedList<Feature> features = new LinkedList<Feature>();
-    protected IConfig attributes;
+    protected INode attributes;
 
     /**
      * init.
@@ -112,9 +112,9 @@ public abstract class Table extends MObject {
         }
 
         if (table != null && !MString.isEmptyTrim(table.attributes())) {
-            attributes = IConfig.readConfigFromString(table.attributes());
+            attributes = INode.readNodeFromString(table.attributes());
         } else {
-            attributes = new MConfig();
+            attributes = new MNode();
         }
 
         tableNameOrg = schema.getTableName(name);
@@ -693,15 +693,15 @@ public abstract class Table extends MObject {
      */
     public void createTable(DbConnection con, boolean cleanup) throws Exception {
 
-        IConfig cstr = new MConfig();
-        IConfig ctable = cstr.createObject("table");
+        INode cstr = new MNode();
+        INode ctable = cstr.createObject("table");
         ctable.setProperty("name", tableNameOrg);
 
         LinkedList<String> pk = new LinkedList<String>();
 
-        ConfigList cfList = ctable.createArray("field");
+        NodeList cfList = ctable.createArray("field");
         for (Field f : fList) {
-            IConfig cfield = cfList.createObject();
+            INode cfield = cfList.createObject();
             cfield.setProperty(Dialect.K_NAME, f.createName);
             cfield.setProperty(Dialect.K_TYPE, f.retDbType);
             cfield.setProperty(Dialect.K_SIZE, String.valueOf(f.size));
@@ -724,9 +724,9 @@ public abstract class Table extends MObject {
         }
 
         // create index entries
-        ConfigList cIndexList = cstr.createArray("index");
+        NodeList cIndexList = cstr.createArray("index");
         for (IndexStruc item : iIdx.values()) {
-            IConfig cindex = cIndexList.createObject();
+            INode cindex = cIndexList.createObject();
             String n = item.getName();
             if (item.isUnique()) {
                 cindex.setString(Dialect.I_TYPE, Dialect.I_UNIQUE);
@@ -895,7 +895,7 @@ public abstract class Table extends MObject {
      *
      * @return a object.
      */
-    public IConfig getAttributes() {
+    public INode getAttributes() {
         return attributes;
     }
 

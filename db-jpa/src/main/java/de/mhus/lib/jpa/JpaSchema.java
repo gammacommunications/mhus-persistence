@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.jpa;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MObject;
 
 public abstract class JpaSchema extends MObject {
@@ -35,7 +35,7 @@ public abstract class JpaSchema extends MObject {
      *
      * @param config
      */
-    public void doInit(IConfig config) {}
+    public void doInit(INode config) {}
 
     public String getSchemaName() {
         return getClass().getSimpleName();

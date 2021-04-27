@@ -20,7 +20,7 @@ import java.util.Date;
 
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MSql;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 /**
  * This class can compare a configuration with a database table structure and can modify the
@@ -63,7 +63,7 @@ public class DialectMysql extends DialectDefault {
     }
 
     @Override
-    protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {
+    protected void createTableLastCheck(INode ctable, String tn, StringBuilder sql) {
         sql.append(" ENGINE=InnoDb");
     }
 

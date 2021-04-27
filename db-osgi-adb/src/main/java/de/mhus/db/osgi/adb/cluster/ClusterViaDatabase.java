@@ -31,9 +31,9 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.concurrent.Lock;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.logging.ITracer;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.INodeFactory;
 import de.mhus.lib.core.service.ClusterApi;
 import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.sql.DataSourceProvider;
@@ -102,7 +102,7 @@ public class ClusterViaDatabase extends MLog implements ClusterApi {
                     // init tables
                     URL url = MSystem.locateResource(this, "SqlDbStorage.xml");
                     DbConnection con = pool.getConnection();
-                    IConfig data = M.l(IConfigFactory.class).read(url);
+                    INode data = M.l(INodeFactory.class).read(url);
                     data.setString("prefix", prefix);
                     pool.getDialect().createStructure(data, con, null, false);
                     con.close();

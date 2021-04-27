@@ -17,7 +17,7 @@ package de.mhus.lib.jpa;
 
 import java.util.Properties;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class JpaDefaultProperties extends JpaProperties {
 
@@ -27,7 +27,7 @@ public class JpaDefaultProperties extends JpaProperties {
         super();
     }
 
-    public JpaDefaultProperties(IConfig config) {
+    public JpaDefaultProperties(INode config) {
         super(config);
     }
 

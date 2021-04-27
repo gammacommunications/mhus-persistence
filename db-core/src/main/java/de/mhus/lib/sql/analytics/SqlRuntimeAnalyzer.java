@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 
@@ -66,7 +66,7 @@ public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
     }
 
     @Override
-    public void doConfigure(IConfig config) {
+    public void doConfigure(INode config) {
         minRuntime = config.getLong("minRuntime", minRuntime);
         super.doConfigure(config);
     }

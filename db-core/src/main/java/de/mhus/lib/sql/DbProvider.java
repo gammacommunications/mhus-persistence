@@ -17,8 +17,8 @@ package de.mhus.lib.sql;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.util.MObject;
 
 /**
@@ -31,7 +31,7 @@ public abstract class DbProvider extends MObject {
 
     //	private static Log log = Log.getLog(DbProvider.class);
 
-    protected IConfig config;
+    protected INode config;
     protected MActivator activator;
 
     /**
@@ -48,8 +48,8 @@ public abstract class DbProvider extends MObject {
      * @param config
      * @param activator
      */
-    public void doInitialize(IConfig config, MActivator activator) {
-        if (config == null) config = new MConfig();
+    public void doInitialize(INode config, MActivator activator) {
+        if (config == null) config = new MNode();
         if (activator == null) activator = M.l(MActivator.class);
         this.config = config;
         this.activator = activator;
@@ -63,7 +63,7 @@ public abstract class DbProvider extends MObject {
      * @return x The query string or null.
      */
     public String[] getQuery(String name) {
-        IConfig query = config.getObjectOrNull("queries");
+        INode query = config.getObjectOrNull("queries");
         if (query == null) return new String[0];
 
         String queryLanguage = null;
@@ -71,7 +71,7 @@ public abstract class DbProvider extends MObject {
         String[] out = new String[] {queryLanguage, queryString};
 
         if (queryString == null) {
-            for (IConfig q : query.getObjectList("query")) {
+            for (INode q : query.getObjectList("query")) {
                 if (q.getString("name", "").equals(name)) {
                     queryLanguage = q.getExtracted("language");
                     queryString = q.getExtracted("string");

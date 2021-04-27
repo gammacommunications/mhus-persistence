@@ -16,7 +16,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class PseudoDbPool extends DbPool {
 
@@ -33,7 +33,7 @@ public class PseudoDbPool extends DbPool {
      * @param activator Activator or null. null will use the central MApi Activator.
      * @throws Exception
      */
-    public PseudoDbPool(IConfig config, MActivator activator) throws Exception {
+    public PseudoDbPool(INode config, MActivator activator) throws Exception {
         super(config, activator);
     }
 

@@ -17,24 +17,24 @@ package de.mhus.lib.jpa;
 
 import java.util.Properties;
 
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 
 public class JpaProperties extends Properties {
 
     protected JpaSchema schema;
-    protected IConfig config;
+    protected INode config;
 
     /** */
     private static final long serialVersionUID = 1L;
 
-    public JpaProperties(IConfig config) {
+    public JpaProperties(INode config) {
         super();
         this.config = config;
         // fill from config
-        IConfig cproperties = config.getObjectOrNull("properties");
+        INode cproperties = config.getObjectOrNull("properties");
         if (cproperties != null) {
-            for (IConfig prop : cproperties.getObjectList("property")) {
+            for (INode prop : cproperties.getObjectList("property")) {
                 setProperty(prop.getExtracted("name"), prop.getExtracted("value"));
             }
         }
@@ -42,12 +42,12 @@ public class JpaProperties extends Properties {
 
     public JpaProperties() {
         super();
-        config = new MConfig();
+        config = new MNode();
     }
 
     public JpaProperties(Properties arg0) {
         super(arg0);
-        config = new MConfig();
+        config = new MNode();
     }
 
     public JpaSchema getSchema() {
@@ -74,7 +74,7 @@ public class JpaProperties extends Properties {
         put("openjpa.jdbc.SynchronizeMappings", "buildSchema(ForeignKeys=true)");
     }
 
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 }

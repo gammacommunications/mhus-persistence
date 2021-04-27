@@ -48,7 +48,7 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.ASubQuery;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.NotSupportedException;
 
 /**
@@ -80,7 +80,7 @@ public class DialectDefault extends Dialect {
      */
     @Override
     public void createTables(
-            IConfig data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
+            INode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
             throws Exception {
 
         Connection con = ((JdbcConnection) db.instance()).getConnection();
@@ -88,7 +88,7 @@ public class DialectDefault extends Dialect {
         DatabaseMetaData meta = con.getMetaData();
 
         // first check tables
-        for (IConfig ctable : data.getObjectList("table")) {
+        for (INode ctable : data.getObjectList("table")) {
             String tName = ctable.getExtracted("name");
             String tPrefix = ctable.getExtracted("prefix", "");
 
@@ -123,7 +123,7 @@ public class DialectDefault extends Dialect {
                 LinkedList<String> fieldsInTable = null;
                 if (cleanup) fieldsInTable = new LinkedList<>();
 
-                for (IConfig cfield : ctable.getObjectList("field")) {
+                for (INode cfield : ctable.getObjectList("field")) {
 
                     String fNameOrg = cfield.getExtracted("name");
                     String fName = normalizeColumnName(fNameOrg);
@@ -213,7 +213,7 @@ public class DialectDefault extends Dialect {
                 }
 
                 createTable(sth, tn, ctable);
-                for (IConfig f : ctable.getObjectList("field")) {
+                for (INode f : ctable.getObjectList("field")) {
                     if (caoMeta != null) {
                         List<SqlMetaDefinition> metaMap = caoMeta.getMap();
                         SqlMetaDefinition.TYPE caoType = getCaoType(f);
@@ -287,12 +287,12 @@ public class DialectDefault extends Dialect {
         return meta.getTables(null, null, name, new String[] {"TABLE"});
     }
 
-    protected void createTable(Statement sth, String tn, IConfig ctable) {
+    protected void createTable(Statement sth, String tn, INode ctable) {
         log().d("createTable", tn, ctable);
         StringBuilder sql = new StringBuilder();
         sql.append("create table " + tn + " ( ");
         boolean first = true;
-        for (IConfig f : ctable.getObjectList("field")) {
+        for (INode f : ctable.getObjectList("field")) {
             if (!first) sql.append(",");
             sql.append(getFieldConfig(f));
             first = false;
@@ -307,7 +307,7 @@ public class DialectDefault extends Dialect {
         }
     }
 
-    protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {}
+    protected void createTableLastCheck(INode ctable, String tn, StringBuilder sql) {}
 
     protected void alterTableAddPrimaryKey(Statement sth, String tn, String keys) {
         String sql = "ALTER TABLE " + tn + " ADD PRIMARY KEY(" + keys + ")";
@@ -339,7 +339,7 @@ public class DialectDefault extends Dialect {
         }
     }
 
-    protected void alterColumnAdd(Statement sth, String tn, IConfig cfield) {
+    protected void alterColumnAdd(Statement sth, String tn, INode cfield) {
         //		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
         String sql = "ALTER TABLE " + tn + " ADD COLUMN " + getFieldConfig(cfield);
         log().d("alter table", sql);
@@ -350,7 +350,7 @@ public class DialectDefault extends Dialect {
         }
     }
 
-    protected void alterColumnSetDefault(Statement sth, String tn, String fName, IConfig cfield) {
+    protected void alterColumnSetDefault(Statement sth, String tn, String fName, INode cfield) {
         String sql = null;
         try {
             sql =
@@ -377,7 +377,7 @@ public class DialectDefault extends Dialect {
         }
     }
 
-    protected void alterColumn(Statement sth, String tn, IConfig cfield) {
+    protected void alterColumn(Statement sth, String tn, INode cfield) {
         String sql = "ALTER TABLE " + tn + " MODIFY COLUMN " + getFieldConfig(cfield);
         log().d("alter table", sql);
         try {
@@ -409,7 +409,7 @@ public class DialectDefault extends Dialect {
      */
     @Override
     public void createIndexes(
-            IConfig data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
+            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
             throws Exception {
 
         Connection con = ((JdbcConnection) db.instance()).getConnection();
@@ -417,7 +417,7 @@ public class DialectDefault extends Dialect {
         DatabaseMetaData meta = con.getMetaData();
 
         // first check tables
-        for (IConfig cindex : data.getObjectList("index")) {
+        for (INode cindex : data.getObjectList("index")) {
             String iNameOrg = cindex.getExtracted("name");
             String tableName = cindex.getExtracted("table");
             String prefix = cindex.getExtracted("prefix", "");
@@ -555,12 +555,12 @@ public class DialectDefault extends Dialect {
      * @throws Exception
      */
     @Override
-    public void createData(IConfig data, DbConnection db) throws Exception {
+    public void createData(INode data, DbConnection db) throws Exception {
         Connection con = ((JdbcConnection) db.instance()).getConnection();
         Statement sth = con.createStatement();
 
         // first check tables
-        for (IConfig cdata : data.getObjectList("data")) {
+        for (INode cdata : data.getObjectList("data")) {
             // String table  = cdata.getExtracted("table");
             String select = cdata.getExtracted("select");
             String set = cdata.getExtracted("set");
@@ -597,7 +597,7 @@ public class DialectDefault extends Dialect {
             }
 
             if (accepted) {
-                for (IConfig cexecute : cdata.getObjectList("execute")) {
+                for (INode cexecute : cdata.getObjectList("execute")) {
                     String sql = cexecute.getExtracted("sql");
                     if (sql != null) {
                         log().t("execute", sql);

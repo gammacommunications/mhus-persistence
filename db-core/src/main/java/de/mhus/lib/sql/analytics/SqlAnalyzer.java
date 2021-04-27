@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.sql.analytics;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public interface SqlAnalyzer {
 
@@ -25,5 +25,5 @@ public interface SqlAnalyzer {
 
     void stop();
 
-    void doConfigure(IConfig config);
+    void doConfigure(INode config);
 }
