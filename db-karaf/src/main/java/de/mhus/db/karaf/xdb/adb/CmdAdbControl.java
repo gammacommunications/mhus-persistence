@@ -52,7 +52,9 @@ public class CmdAdbControl extends AbstractCmd {
                             + " info     <serviceName> - info about the adb service\n"
                             + " cleanup  <serviceName> <unused also (true)>- cleanup pool\n"
                             + " datasource <name> - change datasource (be aware!)\n"
-                            + " mapping  - print service mappings",
+                            + " mapping  - print service mappings\n"
+                            + "\n"
+                            + "A sample service name is 'common_adb'",
             multiValued = false)
     String cmd;
 
