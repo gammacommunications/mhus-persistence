@@ -83,10 +83,10 @@ public class TransactionLock extends LockBase {
     @Override
     public void lock(long timeout) throws TimeoutRuntimeException {
         if (objects == null)
-            throw new NotSupportedException("Transaction already gone" + stacktrace);
+            throw new NotSupportedException("Transaction already gone " + stacktrace);
         if (manager == null)
             throw new NotSupportedException(
-                    "DbManager not found, need direct manager or DbObject implementation to grep the manager"
+                    "DbManager not found, need direct manager or DbObject implementation to grep the manager "
                             + stacktrace);
         LockStrategy strategy = manager.getSchema().getLockStrategy();
         if (strategy == null) return;
