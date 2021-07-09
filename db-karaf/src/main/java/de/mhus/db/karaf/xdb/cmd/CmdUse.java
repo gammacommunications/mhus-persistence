@@ -15,13 +15,10 @@
  */
 package de.mhus.db.karaf.xdb.cmd;
 
-import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafApi;
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
@@ -30,10 +27,11 @@ import de.mhus.db.osgi.api.xdb.XdbUtil;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
+import de.mhus.osgi.api.karaf.AbstractCmd;
 
 @Command(scope = "xdb", name = "use", description = "Show or select the default api")
 @Service
-public class CmdUse implements Action {
+public class CmdUse extends AbstractCmd {
 
     @Argument(
             index = 0,
@@ -64,10 +62,8 @@ public class CmdUse implements Action {
     @Option(name = "-g", description = "Set Global", required = false)
     boolean global = false;
 
-    @Reference private Session session;
-
     @Override
-    public Object execute() throws Exception {
+    public Object execute2() throws Exception {
 
         if ("load".equals(cmd)) {
             M.l(XdbKarafApi.class).load();
@@ -100,10 +96,10 @@ public class CmdUse implements Action {
 
         if (apiName != null || serviceName != null || dsName != null)
             XdbKarafUtil.setSessionUse(
-                    session,
-                    XdbKarafUtil.getApiName(session, apiName),
-                    XdbKarafUtil.getServiceName(session, serviceName),
-                    XdbKarafUtil.getDatasourceName(session, dsName));
+                    getSession(),
+                    XdbKarafUtil.getApiName(getSession(), apiName),
+                    XdbKarafUtil.getServiceName(getSession(), serviceName),
+                    XdbKarafUtil.getDatasourceName(getSession(), dsName));
 
         System.out.println(
                 "Global : xdb:"
@@ -116,18 +112,18 @@ public class CmdUse implements Action {
 
         System.out.println(
                 "Session: xdb:"
-                        + encode(XdbKarafUtil.getApiName(session, null))
+                        + encode(XdbKarafUtil.getApiName(getSession(), null))
                         + "/"
-                        + encode(XdbKarafUtil.getServiceName(session, null))
-                        + (XdbKarafUtil.getDatasourceName(session, null) != null
-                                ? "/" + encode(XdbKarafUtil.getDatasourceName(session, null))
+                        + encode(XdbKarafUtil.getServiceName(getSession(), null))
+                        + (XdbKarafUtil.getDatasourceName(getSession(), null) != null
+                                ? "/" + encode(XdbKarafUtil.getDatasourceName(getSession(), null))
                                 : ""));
 
         if ("apis".equals(cmd))
             for (String n : XdbUtil.getApis()) System.out.println("Available Api: " + n);
 
         if ("services".equals(cmd)) {
-            String an = XdbKarafUtil.getApiName(session, null);
+            String an = XdbKarafUtil.getApiName(getSession(), null);
             XdbApi a = XdbUtil.getApi(an);
             System.out.println("Services in " + an + ":");
             for (String n : a.getServiceNames()) System.out.println("  " + n);

@@ -21,9 +21,7 @@ import java.util.List;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbUtil;
@@ -81,13 +79,15 @@ public class CmdView extends AbstractCmd {
     @Option(name = "-s", description = "Service Name", required = false)
     String serviceName;
 
-    @Reference private Session session;
+    {
+        cmdIsPermissionDependent = true;
+    }
 
     @Override
     public Object execute2() throws Exception {
 
-        apiName = XdbKarafUtil.getApiName(session, apiName);
-        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(getSession(), apiName);
+        serviceName = XdbKarafUtil.getServiceName(getSession(), serviceName);
 
         Object output = null;
 
@@ -128,7 +128,7 @@ public class CmdView extends AbstractCmd {
             output = object;
         }
 
-        if (outputParam != null) session.put(outputParam, output);
+        if (outputParam != null) getSession().put(outputParam, output);
         return null;
     }
 }

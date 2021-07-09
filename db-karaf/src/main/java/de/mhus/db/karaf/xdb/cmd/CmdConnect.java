@@ -15,22 +15,20 @@
  */
 package de.mhus.db.karaf.xdb.cmd;
 
-import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbApi;
 import de.mhus.db.osgi.api.xdb.XdbUtil;
 import de.mhus.lib.xdb.XdbService;
+import de.mhus.osgi.api.karaf.AbstractCmd;
 
 @Command(scope = "xdb", name = "connect", description = "Connect ADB DataSource")
 @Service
-public class CmdConnect implements Action {
+public class CmdConnect extends AbstractCmd {
 
     @Argument(
             index = 0,
@@ -58,13 +56,11 @@ public class CmdConnect implements Action {
     @Option(name = "-a", description = "Api Name", required = false)
     String apiName;
 
-    @Reference private Session session;
-
     @Override
-    public Object execute() throws Exception {
+    public Object execute2() throws Exception {
 
-        apiName = XdbKarafUtil.getApiName(session, apiName);
-        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(getSession(), apiName);
+        serviceName = XdbKarafUtil.getServiceName(getSession(), serviceName);
 
         XdbApi api = XdbUtil.getApi(apiName);
 

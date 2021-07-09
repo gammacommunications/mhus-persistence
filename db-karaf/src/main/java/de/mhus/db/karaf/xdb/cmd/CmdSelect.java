@@ -25,9 +25,7 @@ import java.util.Map;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.adb.DbCollection;
@@ -111,7 +109,9 @@ public class CmdSelect extends AbstractCmd {
     @Option(name = "-q", description = "xdb query parser", required = false)
     boolean xdbQuery = false;
 
-    @Reference private Session session;
+    {
+        cmdIsPermissionDependent = true;
+    }
 
     private Condition condition;
 
@@ -122,8 +122,8 @@ public class CmdSelect extends AbstractCmd {
 
         if (MString.isSet(filter)) condition = new Condition(filter);
 
-        apiName = XdbKarafUtil.getApiName(session, apiName);
-        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(getSession(), apiName);
+        serviceName = XdbKarafUtil.getServiceName(getSession(), serviceName);
 
         XdbService service = XdbKarafUtil.getService(apiName, serviceName);
 
@@ -276,7 +276,7 @@ public class CmdSelect extends AbstractCmd {
 
         out.print(System.out);
 
-        if (outputParam != null) session.put(outputParam, output);
+        if (outputParam != null) getSession().put(outputParam, output);
         return null;
     }
 

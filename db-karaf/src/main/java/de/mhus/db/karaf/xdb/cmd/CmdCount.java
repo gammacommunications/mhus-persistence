@@ -15,23 +15,21 @@
  */
 package de.mhus.db.karaf.xdb.cmd;
 
-import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.xdb.XdbType;
+import de.mhus.osgi.api.karaf.AbstractCmd;
 
 @Command(
         scope = "xdb",
         name = "count",
         description = "Select data from DB DataSource ant print the count of found objects")
 @Service
-public class CmdCount implements Action {
+public class CmdCount extends AbstractCmd {
 
     @Argument(
             index = 0,
@@ -58,13 +56,15 @@ public class CmdCount implements Action {
     @Option(name = "-s", description = "Service Name", required = false)
     String serviceName;
 
-    @Reference private Session session;
+    {
+        cmdIsPermissionDependent = true;
+    }
 
     @Override
-    public Object execute() throws Exception {
+    public Object execute2() throws Exception {
 
-        apiName = XdbKarafUtil.getApiName(session, apiName);
-        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(getSession(), apiName);
+        serviceName = XdbKarafUtil.getServiceName(getSession(), serviceName);
 
         XdbType<?> type = XdbKarafUtil.getType(apiName, serviceName, typeName);
 
@@ -96,7 +96,7 @@ public class CmdCount implements Action {
 
         System.out.println(count);
 
-        if (outputParam != null) session.put(outputParam, count);
+        if (outputParam != null) getSession().put(outputParam, count);
         return null;
     }
 }

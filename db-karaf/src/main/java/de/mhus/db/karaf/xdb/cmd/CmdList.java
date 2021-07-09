@@ -19,9 +19,7 @@ import java.util.List;
 
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.db.osgi.api.xdb.XdbApi;
@@ -41,15 +39,13 @@ public class CmdList extends AbstractCmd {
     @Option(name = "-c", description = "Connect", required = false)
     boolean connect;
 
-    @Reference private Session session;
-
     @Override
     public Object execute2() throws Exception {
 
         List<String> apis =
                 apiName == null
                         ? XdbUtil.getApis()
-                        : MCollection.toList(XdbKarafUtil.getApiName(session, apiName));
+                        : MCollection.toList(XdbKarafUtil.getApiName(getSession(), apiName));
 
         ConsoleTable table = new ConsoleTable(tblOpt);
         table.setHeaderValues("Service", "Schema", "DataSource", "Managed Types");

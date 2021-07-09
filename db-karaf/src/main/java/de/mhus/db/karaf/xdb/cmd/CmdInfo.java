@@ -21,9 +21,7 @@ import java.util.List;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.Option;
-import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
-import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.db.karaf.xdb.adb.XdbKarafUtil;
 import de.mhus.lib.core.console.ConsoleTable;
@@ -48,13 +46,11 @@ public class CmdInfo extends AbstractCmd {
     @Option(name = "-s", description = "Service Name", required = false)
     String serviceName;
 
-    @Reference private Session session;
-
     @Override
     public Object execute2() throws Exception {
 
-        apiName = XdbKarafUtil.getApiName(session, apiName);
-        serviceName = XdbKarafUtil.getServiceName(session, serviceName);
+        apiName = XdbKarafUtil.getApiName(getSession(), apiName);
+        serviceName = XdbKarafUtil.getServiceName(getSession(), serviceName);
 
         XdbType<?> type = XdbKarafUtil.getType(apiName, serviceName, typeName);
 
