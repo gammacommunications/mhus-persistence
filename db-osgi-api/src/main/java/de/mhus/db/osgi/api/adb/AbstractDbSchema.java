@@ -17,6 +17,7 @@ package de.mhus.db.osgi.api.adb;
 
 import java.util.HashMap;
 
+import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.MemoryLockStrategy;
@@ -45,14 +46,32 @@ public abstract class AbstractDbSchema extends DbSchema {
     @Override
     public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw)
             throws AccessDeniedException {
-        if (!Aaa.isAdmin()) throw new AccessDeniedException();
+        if (!Aaa.hasAccess(Table.class, "saveforce", table.getRegistryName()))
+            throw new AccessDeniedException();
     }
 
     @Override
     public void authorizeUpdateAttributes(
             DbConnection con, Table table, Object object, boolean raw, String... attributeNames)
             throws AccessDeniedException {
-        if (!Aaa.isAdmin()) throw new AccessDeniedException();
+        if (Aaa.hasAccess(Table.class, "updateattributes", table.getRegistryName()))
+            return;
+        for (String attr: attributeNames)
+            if (!Aaa.hasAccess(Table.class, "updateattributes", table.getRegistryName() + "_" + attr))
+                throw new AccessDeniedException();
+    }
+
+    @Override
+    public void authorizeReadAttributes(
+            DbConnection con,
+            DbManager dbManagerJdbc,
+            Class<?> clazz,
+            String registryName,
+            String attribute) {
+
+        if (!Aaa.hasAccess(Table.class, "readattributes", registryName + "_" + attribute) && !Aaa.hasAccess(Table.class, "readattributes", registryName) )
+            throw new AccessDeniedException();
+
     }
 
     @Override
