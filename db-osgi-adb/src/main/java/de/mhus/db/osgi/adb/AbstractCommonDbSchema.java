@@ -25,6 +25,7 @@ import de.mhus.lib.adb.DbMetadata;
 import de.mhus.lib.adb.DbObject;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.transaction.DbLockObject;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbResult;
@@ -91,28 +92,28 @@ public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
                     switch (right) {
                         case CREATE:
                             if (!admin.canCreate(obj))
-                                throw new AccessDeniedException(c.getName(), right);
+                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case DELETE:
                             if (!admin.canDelete(obj))
-                                throw new AccessDeniedException(c.getName(), right);
+                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case READ:
                             if (!admin.canRead(obj))
-                                throw new AccessDeniedException(c.getName(), right);
+                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case UPDATE:
                             if (!admin.canUpdate(obj))
-                                throw new AccessDeniedException(c.getName(), right);
+                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
                             break;
                         default:
-                            throw new AccessDeniedException(c.getName(), right, "unknown right");
+                            throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right, "unknown right");
                     }
                 } catch (AccessDeniedException ade) {
                     throw ade;
                 } catch (Throwable t) {
                     log().d(t);
-                    throw new AccessDeniedException(c.getName(), right, t);
+                    throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right, t);
                 }
             }
         }
