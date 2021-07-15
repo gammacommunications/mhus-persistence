@@ -47,7 +47,7 @@ public abstract class AbstractDbSchema extends DbSchema {
     public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw)
             throws AccessDeniedException {
         if (!Aaa.hasAccess(Table.class, "saveforce", table.getRegistryName()))
-            throw new AccessDeniedException();
+            throw new AccessDeniedException(Aaa.getPrincipal(),table.getName(),"saveforce");
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class AbstractDbSchema extends DbSchema {
             return;
         for (String attr: attributeNames)
             if (!Aaa.hasAccess(Table.class, "updateattributes", table.getRegistryName() + "_" + attr))
-                throw new AccessDeniedException();
+                throw new AccessDeniedException(Aaa.getPrincipal(),table.getName(),"updateattributes",attr);
     }
 
     @Override
@@ -70,7 +70,7 @@ public abstract class AbstractDbSchema extends DbSchema {
             String attribute) {
 
         if (!Aaa.hasAccess(Table.class, "readattributes", registryName + "_" + attribute) && !Aaa.hasAccess(Table.class, "readattributes", registryName) )
-            throw new AccessDeniedException();
+            throw new AccessDeniedException(Aaa.getPrincipal(),registryName,"readattributes",attribute);
 
     }
 
