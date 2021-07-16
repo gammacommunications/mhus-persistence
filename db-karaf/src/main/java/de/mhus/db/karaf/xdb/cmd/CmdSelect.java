@@ -120,6 +120,16 @@ public class CmdSelect extends AbstractCmd {
 
         Object output = null;
 
+        HashMap<String, Object> queryParam = null;
+        if (parameters != null) {
+            queryParam = new HashMap<>();
+            for (String p : parameters) {
+                String k = MString.beforeIndex(p, '=');
+                String v = MString.afterIndex(p, '=');
+                queryParam.put(k, v);
+            }
+        }
+
         if (MString.isSet(filter)) condition = new Condition(filter);
 
         apiName = XdbKarafUtil.getApiName(getSession(), apiName);
@@ -137,7 +147,14 @@ public class CmdSelect extends AbstractCmd {
         List<String> columns = parser.getColumnNames();
         if (columns.size() == 1 && columns.get(0).equals("*")) {
             columns = null;
+        } else
+        if (columns.size() == 1 && columns.get(0).equals("count(*)")) {
+
+            long cnt = type.count(parser.getQualification(), queryParam);
+            System.out.println("Count: " + cnt);
+            return cnt;
         }
+
 
         // sort columns to print
         final LinkedList<String> fieldNames = new LinkedList<>();
@@ -175,16 +192,6 @@ public class CmdSelect extends AbstractCmd {
         for (String name : fieldNames) {
             if (type.isPrimaryKey(name)) name = name + "*";
             out.addHeader(name);
-        }
-
-        HashMap<String, Object> queryParam = null;
-        if (parameters != null) {
-            queryParam = new HashMap<>();
-            for (String p : parameters) {
-                String k = MString.beforeIndex(p, '=');
-                String v = MString.afterIndex(p, '=');
-                queryParam.put(k, v);
-            }
         }
 
         //		if (xdbQuery) {

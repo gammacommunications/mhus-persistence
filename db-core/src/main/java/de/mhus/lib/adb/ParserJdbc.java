@@ -123,6 +123,8 @@ import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.FromItemVisitor;
 import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.LateralSubSelect;
+import net.sf.jsqlparser.statement.select.OrderByElement;
+import net.sf.jsqlparser.statement.select.OrderByVisitor;
 import net.sf.jsqlparser.statement.select.ParenthesisFromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
@@ -142,6 +144,7 @@ import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
+
 public class ParserJdbc
         implements QueryParser,
                 SelectVisitor,
@@ -149,7 +152,8 @@ public class ParserJdbc
                 ExpressionVisitor,
                 ItemsListVisitor,
                 SelectItemVisitor,
-                StatementVisitor {
+                StatementVisitor,
+                OrderByVisitor {
 
     private static final String NOT_SUPPORTED_YET = "Not supported yet.";
 
@@ -178,6 +182,7 @@ public class ParserJdbc
 
     @Override
     public void visit(PlainSelect plainSelect) {
+
         if (plainSelect.getSelectItems() != null) {
             for (SelectItem item : plainSelect.getSelectItems()) {
                 item.accept(this);
@@ -204,6 +209,22 @@ public class ParserJdbc
         if (plainSelect.getOracleHierarchical() != null) {
             plainSelect.getOracleHierarchical().accept(this);
         }
+
+        if (plainSelect.getOrderByElements() != null) {
+            sql.append(" ORDER BY ");
+            boolean first = true;
+            for (OrderByElement order : plainSelect.getOrderByElements()) {
+                if (!first)
+                    sql.append(",");
+                order.accept(this);
+                first = false;
+            }
+        }
+
+        if (plainSelect.getLimit() != null && !plainSelect.getLimit().isLimitAll()) {
+            sql.append(" LIMIT " + plainSelect.getLimit().getRowCount() );
+        }
+
     }
 
     @Override
@@ -927,5 +948,14 @@ public class ParserJdbc
     @Override
     public List<String> getColumnNames() {
         return columns;
+    }
+
+    @Override
+    public void visit(OrderByElement orderBy) {
+        orderBy.getExpression().accept(this);
+        if (orderBy.isAsc())
+            sql.append(" ASC");
+        else
+            sql.append(" DESC");
     }
 }

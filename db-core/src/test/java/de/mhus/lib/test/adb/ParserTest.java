@@ -45,6 +45,54 @@ public class ParserTest extends TestCase {
     }
 
     @Test
+    public void testLimit() throws Throwable {
+        System.out.println(">>> testSelectAll");
+        ParserJdbcDebug parser = new ParserJdbcDebug();
+        parser.init(null);
+        QueryParser.parse("select * from book limit 1", parser);
+
+        System.out.println("Table: " + parser.getEntityName());
+        System.out.println("Columns: " + parser.getColumnNames());
+        System.out.println("Query: " + parser.getQualification());
+
+        assertEquals("book", parser.getEntityName());
+        assertEquals("LIMIT 1", parser.getQualification().trim());
+        assertEquals("[*]", parser.getColumnNames().toString());
+    }
+
+    @Test
+    public void testOrderAsc() throws Throwable {
+        System.out.println(">>> testSelectAll");
+        ParserJdbcDebug parser = new ParserJdbcDebug();
+        parser.init(null);
+        QueryParser.parse("select * from book order by name", parser);
+
+        System.out.println("Table: " + parser.getEntityName());
+        System.out.println("Columns: " + parser.getColumnNames());
+        System.out.println("Query: " + parser.getQualification());
+
+        assertEquals("book", parser.getEntityName());
+        assertEquals("ORDER BY $db.book.name$ ASC", parser.getQualification().trim());
+        assertEquals("[*]", parser.getColumnNames().toString());
+    }
+    
+    @Test
+    public void testOrderDesc() throws Throwable {
+        System.out.println(">>> testSelectAll");
+        ParserJdbcDebug parser = new ParserJdbcDebug();
+        parser.init(null);
+        QueryParser.parse("select * from book order by name desc", parser);
+
+        System.out.println("Table: " + parser.getEntityName());
+        System.out.println("Columns: " + parser.getColumnNames());
+        System.out.println("Query: " + parser.getQualification());
+
+        assertEquals("book", parser.getEntityName());
+        assertEquals("ORDER BY $db.book.name$ DESC", parser.getQualification().trim());
+        assertEquals("[*]", parser.getColumnNames().toString());
+    }
+    
+    @Test
     public void testSelectAll() throws Throwable {
         System.out.println(">>> testSelectAll");
         ParserJdbcDebug parser = new ParserJdbcDebug();
