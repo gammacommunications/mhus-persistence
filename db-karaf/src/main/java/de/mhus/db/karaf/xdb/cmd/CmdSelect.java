@@ -137,6 +137,12 @@ public class CmdSelect extends AbstractCmd {
 
         XdbService service = XdbKarafUtil.getService(apiName, serviceName);
 
+        boolean isCount = false;
+        if (select != null && select.length > 0 && select[0].equalsIgnoreCase("count(*)")) {
+            isCount = true;
+            select[0] = "*";
+        }
+
         String sql = "SELECT " + MString.join(select, ' ');
         QueryParser parser = QueryParser.parse(service, sql);
 
@@ -145,16 +151,15 @@ public class CmdSelect extends AbstractCmd {
         XdbType<?> type = XdbKarafUtil.getType(apiName, serviceName, typeName);
 
         List<String> columns = parser.getColumnNames();
-        if (columns.size() == 1 && columns.get(0).equals("*")) {
-            columns = null;
-        } else
-        if (columns.size() == 1 && columns.get(0).equals("count(*)")) {
 
+        if (isCount) {
             long cnt = type.count(parser.getQualification(), queryParam);
             System.out.println("Count: " + cnt);
             return cnt;
+        } else
+        if (columns.size() == 1 && columns.get(0).equals("*")) {
+            columns = null;
         }
-
 
         // sort columns to print
         final LinkedList<String> fieldNames = new LinkedList<>();
