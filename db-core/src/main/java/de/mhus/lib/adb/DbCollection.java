@@ -55,11 +55,27 @@ public interface DbCollection<O> extends Iterable<O>, Iterator<O>, MCloseable {
 
     default List<O> toCacheAndClose() {
         List<O> list = new LinkedList<O>();
-        addToList(list);
-        close();
+        try {
+        	addToList(list);
+        } finally {
+        	close();
+        }
         return list;
     }
 
+    default List<O> toCacheAndClose(int max) {
+        List<O> list = new LinkedList<O>();
+        try {
+	        for (O o : this) {
+	            list.add(o);
+	            if (max >= 0 && list.size() >= max) break;
+	        }
+        } finally {
+        	close();
+        }
+        return list;
+    }
+    
     default O[] toArrayAndClose(O[] dummy) {
         List<O> list = toCacheAndClose();
         return list.toArray(dummy);

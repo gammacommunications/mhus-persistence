@@ -1398,7 +1398,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         if (nameMapping != null) return;
 
-        try (Scope scope = ITracer.get().enter("initDatabase", "cleanup", cleanup)) {
+        try (Scope scope = ITracer.get().enter("initDatabase", "cleanup", cleanup, "dataSource", dataSourceName)) {
             schema.resetObjectTypes();
             pool.cleanup(true);
             Class<? extends Object>[] types = schema.getObjectTypes();
