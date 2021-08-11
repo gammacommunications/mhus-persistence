@@ -65,7 +65,8 @@ import de.mhus.osgi.api.util.DataSourceUtil;
 // @Component(service = AdbService.class, immediate = true)
 public abstract class AbstractCommonService extends AbstractAdbService implements CommonService {
 
-    private static HashMap<String, AbstractCommonService> instances = new HashMap<>(); //TODO should use a service for it
+    private static HashMap<String, AbstractCommonService> instances =
+            new HashMap<>(); // TODO should use a service for it
 
     private ServiceTracker<CommonDbConsumer, CommonDbConsumer> tracker;
     private TreeMap<String, CommonDbConsumer> schemaList = new TreeMap<>();
@@ -113,22 +114,19 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     SERVICE_NAME + "@initRetrySec",
                     1); // XXX should be 10 to 30 by default and listen for events
 
-    private CfgBoolean CFG_USE_ACCESS_CACHE_API = new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@accessCacheEnabled", true);
+    private CfgBoolean CFG_USE_ACCESS_CACHE_API =
+            new CfgBoolean(AbstractCommonService.class, SERVICE_NAME + "@accessCacheEnabled", true);
 
     private final CfgLong CFG_ACCESS_CACHE_TTL =
             new CfgLong(
                     AbstractCommonService.class,
                     SERVICE_NAME + "@accessCacheTTL",
-                    MPeriod.MINUTE_IN_MILLISECOUNDS * 15); 
+                    MPeriod.MINUTE_IN_MILLISECOUNDS * 15);
 
     private final CfgInt CFG_ACCESS_CACHE_SIZE =
-            new CfgInt(
-                    AbstractCommonService.class,
-                    SERVICE_NAME + "@accessCacheSize",
-                    1000000); 
+            new CfgInt(AbstractCommonService.class, SERVICE_NAME + "@accessCacheSize", 1000000);
 
     private ICache<String, Boolean> accessCache;
-
 
     public static AbstractCommonService instance(String name) {
         return instances.get(name);
@@ -250,8 +248,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
     @Override
     protected DbPool doCreateRoDataPool() {
-    	if (MString.equals(dataSourceName, dataSourceRoName) || CFG_USE_PSEUDO.value())
-    		return null;
+        if (MString.equals(dataSourceName, dataSourceRoName) || CFG_USE_PSEUDO.value()) return null;
         return new DefaultDbPool(
                 new DataSourceProvider(
                         getDataSourceRo(),
@@ -276,7 +273,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                 schemaList.put(name, service);
                 List<Class<? extends Object>> list = new ArrayList<>();
                 service.registerObjectTypes(list);
-                list.forEach(v -> objectTypes.put(v.getCanonicalName(), service) );
+                list.forEach(v -> objectTypes.put(v.getCanonicalName(), service));
                 updateManager();
             }
 
@@ -311,7 +308,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                 service.registerObjectTypes(list);
                 HashSet<String> set = new HashSet<>();
                 list.forEach(v -> set.add(v.getCanonicalName()));
-                objectTypes.keySet().removeIf(k -> set.contains(k) );
+                objectTypes.keySet().removeIf(k -> set.contains(k));
                 updateManager();
             }
         }
@@ -391,7 +388,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
         if (type == null) throw new MException("type is null");
         CommonDbConsumer ret = objectTypes.get(type);
         if (ret == null) {
-            log().t("Access Controller not found",type,objectTypes);
+            log().t("Access Controller not found", type, objectTypes);
             throw new MException("Access Controller not found", type);
         }
         return ret;
@@ -403,7 +400,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         String clazz = obj.getClass().getCanonicalName();
         if (obj instanceof UuidIdentificable) {
-            Boolean cached = getCachedAccess("read", clazz, ((UuidIdentificable)obj).getId());
+            Boolean cached = getCachedAccess("read", clazz, ((UuidIdentificable) obj).getId());
             if (cached != null) return cached;
         }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
@@ -411,7 +408,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         boolean bool = controller.canRead(obj);
         if (obj instanceof UuidIdentificable)
-            doCacheAccess("read", clazz, ((UuidIdentificable)obj).getId(), bool);
+            doCacheAccess("read", clazz, ((UuidIdentificable) obj).getId(), bool);
         return bool;
     }
 
@@ -421,7 +418,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         String clazz = obj.getClass().getCanonicalName();
         if (obj instanceof UuidIdentificable) {
-            Boolean cached = getCachedAccess("update", clazz, ((UuidIdentificable)obj).getId());
+            Boolean cached = getCachedAccess("update", clazz, ((UuidIdentificable) obj).getId());
             if (cached != null) return cached;
         }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
@@ -429,7 +426,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         boolean bool = controller.canUpdate(obj);
         if (obj instanceof UuidIdentificable)
-            doCacheAccess("update", clazz, ((UuidIdentificable)obj).getId(), bool);
+            doCacheAccess("update", clazz, ((UuidIdentificable) obj).getId(), bool);
         return bool;
     }
 
@@ -439,7 +436,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         String clazz = obj.getClass().getCanonicalName();
         if (obj instanceof UuidIdentificable) {
-            Boolean cached = getCachedAccess("delete", clazz, ((UuidIdentificable)obj).getId());
+            Boolean cached = getCachedAccess("delete", clazz, ((UuidIdentificable) obj).getId());
             if (cached != null) return cached;
         }
         CommonDbConsumer controller = getConsumer(obj.getClass().getCanonicalName());
@@ -447,7 +444,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
         boolean bool = controller.canDelete(obj);
         if (obj instanceof UuidIdentificable)
-            doCacheAccess("delete", clazz, ((UuidIdentificable)obj).getId(), bool);
+            doCacheAccess("delete", clazz, ((UuidIdentificable) obj).getId(), bool);
         return bool;
     }
 
@@ -464,8 +461,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
         if (controller == null) return false;
 
         boolean bool = controller.canCreate(obj);
-        if (obj instanceof UuidIdentificable)
-            doCacheAccess("create", clazz, null, bool);
+        if (obj instanceof UuidIdentificable) doCacheAccess("create", clazz, null, bool);
         return bool;
     }
 
@@ -494,10 +490,11 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                             "accessCache@" + getServiceName(),
                             String.class,
                             Boolean.class,
-                            new CacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
-                            );
+                            new CacheConfig()
+                                    .setHeapSize(CFG_ACCESS_CACHE_SIZE.value())
+                                    .setTTL(CFG_ACCESS_CACHE_TTL.value()));
         } catch (Throwable e) {
-            log().d(getServiceName(),e.toString());
+            log().d(getServiceName(), e.toString());
         }
     }
 
@@ -530,7 +527,8 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     public void foundReference(Reference<?> ref) {
                         if (ref.getType() == TYPE.CHILD) {
                             if (ref.getObject() == null) return;
-                            // be sure not to cause an infinity loop, a object should only be deleted
+                            // be sure not to cause an infinity loop, a object should only be
+                            // deleted
                             // once ...
                             if (ref.getObject() instanceof UuidIdentificable) {
                                 if (list.contains(((UuidIdentificable) ref.getObject()).getId()))

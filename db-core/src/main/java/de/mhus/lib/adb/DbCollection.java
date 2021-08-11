@@ -56,9 +56,9 @@ public interface DbCollection<O> extends Iterable<O>, Iterator<O>, MCloseable {
     default List<O> toCacheAndClose() {
         List<O> list = new LinkedList<O>();
         try {
-        	addToList(list);
+            addToList(list);
         } finally {
-        	close();
+            close();
         }
         return list;
     }
@@ -66,16 +66,16 @@ public interface DbCollection<O> extends Iterable<O>, Iterator<O>, MCloseable {
     default List<O> toCacheAndClose(int max) {
         List<O> list = new LinkedList<O>();
         try {
-	        for (O o : this) {
-	            list.add(o);
-	            if (max >= 0 && list.size() >= max) break;
-	        }
+            for (O o : this) {
+                list.add(o);
+                if (max >= 0 && list.size() >= max) break;
+            }
         } finally {
-        	close();
+            close();
         }
         return list;
     }
-    
+
     default O[] toArrayAndClose(O[] dummy) {
         List<O> list = toCacheAndClose();
         return list.toArray(dummy);

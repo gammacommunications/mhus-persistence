@@ -114,8 +114,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @throws Exception
      */
     public void createStructure(
-            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
-            throws Exception {
+            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception {
         createTables(data, db, caoMeta, cleanup);
         createIndexes(data, db, caoMeta, cleanup);
         createData(data, db);
@@ -149,8 +148,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
      * @throws Exception
      */
     public abstract void createIndexes(
-            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
-            throws Exception;
+            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception;
 
     /**
      * Execute 'data' configs: select = a select query to define a condition and/or data set set and

@@ -144,7 +144,6 @@ import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.statement.values.ValuesStatement;
 
-
 public class ParserJdbc
         implements QueryParser,
                 SelectVisitor,
@@ -214,17 +213,15 @@ public class ParserJdbc
             sql.append(" ORDER BY ");
             boolean first = true;
             for (OrderByElement order : plainSelect.getOrderByElements()) {
-                if (!first)
-                    sql.append(",");
+                if (!first) sql.append(",");
                 order.accept(this);
                 first = false;
             }
         }
 
         if (plainSelect.getLimit() != null && !plainSelect.getLimit().isLimitAll()) {
-            sql.append(" LIMIT " + plainSelect.getLimit().getRowCount() );
+            sql.append(" LIMIT " + plainSelect.getLimit().getRowCount());
         }
-
     }
 
     @Override
@@ -953,9 +950,7 @@ public class ParserJdbc
     @Override
     public void visit(OrderByElement orderBy) {
         orderBy.getExpression().accept(this);
-        if (orderBy.isAsc())
-            sql.append(" ASC");
-        else
-            sql.append(" DESC");
+        if (orderBy.isAsc()) sql.append(" ASC");
+        else sql.append(" DESC");
     }
 }

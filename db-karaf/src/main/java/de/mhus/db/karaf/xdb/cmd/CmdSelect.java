@@ -156,8 +156,7 @@ public class CmdSelect extends AbstractCmd {
             long cnt = type.count(parser.getQualification(), queryParam);
             System.out.println("Count: " + cnt);
             return cnt;
-        } else
-        if (columns.size() == 1 && columns.get(0).equals("*")) {
+        } else if (columns.size() == 1 && columns.get(0).equals("*")) {
             columns = null;
         }
 

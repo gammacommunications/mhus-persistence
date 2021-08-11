@@ -75,7 +75,7 @@ public class ParserTest extends TestCase {
         assertEquals("ORDER BY $db.book.name$ ASC", parser.getQualification().trim());
         assertEquals("[*]", parser.getColumnNames().toString());
     }
-    
+
     @Test
     public void testOrderDesc() throws Throwable {
         System.out.println(">>> testSelectAll");
@@ -91,7 +91,7 @@ public class ParserTest extends TestCase {
         assertEquals("ORDER BY $db.book.name$ DESC", parser.getQualification().trim());
         assertEquals("[*]", parser.getColumnNames().toString());
     }
-    
+
     @Test
     public void testSelectAll() throws Throwable {
         System.out.println(">>> testSelectAll");

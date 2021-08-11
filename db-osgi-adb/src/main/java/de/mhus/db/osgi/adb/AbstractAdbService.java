@@ -86,15 +86,14 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     }
 
     protected DbPool doCreateRoDataPool() {
-    	if (MString.equals(dataSourceName, dataSourceRoName))
-    		return null;
-    	DataSource ds = getDataSourceRo();
-    	if (ds == null) return null;
+        if (MString.equals(dataSourceName, dataSourceRoName)) return null;
+        DataSource ds = getDataSourceRo();
+        if (ds == null) return null;
         return new DefaultDbPool(
                 new DataSourceProvider(
                         ds, doCreateDialect(), doCreateConfig(), doCreateActivator()));
     }
-    
+
     protected MActivator doCreateActivator() {
         try {
             return new DefaultActivator(null, getClass().getClassLoader());
@@ -119,19 +118,17 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     }
 
     protected DataSource getDataSourceRo() {
-    	if (MString.equals(dataSourceName, dataSourceRoName))
-    		return getDataSource();
-    	
+        if (MString.equals(dataSourceName, dataSourceRoName)) return getDataSource();
+
         DataSource ds = DataSourceUtil.getDataSource(dataSourceRoName);
         if (ds == null) {
-        	log().w("DataSourceRo is unknown", dataSourceRoName);
+            log().w("DataSourceRo is unknown", dataSourceRoName);
             ds = DataSourceUtil.getDataSource(dataSourceName); // try RW datasource
-            if (ds != null)
-            	log().w("DataSourceRo fallback to RW");
+            if (ds != null) log().w("DataSourceRo fallback to RW");
         }
         return ds;
     }
-    
+
     @Override
     public void updateManager(boolean clean) throws MException {
         doClose();
@@ -167,7 +164,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     public String getDataSourceRoName() {
         return dataSourceRoName;
     }
-    
+
     @Override
     public void setDataSourceName(String dataSourceName) {
         if (MSystem.equals(this.dataSourceName, dataSourceName)) return;
@@ -187,7 +184,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
         } catch (Exception e) {
         }
     }
-    
+
     @Override
     public String getServiceName() {
         return getClass().getSimpleName();

@@ -90,10 +90,8 @@ public class ParameterPart extends StringParsingPart {
         } else {
             if (value instanceof Integer || value instanceof Short || value instanceof Byte)
                 type = M.TYPE_INT;
-            else if (value instanceof Long || value instanceof Character)
-                type = M.TYPE_LONG;
-            else if (value instanceof Double || value instanceof Float)
-                type = M.TYPE_DOUBLE;
+            else if (value instanceof Long || value instanceof Character) type = M.TYPE_LONG;
+            else if (value instanceof Double || value instanceof Float) type = M.TYPE_DOUBLE;
             else if (value instanceof Number || value instanceof Raw)
                 type = M.TYPE_RAW; // direct toString() operation (via compiler request)
             else if (value instanceof Date
@@ -156,6 +154,6 @@ public class ParameterPart extends StringParsingPart {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, new Object[] { attribute });
+        return MSystem.toString(this, new Object[] {attribute});
     }
 }

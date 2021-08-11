@@ -123,8 +123,7 @@ public class ADynValue extends AAttribute {
                         else if (long.class == fType
                                 || char.class == fType
                                 || Long.class.isAssignableFrom(fType)
-                                || Character.class.isAssignableFrom(fType))
-                            t = M.TYPE_LONG;
+                                || Character.class.isAssignableFrom(fType)) t = M.TYPE_LONG;
                         else if (double.class == fType || Double.class.isAssignableFrom(fType))
                             t = M.TYPE_DOUBLE;
                         else if (float.class == fType || Float.class.isAssignableFrom(fType))

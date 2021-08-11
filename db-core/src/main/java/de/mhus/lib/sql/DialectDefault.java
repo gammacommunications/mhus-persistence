@@ -79,8 +79,7 @@ public class DialectDefault extends Dialect {
      * @throws Exception
      */
     @Override
-    public void createTables(
-            INode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
+    public void createTables(INode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup)
             throws Exception {
 
         Connection con = ((JdbcConnection) db.instance()).getConnection();
@@ -408,8 +407,7 @@ public class DialectDefault extends Dialect {
      * @throws Exception
      */
     @Override
-    public void createIndexes(
-            INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
+    public void createIndexes(INode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup)
             throws Exception {
 
         Connection con = ((JdbcConnection) db.instance()).getConnection();

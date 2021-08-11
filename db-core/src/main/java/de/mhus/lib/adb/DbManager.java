@@ -402,7 +402,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     public abstract DbPool getPool();
 
     public abstract DbPool getPoolRo();
-    
+
     public abstract MActivator getActivator();
 
     @JmxManaged(descrition = "Current mapping of the table and column names")
@@ -487,17 +487,17 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
     public void save(Object object) throws MException {
         saveObject(object);
     }
-    
+
     public Object[] getPrimaryKeyValues(Object object) throws Exception {
 
-    	String registryName = getRegistryName(object);
-    	Table table = getTable(registryName);
-    	List<Field> keys = table.getPrimaryKeys();
-    	Object[] out = new Object[keys.size()];
-    	int i = 0;
+        String registryName = getRegistryName(object);
+        Table table = getTable(registryName);
+        List<Field> keys = table.getPrimaryKeys();
+        Object[] out = new Object[keys.size()];
+        int i = 0;
         for (Field f : keys) {
-        	out[i] = f.get(object);
-        	i++;
+            out[i] = f.get(object);
+            i++;
         }
         return out;
     }

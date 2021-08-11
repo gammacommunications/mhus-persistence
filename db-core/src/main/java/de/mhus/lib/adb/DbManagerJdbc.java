@@ -77,7 +77,8 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     private Lock reloadLock = new ThreadLock("reload");
     private String dataSourceName;
 
-    public DbManagerJdbc(String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema) throws Exception {
+    public DbManagerJdbc(String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema)
+            throws Exception {
         this(dataSourceName, pool, poolRo, schema, false);
     }
 
@@ -86,12 +87,13 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
      *
      * @param dataSourceName
      * @param pool
-     * @param poolRo 
+     * @param poolRo
      * @param schema
      * @param cleanup
      * @throws MException
      */
-    public DbManagerJdbc(String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema, boolean cleanup)
+    public DbManagerJdbc(
+            String dataSourceName, DbPool pool, DbPool poolRo, DbSchema schema, boolean cleanup)
             throws MException {
         this.dataSourceName = dataSourceName;
         this.pool = pool;
@@ -1398,7 +1400,9 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
         if (nameMapping != null) return;
 
-        try (Scope scope = ITracer.get().enter("initDatabase", "cleanup", cleanup, "dataSource", dataSourceName)) {
+        try (Scope scope =
+                ITracer.get()
+                        .enter("initDatabase", "cleanup", cleanup, "dataSource", dataSourceName)) {
             schema.resetObjectTypes();
             pool.cleanup(true);
             Class<? extends Object>[] types = schema.getObjectTypes();
@@ -1491,7 +1495,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
     public DbPool getPoolRo() {
         return poolRo;
     }
-    
+
     @Override
     public MActivator getActivator() {
         return activator;

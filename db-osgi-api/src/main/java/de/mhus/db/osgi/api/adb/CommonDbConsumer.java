@@ -26,10 +26,9 @@ public interface CommonDbConsumer {
     String REASON_DELETE = "delete";
 
     /**
-     * Register supported object types for the database. Will be
-     * called multiple times and should always return the same collection
-     * of classes.
-     * 
+     * Register supported object types for the database. Will be called multiple times and should
+     * always return the same collection of classes.
+     *
      * @param list
      */
     void registerObjectTypes(List<Class<? extends Object>> list);
@@ -62,9 +61,8 @@ public interface CommonDbConsumer {
      * @throws Exception
      */
     void doPostInitialize(XdbService manager) throws Exception;
-    
+
     public default boolean isReasonDelete(String reason) {
         return REASON_DELETE.equals(reason);
     }
-    
 }

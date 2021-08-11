@@ -92,22 +92,27 @@ public abstract class AbstractCommonDbSchema extends AbstractDbSchema {
                     switch (right) {
                         case CREATE:
                             if (!admin.canCreate(obj))
-                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
+                                throw new AccessDeniedException(
+                                        Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case DELETE:
                             if (!admin.canDelete(obj))
-                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
+                                throw new AccessDeniedException(
+                                        Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case READ:
                             if (!admin.canRead(obj))
-                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
+                                throw new AccessDeniedException(
+                                        Aaa.getPrincipal(), c.getName(), right);
                             break;
                         case UPDATE:
                             if (!admin.canUpdate(obj))
-                                throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right);
+                                throw new AccessDeniedException(
+                                        Aaa.getPrincipal(), c.getName(), right);
                             break;
                         default:
-                            throw new AccessDeniedException(Aaa.getPrincipal(), c.getName(), right, "unknown right");
+                            throw new AccessDeniedException(
+                                    Aaa.getPrincipal(), c.getName(), right, "unknown right");
                     }
                 } catch (AccessDeniedException ade) {
                     throw ade;
