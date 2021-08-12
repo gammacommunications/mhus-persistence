@@ -29,7 +29,7 @@
 	<version>7.5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Persistence framework</description>
-	<url>http://www.mhus.de</url>
+	<url>http://www.mhus.info</url>
 
     <inceptionYear>2020</inceptionYear>
 	<licenses>
@@ -41,8 +41,8 @@
 	</licenses>
 	
 	<scm>
-		<url>https://github.com/mhus/mhus-persistence</url>
-		<connection>scm:git:https://github.com/mhus/mhus-persistence/</connection>
+		<url>https://github.com/mhus-info/mhus-persistence</url>
+		<connection>scm:git:https://github.com/mhus-info/mhus-persistence/</connection>
 	</scm>
 	
 	<developers>
