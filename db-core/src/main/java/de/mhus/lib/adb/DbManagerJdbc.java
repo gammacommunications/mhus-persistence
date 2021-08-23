@@ -417,7 +417,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         try (Scope scope =
                 ITracer.get()
                         .enter(
-                                "executeQuery",
+                                "executeQuery " + query,
                                 "class",
                                 clazz,
                                 "registryName",
@@ -468,7 +468,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         try (Scope scope =
                 ITracer.get()
                         .enter(
-                                "executeQuery",
+                                "executeCountQuery " + query,
                                 "attributeName",
                                 attributeName,
                                 "query",
@@ -520,7 +520,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
         try (Scope scope =
                 ITracer.get()
                         .enter(
-                                "executeQuery",
+                                "executeAttributeQuery" + query,
                                 "alias",
                                 alias,
                                 "query",
