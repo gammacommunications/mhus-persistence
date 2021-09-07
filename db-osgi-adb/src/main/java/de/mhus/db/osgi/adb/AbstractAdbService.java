@@ -40,14 +40,6 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     protected String dataSourceName;
     protected String dataSourceRoName;
     private DbManager manager;
-    enum STATUS {
-        NONE,
-        ACTIVATED,
-        STARTED,
-        CLOSED
-    }
-
-    protected STATUS status = STATUS.NONE;
 
     //	protected abstract void doInitialize() throws Exception;
 
@@ -58,7 +50,7 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
      * @throws Exception
      */
     protected void doOpen(boolean clean) throws MException {
-        if (manager != null || status != STATUS.STARTED) return;
+        if (manager != null) return;
         doInitialize();
 
         if (getDataSource() == null) return;
@@ -197,9 +189,4 @@ public abstract class AbstractAdbService extends MLog implements AdbService {
     public String getServiceName() {
         return getClass().getSimpleName();
     }
-    
-    public STATUS getStatus() {
-        return status;
-    }
-
 }
