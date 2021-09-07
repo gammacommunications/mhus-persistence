@@ -19,12 +19,19 @@ import java.util.HashMap;
 
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MemoryLockStrategy extends LockStrategy {
 
-    private long maxLockAge = MPeriod.HOUR_IN_MILLISECOUNDS;
-    private long sleepTime = 200;
+    private static final CfgLong CFG_MAX_LOCK_AGE = new CfgLong(MemoryLockStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
+    private static final CfgLong CFG_SLEEP_TIME = new CfgLong(MemoryLockStrategy.class, "sleepTime", 200);
+    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER = new CfgBoolean(MemoryLockStrategy.class, "ignoreLockOwner", false);
+
+    private long maxLockAge = CFG_MAX_LOCK_AGE.value();
+    private long sleepTime = CFG_SLEEP_TIME.value();
+    private boolean ignoreLockOwner = CFG_IGNORE_LOCK_OWNER.value();
 
     private HashMap<String, LockObject> locks = new HashMap<>();
 
@@ -64,7 +71,11 @@ public class MemoryLockStrategy extends LockStrategy {
             LockObject obj = locks.get(key);
             if (obj == null) return;
             if (obj.owner.equals(transaction.getName())) locks.remove(key);
-            else log().d("it's not lock owner", key, transaction);
+            else {
+                log().w("it's not lock owner", key, obj.owner, transaction.getName());
+                if (ignoreLockOwner)
+                    locks.remove(key);
+            }
         }
     }
 

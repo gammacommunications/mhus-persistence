@@ -18,13 +18,20 @@ package de.mhus.lib.adb.transaction;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class DbLockObjectStrategy extends LockStrategy {
 
-    private long maxLockAge = MPeriod.HOUR_IN_MILLISECOUNDS;
-    private long sleepTime = 200;
+    private static final CfgLong CFG_MAX_LOCK_AGE = new CfgLong(DbLockObjectStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
+    private static final CfgLong CFG_SLEEP_TIME = new CfgLong(DbLockObjectStrategy.class, "sleepTime", 200);
+    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER = new CfgBoolean(DbLockObjectStrategy.class, "ignoreLockOwner", false);
+
+    private long maxLockAge = CFG_MAX_LOCK_AGE.value();
+    private long sleepTime = CFG_SLEEP_TIME.value();
+    private boolean ignoreLockOwner = CFG_IGNORE_LOCK_OWNER.value();
 
     @Override
     public void lock(Object object, String key, LockBase transaction, long timeout) {
@@ -64,7 +71,11 @@ public class DbLockObjectStrategy extends LockStrategy {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null) {
                 if (obj.getOwner().equals(transaction.getName())) obj.delete();
-                else log().d("it's not lock owner", key, transaction);
+                else {
+                    log().w("it's not lock owner", key, transaction);
+                    if (ignoreLockOwner)
+                        obj.delete();
+                }
             }
         } catch (MException e) {
             log().d(e);
