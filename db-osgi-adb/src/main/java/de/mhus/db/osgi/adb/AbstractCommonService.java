@@ -309,7 +309,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                 HashSet<String> set = new HashSet<>();
                 list.forEach(v -> set.add(v.getCanonicalName()));
                 objectTypes.keySet().removeIf(k -> set.contains(k));
-                updateManager();
+                // updateManager(); - no need to update - leave it unused
             }
         }
     }
