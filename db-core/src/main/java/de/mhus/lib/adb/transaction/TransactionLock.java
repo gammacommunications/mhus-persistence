@@ -182,7 +182,8 @@ public class TransactionLock extends LockBase {
                                     + key
                                     + ", actuall locked: "
                                     + orderedKeys
-                                    + stacktrace);
+                                    + stacktrace
+                                    + ", Thread: " + Thread.currentThread().getId());
                 }
             }
         }

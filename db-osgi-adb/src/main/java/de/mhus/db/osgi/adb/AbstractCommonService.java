@@ -74,15 +74,6 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
     private BundleContext context;
 
-    enum STATUS {
-        NONE,
-        ACTIVATED,
-        STARTED,
-        CLOSED
-    }
-
-    private STATUS status = STATUS.NONE;
-
     // static service name
     protected final String SERVICE_NAME = getCommonServiceName();
 
@@ -309,7 +300,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                 HashSet<String> set = new HashSet<>();
                 list.forEach(v -> set.add(v.getCanonicalName()));
                 objectTypes.keySet().removeIf(k -> set.contains(k));
-                updateManager();
+//                updateManager(); // do not update - no need for
             }
         }
     }
@@ -339,7 +330,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                     public void run() {
                         // wait for STARTED
                         while (status == STATUS.ACTIVATED
-                                || AbstractCommonService.this.getManager().getPool() == null) {
+                                || AbstractCommonService.this.getManager() == null || AbstractCommonService.this.getManager().getPool() == null) {
                             log().d("Wait for start", service);
                             MThread.sleep(250);
                         }
@@ -374,10 +365,6 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
                         servicePostInitialize(service, name);
                     });
         }
-    }
-
-    public STATUS getStatus() {
-        return status;
     }
 
     // ----
