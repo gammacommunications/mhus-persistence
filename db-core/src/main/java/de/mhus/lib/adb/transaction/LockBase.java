@@ -54,4 +54,6 @@ public abstract class LockBase extends MLog {
     }
 
     public abstract Set<String> getLockKeys();
+
+    protected abstract boolean isLocked();
 }

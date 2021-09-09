@@ -20,12 +20,13 @@ import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.adb.TransactionConnection;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 /**
- * Allow transaction and lock manageent with adb framework. This implementation should be used if
+ * Allow transaction and lock management within the adb framework. This implementation should be used if
  * you not need to synchronize transactions with other resources. A JTA implementation is not planed
  * but can be implemented on top of this implementation. The transaction is based on the current
  * thread. If you leave the thread you will also leave the current transaction.
@@ -36,7 +37,7 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 public class DbTransaction {
 
     /** Constant <code>DEFAULT_TIMEOUT=MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10</code> */
-    public static final long DEFAULT_TIMEOUT = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
+    public static final CfgLong CFG_DEFAULT_TIMEOUT = new CfgLong(DbTransaction.class, "defaultTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 10 );
 
     /**
      * lock accept only nested locks with already locked objects.
@@ -46,7 +47,7 @@ public class DbTransaction {
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
     public static DbLock lockDefault(Object... objects) throws TimeoutRuntimeException {
-        return lock(DEFAULT_TIMEOUT, objects);
+        return lock(CFG_DEFAULT_TIMEOUT.value(), objects);
     }
 
     /**
@@ -57,7 +58,7 @@ public class DbTransaction {
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
     public static DbLock relaxedLock(Object... objects) throws TimeoutRuntimeException {
-        return relaxedLock(DEFAULT_TIMEOUT, objects);
+        return relaxedLock(CFG_DEFAULT_TIMEOUT.value(), objects);
     }
 
     /**
@@ -96,7 +97,7 @@ public class DbTransaction {
      * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
      */
     public static DbLock lock(DbManager manager, Object... objects) throws TimeoutRuntimeException {
-        return lock(manager, DEFAULT_TIMEOUT, objects);
+        return lock(manager, CFG_DEFAULT_TIMEOUT.value(), objects);
     }
 
     /**

@@ -77,7 +77,7 @@ public class DbLockObjectStrategy extends LockStrategy {
                         obj.delete();
                 }
             }
-        } catch (MException e) {
+        } catch (Throwable e) {
             log().d(e);
         }
     }
@@ -101,4 +101,37 @@ public class DbLockObjectStrategy extends LockStrategy {
     public void setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
     }
+
+    @Override
+    public boolean isLocked(Object object, String key, LockBase transaction) {
+        try {
+            DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
+            if (obj != null && obj.getAge() > maxLockAge) {
+                log().i("remove old lock", obj.getOwner(), key);
+                obj.delete();
+                return false;
+            }
+            return obj != null;
+        } catch (Throwable e) {
+            log().d(e);
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean isLockedByOwner(Object object, String key, LockBase transaction) {
+        try {
+            DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
+            if (obj != null && obj.getAge() > maxLockAge) {
+                log().i("remove old lock", obj.getOwner(), key);
+                obj.delete();
+                return false;
+            }
+            return obj != null && obj.getOwner().equals(transaction.getName());
+        } catch (Throwable e) {
+            log().d(e);
+        }
+        return false;
+    }
+    
 }

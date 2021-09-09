@@ -36,6 +36,34 @@ public class MemoryLockStrategy extends LockStrategy {
     private HashMap<String, LockObject> locks = new HashMap<>();
 
     @Override
+    public boolean isLocked(Object object, String key, LockBase transaction) {
+        synchronized (this) {
+            LockObject current = locks.get(key);
+            if (current != null && current.getAge() > maxLockAge) {
+                log().i("remove old lock", current.owner, key);
+                locks.remove(key);
+                return false;
+            }
+            return current != null;
+        }
+
+    }
+
+    @Override
+    public boolean isLockedByOwner(Object object, String key, LockBase transaction) {
+        synchronized (this) {
+            LockObject current = locks.get(key);
+            if (current != null && current.getAge() > maxLockAge) {
+                log().i("remove old lock", current.owner, key);
+                locks.remove(key);
+                return false;
+            }
+            return current != null && current.owner.equals(transaction.getName());
+        }
+
+    }
+    
+    @Override
     public void lock(Object object, String key, LockBase transaction, long timeout) {
 
         long start = System.currentTimeMillis();

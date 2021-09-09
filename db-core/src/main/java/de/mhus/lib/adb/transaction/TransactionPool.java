@@ -58,12 +58,16 @@ public class TransactionPool extends MLog {
 
     public void releaseLock() {
         //		synchronized (pool) {
-        LockBase out = lock.get();
-        if (out == null) return;
-        LockBase nested = out.popNestedLock();
-        if (nested == null) {
-            lock.remove();
-            out.release();
+        try {
+            LockBase out = lock.get();
+            if (out == null) return;
+            LockBase nested = out.popNestedLock();
+            if (nested == null) {
+                lock.remove();
+                out.release();
+            }
+        } catch (Throwable t) {
+            log().w(t);
         }
         //		}
     }
@@ -71,6 +75,12 @@ public class TransactionPool extends MLog {
     public void lock(long timeout, LockBase transaction) {
         //		synchronized (pool) {
         LockBase current = lock.get();
+        if (current != null) {
+            if (!current.isLocked()) {
+                lock.remove();
+                current = null;
+            }
+        }
         if (current != null) current.pushNestedLock(transaction);
         else {
             lock.set(transaction);

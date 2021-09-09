@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.adb.transaction;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -94,21 +95,23 @@ public class TransactionLock extends LockBase {
         getLockKeys();
 
         long start = System.currentTimeMillis();
+        ArrayList<Map.Entry<String, Object>> done = new ArrayList<>(orderedKeys.size());
         for (Map.Entry<String, Object> entry : orderedKeys.entrySet()) {
             try {
                 strategy.lock(entry.getValue(), entry.getKey(), this, timeout);
+                done.add(entry);
             } catch (Throwable t) {
                 log().d(t);
             }
             if (System.currentTimeMillis() - start > timeout) {
-                for (Map.Entry<String, Object> entry2 : orderedKeys.entrySet()) {
+                for (Map.Entry<String, Object> entry2 : done) {
                     try {
                         strategy.releaseLock(entry2.getValue(), entry2.getKey(), this);
                     } catch (Throwable t) {
                         log().d(t);
                     }
                 }
-                throw new TimeoutRuntimeException();
+                throw new TimeoutRuntimeException(orderedKeys);
             }
         }
 
@@ -210,6 +213,7 @@ public class TransactionLock extends LockBase {
             orderedKeys = new TreeMap<>();
             if (objects != null) {
                 for (Object o : objects) {
+                    if (o == null) continue;
                     String key = createKey(o);
                     orderedKeys.put(key, o);
                 }
@@ -220,5 +224,37 @@ public class TransactionLock extends LockBase {
 
     public boolean isRelaxed() {
         return relaxed;
+    }
+
+    @Override
+    protected boolean isLocked() {
+        if (objects == null || orderedKeys == null) return false;
+
+        LockStrategy strategy = manager.getSchema().getLockStrategy();
+        if (strategy == null) return false;
+
+        boolean locked = true;
+        for (Map.Entry<String, Object> entry : orderedKeys.entrySet()) {
+            if (!strategy.isLockedByOwner(entry.getValue(), entry.getKey(), this)) {
+                locked = false;
+                break;
+            }
+        }
+        if (!locked) {
+            for (Map.Entry<String, Object> entry : orderedKeys.entrySet()) {
+                if (strategy.isLockedByOwner(entry.getValue(), entry.getKey(), this)) {
+                    try {
+                        strategy.releaseLock(entry.getValue(), entry.getKey(), this);
+                    } catch (Throwable t) {
+                        log().d(entry.getKey(),t);
+                    }
+                }
+            }
+            manager = null;
+            objects = null;
+            locked = false;
+        }
+
+        return locked;
     }
 }
