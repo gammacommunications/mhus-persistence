@@ -67,9 +67,18 @@ public abstract class AbstractDbSchema extends DbSchema {
             DbConnection con,
             DbManager dbManagerJdbc,
             Class<?> clazz,
+            Class<?> clazz2,
             String registryName,
             String attribute) {
 
+        if (registryName == null) {
+            if (clazz2 != null)
+                registryName = dbManagerJdbc.getRegistryName(clazz2);
+            else
+            if (clazz != null)
+                registryName = dbManagerJdbc.getRegistryName(clazz);
+        }
+        
         if (!Aaa.hasAccess(Table.class, "readattributes", registryName + "_" + attribute)
                 && !Aaa.hasAccess(Table.class, "readattributes", registryName))
             throw new AccessDeniedException(

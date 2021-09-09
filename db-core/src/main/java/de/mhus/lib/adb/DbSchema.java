@@ -491,6 +491,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
             DbConnection con,
             DbManager dbManagerJdbc,
             Class<?> clazz,
+            Class<?> baseClazz,
             String registryName,
             String attribute) {
         throw new AccessDeniedException();

@@ -99,6 +99,7 @@ public class BookStoreSchema extends DbSchema {
             DbConnection con,
             DbManager dbManagerJdbc,
             Class<?> clazz,
+            Class<?> clazz2,
             String registryName,
             String attribute) {}
 }

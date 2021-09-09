@@ -363,11 +363,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
             Map<String, Object> attributes)
             throws MException {
 
-        getSchema().authorizeReadAttributes(con, this, clazz, registryName, attribute);
+        Class<? extends Object> clazz2 = schema.findClassForObject(clazz, this);
+        getSchema().authorizeReadAttributes(con, this, clazz, clazz2, registryName, attribute);
 
         reloadLock.waitWithException(MAX_LOCK);
 
-        Class<? extends Object> clazz2 = schema.findClassForObject(clazz, this);
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT $db.")
                 .append(getMappingName(clazz2))
