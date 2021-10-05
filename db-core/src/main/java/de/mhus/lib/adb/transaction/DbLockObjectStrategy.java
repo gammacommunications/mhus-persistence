@@ -25,9 +25,12 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class DbLockObjectStrategy extends LockStrategy {
 
-    private static final CfgLong CFG_MAX_LOCK_AGE = new CfgLong(DbLockObjectStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
-    private static final CfgLong CFG_SLEEP_TIME = new CfgLong(DbLockObjectStrategy.class, "sleepTime", 200);
-    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER = new CfgBoolean(DbLockObjectStrategy.class, "ignoreLockOwner", false);
+    private static final CfgLong CFG_MAX_LOCK_AGE =
+            new CfgLong(DbLockObjectStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
+    private static final CfgLong CFG_SLEEP_TIME =
+            new CfgLong(DbLockObjectStrategy.class, "sleepTime", 200);
+    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER =
+            new CfgBoolean(DbLockObjectStrategy.class, "ignoreLockOwner", false);
 
     private long maxLockAge = CFG_MAX_LOCK_AGE.value();
     private long sleepTime = CFG_SLEEP_TIME.value();
@@ -73,8 +76,7 @@ public class DbLockObjectStrategy extends LockStrategy {
                 if (obj.getOwner().equals(transaction.getName())) obj.delete();
                 else {
                     log().w("it's not lock owner", key, transaction);
-                    if (ignoreLockOwner)
-                        obj.delete();
+                    if (ignoreLockOwner) obj.delete();
                 }
             }
         } catch (Throwable e) {
@@ -117,7 +119,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         }
         return false;
     }
-    
+
     @Override
     public boolean isLockedByOwner(Object object, String key, LockBase transaction) {
         try {
@@ -133,5 +135,4 @@ public class DbLockObjectStrategy extends LockStrategy {
         }
         return false;
     }
-    
 }

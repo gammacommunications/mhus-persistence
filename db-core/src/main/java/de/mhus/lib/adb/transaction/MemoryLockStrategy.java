@@ -25,9 +25,12 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MemoryLockStrategy extends LockStrategy {
 
-    private static final CfgLong CFG_MAX_LOCK_AGE = new CfgLong(MemoryLockStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
-    private static final CfgLong CFG_SLEEP_TIME = new CfgLong(MemoryLockStrategy.class, "sleepTime", 200);
-    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER = new CfgBoolean(MemoryLockStrategy.class, "ignoreLockOwner", false);
+    private static final CfgLong CFG_MAX_LOCK_AGE =
+            new CfgLong(MemoryLockStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
+    private static final CfgLong CFG_SLEEP_TIME =
+            new CfgLong(MemoryLockStrategy.class, "sleepTime", 200);
+    private static final CfgBoolean CFG_IGNORE_LOCK_OWNER =
+            new CfgBoolean(MemoryLockStrategy.class, "ignoreLockOwner", false);
 
     private long maxLockAge = CFG_MAX_LOCK_AGE.value();
     private long sleepTime = CFG_SLEEP_TIME.value();
@@ -46,7 +49,6 @@ public class MemoryLockStrategy extends LockStrategy {
             }
             return current != null;
         }
-
     }
 
     @Override
@@ -60,9 +62,8 @@ public class MemoryLockStrategy extends LockStrategy {
             }
             return current != null && current.owner.equals(transaction.getName());
         }
-
     }
-    
+
     @Override
     public void lock(Object object, String key, LockBase transaction, long timeout) {
 
@@ -101,8 +102,7 @@ public class MemoryLockStrategy extends LockStrategy {
             if (obj.owner.equals(transaction.getName())) locks.remove(key);
             else {
                 log().w("it's not lock owner", key, obj.owner, transaction.getName());
-                if (ignoreLockOwner)
-                    locks.remove(key);
+                if (ignoreLockOwner) locks.remove(key);
             }
         }
     }

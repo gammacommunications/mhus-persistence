@@ -77,7 +77,6 @@ public class TransactionTest {
         obj1.save();
         obj2.save();
         obj3.save();
-
     }
 
     @Test
@@ -88,7 +87,7 @@ public class TransactionTest {
 
         DbTransaction.releaseLock(); // one more should be ok - robust code
     }
-    
+
     @Test
     public void testNestedLockExclude() throws Exception {
 
@@ -106,7 +105,7 @@ public class TransactionTest {
         }
         DbTransaction.releaseLock();
     }
-    
+
     @Test
     public void testSimpleLockInclude() throws Exception {
 
@@ -118,7 +117,7 @@ public class TransactionTest {
         DbTransaction.releaseLock();
         DbTransaction.releaseLock();
     }
-    
+
     @Test
     public void testConcurrentLock() throws Exception {
 
@@ -161,17 +160,17 @@ public class TransactionTest {
 
         // test concurrent locking with lock timeout
         try {
-            ((MemoryLockStrategy)manager.getSchema().getLockStrategy()).setMaxLockAge(1000);
+            ((MemoryLockStrategy) manager.getSchema().getLockStrategy()).setMaxLockAge(1000);
             DbTransaction.lockDefault(obj1, obj2);
 
             final Value<Boolean> done = new Value<>(false);
             final Value<String> fail = new Value<>();
 
             MThread.sleep(2000);
-            
+
             new MThread(
                             new Runnable() {
-    
+
                                 @Override
                                 public void run() {
                                     // concurrent
@@ -190,23 +189,22 @@ public class TransactionTest {
 
             while (done.getValue() == false && fail.getValue() == null) MThread.sleep(200);
 
-
             if (fail.getValue() != null) fail(fail.getValue());
 
             DbTransaction.releaseLock();
 
-
         } finally {
-            ((MemoryLockStrategy)manager.getSchema().getLockStrategy()).setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
+            ((MemoryLockStrategy) manager.getSchema().getLockStrategy())
+                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
         }
     }
-    
+
     @Test
     public void testLockTimeout() throws Exception {
 
         // test lock with timeout of old transaction - old transaction will vanish
         try {
-            ((MemoryLockStrategy)manager.getSchema().getLockStrategy()).setMaxLockAge(1000);
+            ((MemoryLockStrategy) manager.getSchema().getLockStrategy()).setMaxLockAge(1000);
             DbTransaction.lockDefault(obj1, obj2);
 
             MThread.sleep(2000);
@@ -215,9 +213,8 @@ public class TransactionTest {
             DbTransaction.releaseLock();
 
         } finally {
-            ((MemoryLockStrategy)manager.getSchema().getLockStrategy()).setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
+            ((MemoryLockStrategy) manager.getSchema().getLockStrategy())
+                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
         }
-
     }
-    
 }

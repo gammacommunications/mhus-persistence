@@ -26,10 +26,10 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 /**
- * Allow transaction and lock management within the adb framework. This implementation should be used if
- * you not need to synchronize transactions with other resources. A JTA implementation is not planed
- * but can be implemented on top of this implementation. The transaction is based on the current
- * thread. If you leave the thread you will also leave the current transaction.
+ * Allow transaction and lock management within the adb framework. This implementation should be
+ * used if you not need to synchronize transactions with other resources. A JTA implementation is
+ * not planed but can be implemented on top of this implementation. The transaction is based on the
+ * current thread. If you leave the thread you will also leave the current transaction.
  *
  * @author mikehummel
  * @version $Id: $Id
@@ -37,7 +37,9 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 public class DbTransaction {
 
     /** Constant <code>DEFAULT_TIMEOUT=MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10</code> */
-    public static final CfgLong CFG_DEFAULT_TIMEOUT = new CfgLong(DbTransaction.class, "defaultTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 10 );
+    public static final CfgLong CFG_DEFAULT_TIMEOUT =
+            new CfgLong(
+                    DbTransaction.class, "defaultTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 10);
 
     /**
      * lock accept only nested locks with already locked objects.

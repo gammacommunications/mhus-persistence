@@ -24,7 +24,6 @@ public abstract class LockStrategy extends MLog {
     public abstract void releaseLock(Object object, String key, LockBase transaction);
 
     public abstract boolean isLocked(Object object, String key, LockBase transaction);
-    
+
     public abstract boolean isLockedByOwner(Object object, String key, LockBase transaction);
-    
 }

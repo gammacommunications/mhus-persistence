@@ -186,7 +186,8 @@ public class TransactionLock extends LockBase {
                                     + ", actuall locked: "
                                     + orderedKeys
                                     + stacktrace
-                                    + ", Thread: " + Thread.currentThread().getId());
+                                    + ", Thread: "
+                                    + Thread.currentThread().getId());
                 }
             }
         }
@@ -246,7 +247,7 @@ public class TransactionLock extends LockBase {
                     try {
                         strategy.releaseLock(entry.getValue(), entry.getKey(), this);
                     } catch (Throwable t) {
-                        log().d(entry.getKey(),t);
+                        log().d(entry.getKey(), t);
                     }
                 }
             }
