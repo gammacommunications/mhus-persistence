@@ -26,6 +26,7 @@ import de.mhus.lib.adb.DbTransaction;
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
@@ -257,5 +258,10 @@ public class TransactionLock extends LockBase {
         }
 
         return locked;
+    }
+    
+    @Override
+    public String toString() {
+        return MSystem.toString(this, locked, relaxed, orderedKeys, stacktrace);
     }
 }

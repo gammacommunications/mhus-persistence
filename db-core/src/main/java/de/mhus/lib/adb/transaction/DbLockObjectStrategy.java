@@ -54,7 +54,7 @@ public class DbLockObjectStrategy extends LockStrategy {
             try {
                 DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
                 if (obj != null && obj.getAge() > maxLockAge) {
-                    log().i("remove old lock", obj.getOwner(), key);
+                    log().i("remove stare lock", obj.getOwner(), key);
                     obj.delete();
                     continue;
                 }
@@ -75,7 +75,7 @@ public class DbLockObjectStrategy extends LockStrategy {
             if (obj != null) {
                 if (obj.getOwner().equals(transaction.getName())) obj.delete();
                 else {
-                    log().w("it's not lock owner", key, transaction);
+                    log().w("you are not the lock owner", key, transaction);
                     if (ignoreLockOwner) obj.delete();
                 }
             }
@@ -109,7 +109,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         try {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null && obj.getAge() > maxLockAge) {
-                log().i("remove old lock", obj.getOwner(), key);
+                log().i("remove stare lock", obj.getOwner(), key);
                 obj.delete();
                 return false;
             }
@@ -125,7 +125,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         try {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null && obj.getAge() > maxLockAge) {
-                log().i("remove old lock", obj.getOwner(), key);
+                log().i("remove stare lock", obj.getOwner(), key);
                 obj.delete();
                 return false;
             }
