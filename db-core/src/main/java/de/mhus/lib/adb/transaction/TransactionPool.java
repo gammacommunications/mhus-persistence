@@ -63,8 +63,11 @@ public class TransactionPool extends MLog {
             if (out == null) return;
             LockBase nested = out.popNestedLock();
             if (nested == null) {
+                log().d("releaseLock",out);
                 lock.remove();
                 out.release();
+            } else {
+                log().d("releaseLock nested",out,nested);
             }
         } catch (Throwable t) {
             log().w(t);
@@ -81,10 +84,13 @@ public class TransactionPool extends MLog {
                 current = null;
             }
         }
-        if (current != null) current.pushNestedLock(transaction);
-        else {
+        if (current != null) {
+            current.pushNestedLock(transaction);
+            log().d("lock nested",current,transaction);
+        } else {
             lock.set(transaction);
             transaction.lock(timeout);
+            log().d("lock",transaction);
         }
         //		}
     }
@@ -128,7 +134,7 @@ public class TransactionPool extends MLog {
     public boolean commit() {
         Encapsulation enc = encapsulate.get();
         if (enc == null) {
-            log().d("encapsulate not enabled - ignore commit");
+            log().d("encapsulate not set - ignore commit");
             return false;
         }
         return enc.commit();
