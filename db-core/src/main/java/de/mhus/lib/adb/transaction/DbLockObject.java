@@ -30,6 +30,8 @@ public class DbLockObject extends DbComfortableObject {
 
     @DbPersistent private String owner;
 
+    @DbPersistent private String ownerStr;
+    
     @Override
     public void doPreCreate(DbConnection con) {
         created = System.currentTimeMillis();
@@ -58,5 +60,13 @@ public class DbLockObject extends DbComfortableObject {
 
     public long getAge() {
         return System.currentTimeMillis() - created;
+    }
+
+    public String getOwnerStr() {
+        return ownerStr;
+    }
+
+    public void setOwnerStr(String ownerStr) {
+        this.ownerStr = ownerStr;
     }
 }

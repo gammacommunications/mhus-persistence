@@ -28,6 +28,7 @@ import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -63,7 +64,7 @@ public class TransactionLock extends LockBase {
             this.stacktrace =
                     "\n"
                             + MCast.toString(
-                                    "TransactionLock", Thread.currentThread().getStackTrace());
+                                    "TransactionLock " + Thread.currentThread().getId() + " " + ITracer.get().getCurrentId(), Thread.currentThread().getStackTrace());
     }
 
     /**
@@ -186,9 +187,7 @@ public class TransactionLock extends LockBase {
                                     + key
                                     + ", actuall locked: "
                                     + orderedKeys
-                                    + stacktrace
-                                    + ", Thread: "
-                                    + Thread.currentThread().getId());
+                                    + stacktrace);
                 }
             }
         }
@@ -263,5 +262,10 @@ public class TransactionLock extends LockBase {
     @Override
     public String toString() {
         return MSystem.toString(this, locked, relaxed, orderedKeys, stacktrace);
+    }
+
+    @Override
+    public String getName() {
+        return MSystem.getObjectId(this);
     }
 }

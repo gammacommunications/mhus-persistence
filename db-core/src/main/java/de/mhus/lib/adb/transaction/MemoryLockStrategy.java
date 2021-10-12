@@ -43,7 +43,7 @@ public class MemoryLockStrategy extends LockStrategy {
         synchronized (this) {
             LockObject current = locks.get(key);
             if (current != null && current.getAge() > maxLockAge) {
-                log().i("remove stare lock", current.owner, key);
+                log().i("remove stare lock", current.owner, current.ownerStr, key);
                 locks.remove(key);
                 return false;
             }
@@ -56,7 +56,7 @@ public class MemoryLockStrategy extends LockStrategy {
         synchronized (this) {
             LockObject current = locks.get(key);
             if (current != null && current.getAge() > maxLockAge) {
-                log().i("remove stare lock", current.owner, key);
+                log().i("remove stare lock", current.owner, current.ownerStr, key);
                 locks.remove(key);
                 return false;
             }
@@ -72,7 +72,7 @@ public class MemoryLockStrategy extends LockStrategy {
             synchronized (this) {
                 LockObject current = locks.get(key);
                 if (current != null && current.getAge() > maxLockAge) {
-                    log().i("remove stare lock", current.owner, key);
+                    log().i("remove stare lock", current.owner, current.ownerStr, key);
                     locks.remove(key);
                     continue;
                 }
@@ -126,6 +126,7 @@ public class MemoryLockStrategy extends LockStrategy {
     private class LockObject {
         public LockObject(LockBase transaction) {
             owner = transaction.getName();
+            ownerStr = transaction.toString();
         }
 
         public long getAge() {
@@ -134,5 +135,6 @@ public class MemoryLockStrategy extends LockStrategy {
 
         private long created = System.currentTimeMillis();
         private String owner;
+        private String ownerStr;
     }
 }

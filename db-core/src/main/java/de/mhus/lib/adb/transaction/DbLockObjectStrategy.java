@@ -42,6 +42,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         //		if (key.length() > 760) key = key.substring(0, 760); // not really a good solution ...!
         lock.setKey(key);
         lock.setOwner(transaction.getName());
+        lock.setOwnerStr(transaction.toString());
         long start = System.currentTimeMillis();
         while (true) {
             try {
@@ -54,7 +55,7 @@ public class DbLockObjectStrategy extends LockStrategy {
             try {
                 DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
                 if (obj != null && obj.getAge() > maxLockAge) {
-                    log().i("remove stare lock", obj.getOwner(), key);
+                    log().i("remove stare lock", obj.getOwner(), obj.getOwnerStr(), key);
                     obj.delete();
                     continue;
                 }
@@ -109,7 +110,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         try {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null && obj.getAge() > maxLockAge) {
-                log().i("remove stare lock", obj.getOwner(), key);
+                log().i("remove stare lock", obj.getOwner(), obj.getOwnerStr(), key);
                 obj.delete();
                 return false;
             }
@@ -125,7 +126,7 @@ public class DbLockObjectStrategy extends LockStrategy {
         try {
             DbLockObject obj = transaction.getDbManager().getObject(DbLockObject.class, key);
             if (obj != null && obj.getAge() > maxLockAge) {
-                log().i("remove stare lock", obj.getOwner(), key);
+                log().i("remove stare lock", obj.getOwner(), obj.getOwnerStr(), key);
                 obj.delete();
                 return false;
             }

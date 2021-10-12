@@ -34,9 +34,7 @@ public abstract class LockBase extends MLog {
 
     public abstract DbManager getDbManager();
 
-    public String getName() {
-        return toString();
-    }
+    public abstract String getName();
 
     public synchronized void pushNestedLock(LockBase transaction) {
         if (nested == null) nested = new LinkedList<>();
