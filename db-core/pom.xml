@@ -24,8 +24,9 @@
   <parent>
 	  	<groupId>de.mhus.db</groupId>
         <artifactId>mhus-persistence</artifactId>
-        <version>7.6.0-SNAPSHOT</version>
+        <version>7.5.0</version>
   </parent>
+  <version>7.5.1</version>
   
      <build>
     <plugins>

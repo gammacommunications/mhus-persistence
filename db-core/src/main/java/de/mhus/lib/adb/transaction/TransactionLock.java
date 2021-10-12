@@ -65,6 +65,8 @@ public class TransactionLock extends LockBase {
                     "\n"
                             + MCast.toString(
                                     "TransactionLock " + Thread.currentThread().getId() + " " + ITracer.get().getCurrentId(), Thread.currentThread().getStackTrace());
+        else
+            this.stacktrace = "TransactionLock " + Thread.currentThread().getId() + " " + ITracer.get().getCurrentId();
     }
 
     /**
