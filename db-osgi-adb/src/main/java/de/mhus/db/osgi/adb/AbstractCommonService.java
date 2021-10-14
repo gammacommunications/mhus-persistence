@@ -74,7 +74,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
     private BundleContext context;
 
-    enum STATUS {
+    public enum STATUS {
         NONE,
         ACTIVATED,
         STARTED,

@@ -27,6 +27,7 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
+import de.mhus.db.osgi.adb.AbstractCommonService.STATUS;
 import de.mhus.db.osgi.adb.CommonAdbService;
 import de.mhus.db.osgi.api.adb.AdbOsgiUtil;
 import de.mhus.db.osgi.api.adb.AdbService;
@@ -77,7 +78,8 @@ public class CmdAdbControl extends AbstractCmd {
                 System.out.println(name);
         } else
         if (cmd.equals("status")) {
-            return CommonAdbService.instance(args[0]).getStatus();
+            STATUS status = CommonAdbService.instance(args[0]).getStatus();
+            System.out.println(status);
         } else
         if (cmd.equals("start")) {
             CommonAdbService.instance(args[0]).doStart(null);
