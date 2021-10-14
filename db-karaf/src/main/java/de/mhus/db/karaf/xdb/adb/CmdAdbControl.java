@@ -49,10 +49,13 @@ public class CmdAdbControl extends AbstractCmd {
                             + " consumers - list all consumers and managed types\n"
                             + " jmx-list <serviceName> - list all pools using jmx\n"
                             + " jmx-all  - list all jmx components - debug only\n"
-                            + " info     <serviceName> - info about the adb service\n"
-                            + " cleanup  <serviceName> <unused also (true)>- cleanup pool\n"
-                            + " datasource <name> - change datasource (be aware!)\n"
-                            + " mapping  - print service mappings\n"
+                            + " info     <instance> <serviceName> - info about the adb service\n"
+                            + " cleanup  <instance> <serviceName> <unused also (true)>- cleanup pool\n"
+                            + " datasource <instance> <name> - change datasource (be aware!)\n"
+                            + " mapping  <instance> - print service mappings\n"
+                            + " status - <instance> status\n"
+                            + " instances\n"
+                            + " start <instance>\n"
                             + "\n"
                             + "A sample service name is 'common_adb'",
             multiValued = false)
@@ -69,9 +72,16 @@ public class CmdAdbControl extends AbstractCmd {
     @Override
     public Object execute2() throws Exception {
 
+        if (cmd.equals("instances")) {
+            for (String name : CommonAdbService.instances())
+                System.out.println(name);
+        } else
+        if (cmd.equals("status")) {
+            return CommonAdbService.instance(args[0]).getStatus();
+        } else
         if (cmd.equals("start")) {
             CommonAdbService.instance(args[0]).doStart(null);
-        }
+        } else
         if (cmd.equals("consumers")) {
             ConsoleTable table = new ConsoleTable(tblOpt);
             table.setHeaderValues("Consumer", "Managed Types", "Instance");

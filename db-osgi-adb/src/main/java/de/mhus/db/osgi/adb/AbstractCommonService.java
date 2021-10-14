@@ -81,7 +81,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
         CLOSED
     }
 
-    private STATUS status = STATUS.NONE;
+    private volatile STATUS status = STATUS.NONE;
 
     // static service name
     protected final String SERVICE_NAME = getCommonServiceName();
