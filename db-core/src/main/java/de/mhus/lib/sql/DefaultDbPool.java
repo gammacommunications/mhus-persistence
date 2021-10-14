@@ -20,6 +20,7 @@ import java.util.List;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.node.INode;
 
 /**
@@ -203,5 +204,10 @@ public class DefaultDbPool extends DbPool {
     @Override
     public boolean isClosed() {
         return pool == null;
+    }
+
+    @Override
+    public String toString() {
+        return MSystem.toString(this, pool == null ? -1 : pool.size());
     }
 }
