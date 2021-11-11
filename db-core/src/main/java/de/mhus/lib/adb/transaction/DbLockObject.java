@@ -31,7 +31,7 @@ public class DbLockObject extends DbComfortableObject {
     @DbPersistent private String owner;
 
     @DbPersistent private String ownerStr;
-    
+
     @Override
     public void doPreCreate(DbConnection con) {
         created = System.currentTimeMillis();

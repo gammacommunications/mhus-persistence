@@ -64,9 +64,17 @@ public class TransactionLock extends LockBase {
             this.stacktrace =
                     "\n"
                             + MCast.toString(
-                                    "TransactionLock " + Thread.currentThread().getId() + " " + ITracer.get().getCurrentId(), Thread.currentThread().getStackTrace());
+                                    "TransactionLock "
+                                            + Thread.currentThread().getId()
+                                            + " "
+                                            + ITracer.get().getCurrentId(),
+                                    Thread.currentThread().getStackTrace());
         else
-            this.stacktrace = "TransactionLock " + Thread.currentThread().getId() + " " + ITracer.get().getCurrentId();
+            this.stacktrace =
+                    "TransactionLock "
+                            + Thread.currentThread().getId()
+                            + " "
+                            + ITracer.get().getCurrentId();
     }
 
     /**
@@ -260,7 +268,7 @@ public class TransactionLock extends LockBase {
 
         return locked;
     }
-    
+
     @Override
     public String toString() {
         return MSystem.toString(this, locked, relaxed, orderedKeys, stacktrace);
