@@ -643,14 +643,10 @@ public class Db {
      * @param part a {@link java.lang.String} object.
      */
     private static void extendObjectQueryFromParameter(QueryCreate<?> cont, String part) {
-        if (part.equals("_sort")) {
+        if (part.startsWith("_sort:")) { // special key
             // implemented sort option
-            int p = part.indexOf(' ');
-            String order = null;
-            if (p > 0) {
-                order = part.substring(p + 1).trim().toLowerCase();
-                part = part.substring(0, p);
-            }
+            String order = part.substring(7).trim().toLowerCase();
+            part = part.substring(0, 6);
             cont.query.order(new AOrder(cont.query.getType(), part, "asc".equals(order)));
             return;
         }
