@@ -26,6 +26,7 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
@@ -536,7 +537,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         @Override
         public <F> F prepareManualValue(String name, Object value) {
             Field field = table.getField(name);
-            if (field == null) throw new MRuntimeException("field not found", name, table);
+            if (field == null) throw new MRuntimeException(RC.ERROR, "field {1} not found in table {2}", name, table);
             return (F) AdbUtil.createAttribute(field.getType(), value);
         }
 
@@ -545,7 +546,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
             try {
                 table.getField(name).set(object, v);
             } catch (Throwable t) {
-                throw new MException(name, t);
+                throw new MException(RC.ERROR, "set name {1}", name, t);
             }
         }
 
@@ -555,7 +556,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
             try {
                 return (F) table.getField(name).get(object);
             } catch (Throwable t) {
-                throw new MException(name, t);
+                throw new MException(RC.ERROR, "get name {1}", name, t);
             }
         }
 
@@ -645,7 +646,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 
                 return out;
             } catch (Throwable t) {
-                throw new MException(pk, t);
+                throw new MException(RC.ERROR, "with primary key {1}", pk, t);
             }
         }
 

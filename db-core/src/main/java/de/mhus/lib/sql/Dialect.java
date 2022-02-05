@@ -24,6 +24,7 @@ import java.util.Date;
 
 import de.mhus.lib.adb.query.AQueryCreator;
 import de.mhus.lib.annotations.adb.DbType;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSql;
@@ -337,7 +338,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 
         if (DbConnection.LANGUAGE_COMMON.equals(language)) return commonParser;
 
-        throw new MException(this, "language not supported", language);
+        throw new MException(RC.STATUS.ERROR, "language {2} not supported", this, language);
     }
 
     /** Interface for the parser. */

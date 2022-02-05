@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import de.mhus.lib.adb.model.Field;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.core.util.Table;
 import de.mhus.lib.errors.AccessDeniedException;
@@ -59,7 +60,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
         if (registryName == null) {
             Class<?> clazz = manager.getSchema().findClassForObject(object, manager);
             if (clazz == null)
-                throw new MException(
+                throw new MException(RC.NOT_SUPPORTED,
                         "class definition not found for object",
                         object.getClass().getCanonicalName(),
                         registryName);
@@ -103,7 +104,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
                                                                 true);
                             } catch (Throwable t) {
                                 close();
-                                throw new MException(con, t);
+                                throw new MException(RC.STATUS.ERROR, con, t);
                             }
                         }
                         manager.fillObject(registryName, out, con, res);

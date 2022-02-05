@@ -18,6 +18,7 @@ package de.mhus.lib.sql;
 import java.io.IOException;
 import java.sql.Connection;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.service.UniqueId;
@@ -47,14 +48,14 @@ public class JdbcConnection extends InternalDbConnection {
     @Override
     public void commit() throws Exception {
         log().t(poolId, id, "commit");
-        if (closed) throw new MException(poolId, id, "Connection not valid");
+        if (closed) throw new MException(RC.INTERNAL_ERROR, "Connection not valid", poolId, id);
         if (!connection.getAutoCommit()) connection.commit();
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isReadOnly() throws Exception {
-        if (closed) throw new MException(poolId, id, "Connection not valid");
+        if (closed) throw new MException(RC.INTERNAL_ERROR, "Connection not valid", poolId, id);
         return connection.isReadOnly();
     }
 
@@ -82,7 +83,7 @@ public class JdbcConnection extends InternalDbConnection {
     @Override
     public DbStatement getStatement(String name) throws MException {
         synchronized (this) {
-            if (closed) throw new MException("Connection not valid");
+            if (closed) throw new MException(RC.STATUS.INTERNAL_ERROR, "Connection not valid");
 
             String[] query = provider.getQuery(name);
             if (query == null) return null;
@@ -94,7 +95,7 @@ public class JdbcConnection extends InternalDbConnection {
     @Override
     public DbStatement createStatement(String sql, String language) throws MException {
         synchronized (this) {
-            if (closed) throw new MException("Connection not valid");
+            if (closed) throw new MException(RC.STATUS.INTERNAL_ERROR, "Connection not valid");
 
             return new JdbcStatement(this, sql, language);
         }

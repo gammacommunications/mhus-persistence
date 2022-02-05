@@ -18,6 +18,7 @@ package de.mhus.db.osgi.api.adb;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MValidator;
@@ -68,9 +69,9 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
                 return manager.getObject(clazz, id);
             }
         } catch (Throwable t) {
-            throw new MException("type error", type, t);
+            throw new MException(RC.STATUS.ERROR, "type error", type, t);
         }
-        throw new MException("unknown type", type);
+        throw new MException(RC.STATUS.ERROR, "unknown type {1}", type);
     }
 
     @Override
@@ -78,9 +79,9 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
         try {
             if (MValidator.isUUID(id)) return getObject(type, UUID.fromString(id));
         } catch (Throwable t) {
-            throw new MException("type error", type, t);
+            throw new MException(RC.STATUS.ERROR, "type error", type, t);
         }
-        throw new MException("unknown type", type);
+        throw new MException(RC.STATUS.ERROR, "unknown type {1}", type);
     }
 
     public DbManager getManager() {

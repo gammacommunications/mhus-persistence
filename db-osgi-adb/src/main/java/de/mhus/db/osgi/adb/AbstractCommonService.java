@@ -40,6 +40,7 @@ import de.mhus.db.osgi.api.adb.Reference.TYPE;
 import de.mhus.db.osgi.api.adb.ReferenceCollector;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPeriod;
@@ -385,11 +386,11 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
 
     @Override
     public CommonDbConsumer getConsumer(String type) throws MException {
-        if (type == null) throw new MException("type is null");
+        if (type == null) throw new MException(RC.STATUS.ERROR, "type is null");
         CommonDbConsumer ret = objectTypes.get(type);
         if (ret == null) {
             log().t("Access Controller not found", type, objectTypes);
-            throw new MException("Access Controller not found", type);
+            throw new MException(RC.STATUS.INTERNAL_ERROR, "Access Controller not found for type {1}", type);
         }
         return ret;
     }

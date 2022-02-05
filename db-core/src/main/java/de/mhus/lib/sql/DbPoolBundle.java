@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
@@ -69,7 +70,7 @@ public class DbPoolBundle extends MObject {
      */
     public DbPool getPool(String name) throws Exception {
 
-        if (bundle == null) throw new MException("Bundle already closed");
+        if (bundle == null) throw new MException(RC.CONFLICT, "Bundle already closed");
 
         synchronized (bundle) {
             DbPool pool = bundle.get(name);
@@ -79,7 +80,7 @@ public class DbPoolBundle extends MObject {
                     pool = new DefaultDbPool(poolCon, activator);
                     bundle.put(name, pool);
                 } else {
-                    throw new MException("pool config not found", name);
+                    throw new MException(RC.ERROR, "config for pool {1} not found", name);
                 }
             }
             return pool;

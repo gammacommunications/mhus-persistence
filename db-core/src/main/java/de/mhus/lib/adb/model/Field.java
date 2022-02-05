@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import de.mhus.lib.adb.DbDynamic;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.node.INode;
@@ -87,7 +88,7 @@ public abstract class Field extends MObject {
             }
 
             if (index < 0 || index >= values.length)
-                throw new MException("index not found in enum", attribute.getType().getName());
+                throw new MException(RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
 
             value = values[index];
         }
@@ -110,7 +111,7 @@ public abstract class Field extends MObject {
 
             Object[] values = attribute.getType().getEnumConstants();
             if (index < 0 || index >= values.length)
-                throw new MException("index not found in enum", attribute.getType().getName());
+                throw new MException(RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
 
             value = values[index];
 

@@ -29,6 +29,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbIndex.TYPE;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
@@ -273,7 +274,7 @@ public abstract class Table extends MObject {
         schema.internalSaveObject(con, name, object, attributes);
 
         int c = sqlUpdate.getStatement(con).executeUpdate(attributes);
-        if (c != 1) throw new MException("update failed, updated objects " + c);
+        if (c != 1) throw new MException(RC.ERROR, "update failed, updated objects {1}", c);
 
         for (Feature f : features) f.postSaveObject(con, object);
 
@@ -308,7 +309,7 @@ public abstract class Table extends MObject {
         schema.internalSaveObject(con, name, object, attributes);
 
         int c = sqlUpdateForce.getStatement(con).executeUpdate(attributes);
-        if (c != 1) throw new MException("update failed, updated objects " + c);
+        if (c != 1) throw new MException(RC.ERROR, "update failed, updated objects {1}", c);
 
         if (!raw) for (Feature f : features) f.postSaveObject(con, object);
 
@@ -378,7 +379,7 @@ public abstract class Table extends MObject {
         schema.internalSaveObject(con, name, object, attributes);
 
         int c = query.getStatement(con).executeUpdate(attributes);
-        if (c != 1) throw new MException("update failed, updated objects " + c);
+        if (c != 1) throw new MException(RC.STATUS.ERROR, "update failed, updated objects {1}", c);
 
         if (!raw) for (Feature f : features) f.postSaveObject(con, object);
 
