@@ -40,7 +40,7 @@ public class JdbcProvider extends DbProvider {
                 try {
                     dialect = (Dialect) activator.getObject(dialectName);
                 } catch (Exception e) {
-                    log().t(dialect, e);
+                    log().t("get object failed", dialect, e);
                 }
             }
             if (dialect == null) {

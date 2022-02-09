@@ -46,7 +46,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
             //			instance.setUsedTrace(createStackTrace);
         }
         this.instance = instance;
-        log().t(id, "created", instance.getInstanceId());
+        log().t("created", id, instance.getInstanceId());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
     @Override
     public void close() {
         if (instance == null) return;
-        log().t(id, "close", instance.getInstanceId());
+        log().t("close", id, instance.getInstanceId());
         setUsed(false); // close of the proxy will free the connection
         if (CFG_TRACE_CALLER.value()) pool.getStackTraces().remove(MSystem.getObjectId(this));
     }
@@ -99,9 +99,9 @@ public class DbConnectionProxy extends MObject implements DbConnection {
     @SuppressWarnings("deprecation")
     @Override
     protected void finalize() throws Throwable {
-        log().t(id, "finalized", instance.getInstanceId());
+        log().t("finalized", id, instance.getInstanceId());
         if (instance != null) {
-            log().i(id, "final closed", instance.getInstanceId());
+            log().i("final closed", id, instance.getInstanceId());
             ConnectionTrace trace = pool.getStackTraces().get(MSystem.getObjectId(this));
             if (trace != null) trace.log(log());
             setUsed(false);

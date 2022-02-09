@@ -48,7 +48,7 @@ public class ConnectionTrace implements Comparable<ConnectionTrace> {
     }
 
     public void log(Log log) {
-        log.w(id, "Connection", this);
+        log.w("Connection", id, this);
         MLogUtil.logStackTrace(log, "" + id, stackTrace);
     }
 }

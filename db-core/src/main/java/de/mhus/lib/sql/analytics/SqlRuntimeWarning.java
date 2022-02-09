@@ -32,7 +32,7 @@ public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator
             long connectionId, String original, String query, long delta, Throwable t) {
         if (t != null) return;
         if (delta > traceMaxRuntime) {
-            log().f(connectionId, "Query Runtime Warning", delta, query);
+            log().f("Query Runtime Warning", connectionId, delta, query);
             MLogUtil.logStackTrace(
                     log(), "" + connectionId, Thread.currentThread().getStackTrace());
         }

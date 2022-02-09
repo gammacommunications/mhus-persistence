@@ -24,7 +24,7 @@ public class SqlReporter extends MLog implements SqlAnalyzer {
     @Override
     public void doAnalyze(
             long connectionId, String original, String query, long delta, Throwable t) {
-        log().i(connectionId, MPeriod.getIntervalAsString(delta), original, query);
+        log().i("doAnalyze", connectionId, MPeriod.getIntervalAsString(delta), original, query);
     }
 
     @Override

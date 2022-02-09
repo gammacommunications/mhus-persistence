@@ -574,7 +574,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             try {
                 service.collectReferences(object, collector, reason);
             } catch (Throwable t) {
-                log().w(service.getClass(), object.getClass(), t);
+                log().w("collect reference for {1} failed", service.getClass(), object.getClass(), t);
             }
     }
 

@@ -218,7 +218,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
                 out.addRow(row);
                 if (maxSize > 0 && out.getRowSize() >= maxSize) break;
             } catch (Throwable t) {
-                log().d(t, cnt);
+                log().d("reading results failed", t, cnt);
             }
         }
         close();

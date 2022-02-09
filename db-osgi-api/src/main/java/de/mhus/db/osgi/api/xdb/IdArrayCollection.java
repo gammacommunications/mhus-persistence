@@ -51,7 +51,7 @@ public class IdArrayCollection<T> implements DbCollection<T> {
         try {
             current = type.getObject(array[index]);
         } catch (Exception e) {
-            MLogUtil.log().d(type, array[index], e);
+            MLogUtil.log().d("loading object of type {1} failed", type, array[index], e);
             index = array.length;
             throw new RuntimeException(e);
         }

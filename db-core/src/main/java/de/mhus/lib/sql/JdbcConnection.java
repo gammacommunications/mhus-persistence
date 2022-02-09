@@ -162,7 +162,7 @@ public class JdbcConnection extends InternalDbConnection {
                     connection = null;
                 }
             } catch (Throwable e) {
-                log().d(this, e);
+                log().d("close failed", this, e);
                 connection = null;
             }
             closed = true;

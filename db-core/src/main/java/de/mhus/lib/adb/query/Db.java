@@ -626,7 +626,7 @@ public class Db {
 
         public void reduce() {
             if (queue == null || queue.size() == 0) {
-                MLogUtil.log().d(Db.class, "closing bracked without open bracked");
+                MLogUtil.log().d("closing bracked without open bracked");
                 current = null;
                 return;
             }

@@ -173,9 +173,9 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
             field.set(obj, res);
             return;
         } catch (NoSuchMethodException nsme) {
-            log().t(field, nsme);
+            log().t("method not found", field, nsme);
         } catch (Throwable t) {
-            log().t(field, t);
+            log().t("create id failed", field, t);
             return;
         }
 

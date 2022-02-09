@@ -78,7 +78,7 @@ public class JdbcResult extends DbResult {
         try {
             instance.close();
         } catch (SQLException e) {
-            MLogUtil.log().d(this, e);
+            MLogUtil.log().d("close failed", this, e);
         }
     }
 

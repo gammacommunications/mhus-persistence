@@ -298,11 +298,11 @@ public class DialectDefault extends Dialect {
         }
         sql.append(" )");
         createTableLastCheck(ctable, tn, sql);
-        log().d(sql);
+        log().d("SQL", sql);
         try {
             sth.execute(sql.toString());
         } catch (Exception e) {
-            log().e(sql, e);
+            log().e("execution of {1} failed", sql, e);
         }
     }
 
