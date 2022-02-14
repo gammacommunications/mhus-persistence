@@ -40,7 +40,7 @@ public abstract class AbstractDbSchema extends DbSchema {
         ((MemoryLockStrategy) lockStrategy)
                 .setMaxLockAge(
                         MApi.getCfg(AdbService.class)
-                                .getLong("maxLockAge", MPeriod.MINUTE_IN_MILLISECOUNDS * 5));
+                                .getLong("maxLockAge", MPeriod.MINUTE_IN_MILLISECONDS * 5));
     }
 
     @Override

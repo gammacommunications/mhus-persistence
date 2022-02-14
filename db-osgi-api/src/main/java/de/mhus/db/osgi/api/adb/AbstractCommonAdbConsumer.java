@@ -30,7 +30,7 @@ public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDb
 
     public static CfgLong CFG_TIMEOUT =
             new CfgLong(
-                    CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECOUNDS * 5);
+                    CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECONDS * 5);
     protected DbManager manager;
 
     @Override

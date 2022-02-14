@@ -26,7 +26,7 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 public class DbLockObjectStrategy extends LockStrategy {
 
     private static final CfgLong CFG_MAX_LOCK_AGE =
-            new CfgLong(DbLockObjectStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECOUNDS);
+            new CfgLong(DbLockObjectStrategy.class, "maxLockAge", MPeriod.HOUR_IN_MILLISECONDS);
     private static final CfgLong CFG_SLEEP_TIME =
             new CfgLong(DbLockObjectStrategy.class, "sleepTime", 200);
     private static final CfgBoolean CFG_IGNORE_LOCK_OWNER =

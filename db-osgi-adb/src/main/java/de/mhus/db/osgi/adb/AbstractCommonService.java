@@ -122,7 +122,7 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             new CfgLong(
                     AbstractCommonService.class,
                     SERVICE_NAME + "@accessCacheTTL",
-                    MPeriod.MINUTE_IN_MILLISECOUNDS * 15);
+                    MPeriod.MINUTE_IN_MILLISECONDS * 15);
 
     private final CfgInt CFG_ACCESS_CACHE_SIZE =
             new CfgInt(AbstractCommonService.class, SERVICE_NAME + "@accessCacheSize", 1000000);

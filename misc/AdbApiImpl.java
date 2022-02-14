@@ -120,7 +120,7 @@ public class AdbApiImpl extends MLog implements AdbApi {
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canRead(obj);
 //        ((AaaContextImpl) c)
-//                .setCached("ace_read|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+//                .setCached("ace_read|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECONDS * 5, ret);
         return ret.bool;
     }
 
@@ -135,7 +135,7 @@ public class AdbApiImpl extends MLog implements AdbApi {
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canUpdate(obj);
 //        ((AaaContextImpl) c)
-//               .setCached("ace_update|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+//               .setCached("ace_update|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECONDS * 5, ret);
         return ret.bool;
     }
 
@@ -150,7 +150,7 @@ public class AdbApiImpl extends MLog implements AdbApi {
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canDelete(obj);
 //        ((AaaContextImpl) c)
-//                .setCached("ace_delete|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+//                .setCached("ace_delete|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECONDS * 5, ret);
         return ret.bool;
     }
 
@@ -164,7 +164,7 @@ public class AdbApiImpl extends MLog implements AdbApi {
         ContextCachedItem ret = new ContextCachedItem();
         ret.bool = controller.canCreate(obj);
 //        ((AaaContextImpl) c)
-//                .setCached("ace_create|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECOUNDS * 5, ret);
+//                .setCached("ace_create|" + obj.getId(), MPeriod.MINUTE_IN_MILLISECONDS * 5, ret);
         return ret.bool;
     }
 

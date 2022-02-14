@@ -195,7 +195,7 @@ public class TransactionTest {
 
         } finally {
             ((MemoryLockStrategy) manager.getSchema().getLockStrategy())
-                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
+                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECONDS); // set back to 'long'
         }
     }
 
@@ -214,7 +214,7 @@ public class TransactionTest {
 
         } finally {
             ((MemoryLockStrategy) manager.getSchema().getLockStrategy())
-                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECOUNDS); // set back to 'long'
+                    .setMaxLockAge(MPeriod.HOUR_IN_MILLISECONDS); // set back to 'long'
         }
     }
 }

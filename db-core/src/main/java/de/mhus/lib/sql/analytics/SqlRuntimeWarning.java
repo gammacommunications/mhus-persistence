@@ -25,7 +25,7 @@ import de.mhus.lib.core.node.INode;
 
 public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator {
 
-    private long traceMaxRuntime = MPeriod.MINUTE_IN_MILLISECOUNDS;
+    private long traceMaxRuntime = MPeriod.MINUTE_IN_MILLISECONDS;
 
     @Override
     public void doAnalyze(
