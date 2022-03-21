@@ -51,7 +51,7 @@ public class TransactionTest {
         cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
         cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
         cdb.setProperty("user", "sa");
-        cdb.setProperty("pass", "");
+        cdb.setProperty("password", "");
 
         DbPoolBundle pool = new DbPoolBundle(cconfig, null);
         return pool;

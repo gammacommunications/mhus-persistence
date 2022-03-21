@@ -33,7 +33,7 @@ public class MysqlDbProvider extends JdbcProvider {
         config.setProperty("driver", "com.mysql.jdbc.Driver");
         config.setProperty("url", url);
         config.setProperty("user", user);
-        config.setProperty("pass", pass);
+        config.setProperty("password", pass);
         config.setProperty("name", url);
         activator = M.l(MActivator.class);
     }

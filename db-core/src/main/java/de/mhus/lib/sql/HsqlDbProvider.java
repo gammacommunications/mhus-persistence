@@ -44,7 +44,7 @@ public class HsqlDbProvider extends JdbcProvider {
         config.setProperty("driver", "org.hsqldb.jdbcDriver");
         config.setProperty("url", "jdbc:hsqldb:mem:" + memoryDbName);
         config.setProperty("user", "sa");
-        config.setProperty("pass", "");
+        config.setProperty("password", "");
         config.setProperty("name", memoryDbName);
         activator = M.l(MActivator.class);
     }
@@ -61,7 +61,7 @@ public class HsqlDbProvider extends JdbcProvider {
         config.setProperty("driver", "org.hsqldb.jdbcDriver");
         config.setProperty("url", "file:" + file);
         config.setProperty("user", user);
-        config.setProperty("pass", pass);
+        config.setProperty("password", pass);
         config.setProperty("name", file);
         activator = M.l(MActivator.class);
     }

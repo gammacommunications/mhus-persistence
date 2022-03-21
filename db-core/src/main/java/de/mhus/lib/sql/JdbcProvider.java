@@ -60,7 +60,7 @@ public class JdbcProvider extends DbProvider {
         String driver = config.getExtracted("driver");
         String url = config.getExtracted("url");
         String user = config.getExtracted("user");
-        String pass = config.getExtracted("pass");
+        String pass = config.getExtracted("password");
 
         if (!MString.isEmpty(driver)) {
             if (activator != null) activator.getClazz(driver);
