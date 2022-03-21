@@ -192,7 +192,7 @@ public class AdbTest extends TestCase {
         cdb.setProperty("driver", jdbcDriver);
         cdb.setProperty("url", jdbcUrl);
         cdb.setProperty("user", jdbcUser);
-        cdb.setProperty("pass", jdbcPass);
+        cdb.setProperty("password", jdbcPass);
 
         DbPoolBundle pool = new DbPoolBundle(cconfig, null);
 
