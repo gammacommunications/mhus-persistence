@@ -227,7 +227,8 @@ public class ParserJdbc
 
     @Override
     public void visit(Table tableName) {
-        if (entityName != null) throw new MRuntimeException(RC.ERROR, "only one table is supported");
+        if (entityName != null)
+            throw new MRuntimeException(RC.ERROR, "only one table is supported");
         entityName = tableName.getFullyQualifiedName().toLowerCase();
         if (manager != null) {
             try {

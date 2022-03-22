@@ -72,7 +72,8 @@ public class CmdUse extends AbstractCmd {
 
         if ("set".equals(cmd) && uriName != null) {
             MUri uri = MUri.toUri(uriName);
-            if (!"xdb".equals(uri.getScheme())) throw new MException(RC.STATUS.ERROR, "scheme is not xdb");
+            if (!"xdb".equals(uri.getScheme()))
+                throw new MException(RC.STATUS.ERROR, "scheme is not xdb");
             apiName = uri.getPathParts()[0];
             if (uri.getPathParts().length > 1) serviceName = uri.getPathParts()[1];
             if (uri.getPathParts().length > 2) dsName = uri.getPathParts()[2];

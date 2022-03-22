@@ -29,8 +29,7 @@ import de.mhus.lib.xdb.XdbService;
 public abstract class AbstractCommonAdbConsumer extends MLog implements CommonDbConsumer {
 
     public static CfgLong CFG_TIMEOUT =
-            new CfgLong(
-                    CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECONDS * 5);
+            new CfgLong(CommonDbConsumer.class, "cacheTimeout", MPeriod.MINUTE_IN_MILLISECONDS * 5);
     protected DbManager manager;
 
     @Override

@@ -88,7 +88,8 @@ public abstract class Field extends MObject {
             }
 
             if (index < 0 || index >= values.length)
-                throw new MException(RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
+                throw new MException(
+                        RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
 
             value = values[index];
         }
@@ -111,7 +112,8 @@ public abstract class Field extends MObject {
 
             Object[] values = attribute.getType().getEnumConstants();
             if (index < 0 || index >= values.length)
-                throw new MException(RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
+                throw new MException(
+                        RC.ERROR, "index {1} not found in enum", attribute.getType().getName());
 
             value = values[index];
 

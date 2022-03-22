@@ -38,8 +38,7 @@ public class DbTransaction {
 
     /** Constant <code>DEFAULT_TIMEOUT=MTimeInterval.MINUTE_IN_MILLISECONDS * 10</code> */
     public static final CfgLong CFG_DEFAULT_TIMEOUT =
-            new CfgLong(
-                    DbTransaction.class, "defaultTimeout", MPeriod.MINUTE_IN_MILLISECONDS * 10);
+            new CfgLong(DbTransaction.class, "defaultTimeout", MPeriod.MINUTE_IN_MILLISECONDS * 10);
 
     /**
      * lock accept only nested locks with already locked objects.

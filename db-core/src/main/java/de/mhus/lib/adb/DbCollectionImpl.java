@@ -60,7 +60,8 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
         if (registryName == null) {
             Class<?> clazz = manager.getSchema().findClassForObject(object, manager);
             if (clazz == null)
-                throw new MException(RC.NOT_SUPPORTED,
+                throw new MException(
+                        RC.NOT_SUPPORTED,
                         "class definition not found for object",
                         object.getClass().getCanonicalName(),
                         registryName);

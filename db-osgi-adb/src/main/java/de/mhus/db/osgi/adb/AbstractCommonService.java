@@ -390,7 +390,8 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
         CommonDbConsumer ret = objectTypes.get(type);
         if (ret == null) {
             log().t("Access Controller not found", type, objectTypes);
-            throw new MException(RC.STATUS.INTERNAL_ERROR, "Access Controller not found for type {1}", type);
+            throw new MException(
+                    RC.STATUS.INTERNAL_ERROR, "Access Controller not found for type {1}", type);
         }
         return ret;
     }
@@ -574,7 +575,9 @@ public abstract class AbstractCommonService extends AbstractAdbService implement
             try {
                 service.collectReferences(object, collector, reason);
             } catch (Throwable t) {
-                log().w("collect reference for {1} failed", service.getClass(), object.getClass(), t);
+                log().w(
+                                "collect reference for {1} failed",
+                                service.getClass(), object.getClass(), t);
             }
     }
 

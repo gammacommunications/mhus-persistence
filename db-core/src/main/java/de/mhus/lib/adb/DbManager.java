@@ -537,7 +537,9 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
         @Override
         public <F> F prepareManualValue(String name, Object value) {
             Field field = table.getField(name);
-            if (field == null) throw new MRuntimeException(RC.ERROR, "field {1} not found in table {2}", name, table);
+            if (field == null)
+                throw new MRuntimeException(
+                        RC.ERROR, "field {1} not found in table {2}", name, table);
             return (F) AdbUtil.createAttribute(field.getType(), value);
         }
 
