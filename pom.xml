@@ -69,4 +69,17 @@
 	        <scope>test</scope>
 	    </dependency>
 	</dependencies>
+	
+    <profiles>
+        <profile>
+            <id>deploy-ngnetwork</id>
+            <repositories>
+                <repository>
+                    <id>nexus_gammanetwork</id>
+                    <url>https://nexus.gammanetwork.de/repository/maven-snapshots</url>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>
